@@ -1,0 +1,23 @@
+---
+title: "Closeread Practice"
+format:
+  closeread-html:
+    toc: false
+---
+
+::: {.cr-section layout="sidebar-left"}
+
+Intro text for the narrative panel.
+
+::: {focus-on="cr-myplot"}
+When this block scrolls into view, it reveals the histogram.
+:::
+
+::: {#cr-myplot .cr-figure}
+
+```{r}
+#| fig-height: 7
+hist(rnorm(200))
+```         
+:::
+:::

@@ -1,0 +1,13 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Texas MHU"
+
+format:
+  closeread-html:
+    toc: false
+
+execute:
+  freeze: false
