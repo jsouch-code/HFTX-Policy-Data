@@ -1,13 +1,18 @@
 ---
-title: "Closeread Practice"
+title: "The Geography of Care"
 format:
   closeread-html:
+    code-tools: true
+    cr-style:
+      narrative-background-color-overlay: black
+      section-background-color: transparent
+      narrative-text-color-overlay: black
     toc: false
 ---
 
 ::: {.cr-section layout="sidebar-left"}
 
-Intro text for the narrative panel.
+Across the 268,597 square miles of Texas, access to women’s healthcare is deeply uneven. Large regions of the state function as “healthcare deserts,” where high- population communities have few or sometimes no access to nearby clinics providing essential services like contraception, cancer screenings, and preventive care. Underfunding, clinic closures, and restrictive and changing policies have widened these gaps, leaving low-income, rural, and underserved Texans faceing long travel distances, limited transportation options, and months-long wait times. These barriers make timely, comprehensive healthcare out of reach for many, underscoring the urgent need for solutions that meet people where they are. That’s where mobile health care units come in.
 
 ::: {focus-on="cr-myplot"}
 When this block scrolls into view, it reveals the histogram.
@@ -18,10 +23,11 @@ When this block scrolls into view, it reveals the histogram.
 ```{r}
 
 library(leaflet)
-leaflet(height = "100vh", width = "68vw") |> 
+leaflet(height = "100vh", width = "60vw") |> 
   addProviderTiles("Esri.WorldTopoMap")
 
 ```         
 
 :::
 :::
+
