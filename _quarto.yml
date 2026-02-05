@@ -3,11 +3,12 @@ project:
   output-dir: docs
 
 website:
-  title: "Texas MHU"
+  title: "HFTX Policy Data"
 
 format:
   closeread-html:
     toc: false
+    relative-resources: true
 
 execute:
   freeze: false
