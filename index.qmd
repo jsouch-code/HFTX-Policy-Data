@@ -16,8 +16,12 @@ When this block scrolls into view, it reveals the histogram.
 ::: {#cr-myplot .cr-figure}
 
 ```{r}
-#| fig-height: 7
-hist(rnorm(200))
+
+library(leaflet)
+leaflet(height = "100vh", width = "68vw") |> 
+  addProviderTiles("Esri.WorldTopoMap")
+
 ```         
+
 :::
 :::
