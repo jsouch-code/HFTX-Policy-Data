@@ -1,14 +1,3 @@
 project:
   type: website
   output-dir: docs
-
-website:
-  title: "HFTX Policy Data"
-
-format:
-  closeread-html:
-    toc: false
-    relative-resources: true
-
-execute:
-  freeze: false

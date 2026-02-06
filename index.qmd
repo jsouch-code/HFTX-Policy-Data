@@ -1,33 +1,139 @@
 ---
-title: "The Geography of Care"
-format:
-  closeread-html:
-    code-tools: true
-    cr-style:
-      narrative-background-color-overlay: black
-      section-background-color: transparent
-      narrative-text-color-overlay: black
-    toc: false
+format: closeread-html
 ---
 
-::: {.cr-section layout="sidebar-left"}
+::::{.cr-section}
 
-Across the 268,597 square miles of Texas, access to women’s healthcare is deeply uneven. Large regions of the state function as “healthcare deserts,” where high- population communities have few or sometimes no access to nearby clinics providing essential services like contraception, cancer screenings, and preventive care. Underfunding, clinic closures, and restrictive and changing policies have widened these gaps, leaving low-income, rural, and underserved Texans faceing long travel distances, limited transportation options, and months-long wait times. These barriers make timely, comprehensive healthcare out of reach for many, underscoring the urgent need for solutions that meet people where they are. That’s where mobile health care units come in.
+# Test other sticky block types
 
-::: {focus-on="cr-myplot"}
-When this block scrolls into view, it reveals the histogram.
+First paragraph.
+
+::: {}
+This is a para nested in a div. These two first bits don't trigger anything...
 :::
 
-::: {#cr-myplot .cr-figure}
+:::{focus-on="cr-pink"}
+This is an image with the sticky tag on the div.
+:::
 
+:::{#cr-pink}
+x![This is a caption](pink-desktop.png)
+:::
+
+:::{focus-on="cr-blue"}
+This is an image with the sticky tag on Image itself.
+
+I've replaced its margin with some padding to demonstrate that you can give it a larger "surface" area on which to trigger scroll events.
+:::
+
+![](blue-desktop.png){#cr-blue}
+
+::::
+
+::::{.column-screen-inset style="background-color: #dddddd; padding: 50px;"}
+Here's a little non-scrolling interlude before our next scrolly section!
+::::
+
+::::{.cr-section}
+
+This is a scatterplot. @cr-scatter
+
+:::{#cr-scatter}
 ```{r}
+#| echo: false
 
-library(leaflet)
-leaflet(height = "100vh", width = "60vw") |> 
-  addProviderTiles("Esri.WorldTopoMap")
-
-```         
-
-:::
+plot(mtcars$mpg, mtcars$dist)
+```
 :::
 
+This is a histogram. @cr-hist
+
+:::{#cr-hist}
+```{r}
+#| echo: true
+#| fig-cap: "This is a caption."
+#| fig-height: 4
+
+hist(mtcars$mpg)
+```
+:::
+
+This is a list (a block element). @cr-list
+
+:::{#cr-list}
+1. Apple
+2. Banana
+:::
+
+This is display math, but I'm making it a bit longer so that it covers a few lines. @cr-displaymath
+
+::: {#cr-displaymath style="font-size: 300%;"}
+
+$$
+\begin{align}
+\hat{y} &= \beta_0 + \beta_1 x + \epsilon \\
+&= 3.4 + 1.2 x
+\end{align}
+$$
+
+:::
+
+This is a poem. It's called ["Bellringer", by Rita Dove](https://www.newyorker.com/culture/2019-in-review/our-year-in-poems). @cr-intro
+
+| {#cr-intro .cr-text  .scale-to-fill}
+| Across the [268,597 square miles of Texas]{#cr-h1} access to women’s healthcare is deeply
+| uneven. Large regions of the state function 
+| as [“healthcare deserts,”]{#cr-h2} 
+| where high- population communities have few or sometimes no access to nearby
+| clinics providing essential services
+| like contraception, cancer screenings, and preventive care. Underfunding,
+| clinic closures,and restrictive and changing policies have widened these gaps,
+| leaving low-income, rural,
+| and underserved Texans facing [long travel distances]{#cr-b1}, 
+| limited transportation options, and
+| months-long wait times. These barriers make timely, 
+| comprehensive healthcare out of reach
+| for many, underscoring the urgent need for solutions that meet people where they are.
+| That’s where mobile health care units come in
+
+
+The author refers to their birth twice: one here... [@cr-intro]{hlz="cr-h1,cr-h2"}
+
+... and again, further down. [@cr-intro]{hlz="cr-b1,cr-b2"}
+
+Let's look at a small limerick. @cr-mylimerick
+
+| {#cr-text .cr-text}
+| The limerick packs [big test]{#cr-text1}
+|   In space that is quite economical.
+
+The phrase 'highlight this' is quite important here! [@cr-text]{hlz="cr-text1"}
+
+This is a mermaid diagram @cr-mermaid
+
+:::{#cr-mermaid .scale-to-fill}
+```{mermaid}
+flowchart LR
+  A[Hard edge] --> B(Round edge)
+  B --> C{Decision}
+  C --> D[Result one]
+  C --> E[Result two]
+```
+:::
+
+This is a graphviz diagram @cr-graphviz
+
+
+:::{#cr-graphviz .scale-to-fill}
+```{dot}
+graph G {
+  layout=neato
+  run -- intr;
+  intr -- runbl;
+}
+```
+:::
+
+::::
+
+# The End
