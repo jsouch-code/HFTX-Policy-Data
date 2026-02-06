@@ -105,41 +105,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+
+<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
+
+<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+
+<script src="site_libs/proj4-2.6.2/proj4.min.js"></script>
+
+<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+
+<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+
+<script src="site_libs/leaflet-binding-2.2.3/leaflet.js"></script>
+
+<script src="site_libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
+
+<script src="site_libs/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js"></script>
+
 <meta cr-debug-mode="false">
 <meta cr-remove-header-space="false">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="site_libs\quarto-contrib\quarto-project\qmd-lab\closeread\closeread.css">
 </head>
@@ -170,29 +160,18 @@ window.Quarto = {
 </div>
 <div class="trigger">
 <div class="narrative">
-<p>This is a para nested in a div. These two first bits don’t trigger anything…</p>
+<p>Welcome to my scrollytelling story.</p>
 </div>
 </div>
 <div class="trigger new-trigger" data-focus-on="cr-pink">
 <div class="narrative">
-<p>This is an image with the sticky tag on the div.</p>
-</div>
-</div>
-<div class="trigger new-trigger" data-focus-on="cr-blue">
-<div class="narrative">
-<p>This is an image with the sticky tag on Image itself.</p>
-<p>I’ve replaced its margin with some padding to demonstrate that you can give it a larger “surface” area on which to trigger scroll events.</p>
+<p>This is an test site.</p>
 </div>
 </div>
 </div>
 <div class="sticky-col">
 <div class="sticky-col-stack">
-<div id="cr-pink" class="sticky">
-<p>x<img src="pink-desktop.png" class="img-fluid" alt="This is a caption"></p>
-</div>
-<div id="cr-blue" class="sticky">
-<img src="blue-desktop.png" class="img-fluid">
-</div>
+
 </div>
 </div>
 </div>
@@ -211,27 +190,17 @@ window.Quarto = {
 <p>This is a histogram.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-focus-on="cr-list">
-<div class="narrative">
-<p>This is a list (a block element).</p>
-</div>
-</div>
-<div class="trigger new-trigger" data-focus-on="cr-displaymath">
-<div class="narrative">
-<p>This is display math, but I’m making it a bit longer so that it covers a few lines.</p>
-</div>
-</div>
 <div class="trigger new-trigger" data-focus-on="cr-intro">
 <div class="narrative">
 <p>This is a poem. It’s called <a href="https://www.newyorker.com/culture/2019-in-review/our-year-in-poems">“Bellringer”, by Rita Dove</a>.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-hlz="cr-h1,cr-h2" data-focus-on="cr-intro">
+<div class="trigger new-trigger" data-focus-on="cr-intro" data-hlz="cr-h1,cr-h2">
 <div class="narrative">
 <p>The author refers to their birth twice: one here…</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-hlz="cr-b1,cr-b2" data-focus-on="cr-intro">
+<div class="trigger new-trigger" data-focus-on="cr-intro" data-hlz="cr-b1,cr-b2">
 <div class="narrative">
 <p>… and again, further down.</p>
 </div>
@@ -241,19 +210,19 @@ window.Quarto = {
 <p>Let’s look at a small limerick.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-hlz="cr-text1" data-focus-on="cr-text">
+<div class="trigger new-trigger" data-focus-on="cr-text" data-hlz="cr-text1">
 <div class="narrative">
 <p>The phrase ‘highlight this’ is quite important here!</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-focus-on="cr-mermaid">
+<div class="trigger new-trigger" data-focus-on="cr-map">
 <div class="narrative">
 <p>This is a mermaid diagram</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-focus-on="cr-graphviz">
+<div class="trigger new-trigger" data-focus-on="cr-map">
 <div class="narrative">
-<p>This is a graphviz diagram</p>
+<p>Map 1 is active here.</p>
 </div>
 </div>
 </div>
@@ -283,20 +252,6 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="cr-list" class="sticky">
-<ol type="1">
-<li>Apple</li>
-<li>Banana</li>
-</ol>
-</div>
-<div id="cr-displaymath" class="sticky" style="font-size: 300%;">
-<p><span class="math display">\[
-\begin{align}
-\hat{y} &amp;= \beta_0 + \beta_1 x + \epsilon \\
-&amp;= 3.4 + 1.2 x
-\end{align}
-\]</span></p>
-</div>
 <div id="cr-intro" class="cr-text scale-to-fill sticky">
 <div class="line-block"><span id="lb1-1">Across the <span id="cr-h1">268,597 square miles of Texas</span> access to women’s healthcare is deeply</span><br>
 <span id="lb1-2">uneven. Large regions of the state function</span><br>
@@ -317,67 +272,11 @@ window.Quarto = {
 <div class="line-block"><span id="lb2-1">The limerick packs <span id="cr-text1">big test</span></span><br>
 <span id="lb2-2">&nbsp;&nbsp;In space that is quite economical.</span></div>
 </div>
-<div id="cr-mermaid" class="scale-to-fill sticky">
-<div class="cell" data-layout-align="default">
+<div id="cr-map" class="sticky">
+<div class="cell">
 <div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-  A[Hard edge] --&gt; B(Round edge)
-  B --&gt; C{Decision}
-  C --&gt; D[Result one]
-  C --&gt; E[Result two]
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</div>
-<div id="cr-graphviz" class="scale-to-fill sticky">
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<svg width="672" height="480" viewbox="0.00 0.00 134.55 169.48" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 165.48)">
-<title>G</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-165.48 130.55,-165.48 130.55,4 -4,4"></polygon>
-<!-- run -->
-<g id="node1" class="node">
-<title>run</title>
-<ellipse fill="none" stroke="black" cx="27" cy="-143.48" rx="27" ry="18"></ellipse>
-<text text-anchor="middle" x="27" y="-139.28" font-family="Times,serif" font-size="14.00">run</text>
-</g>
-<!-- intr -->
-<g id="node2" class="node">
-<title>intr</title>
-<ellipse fill="none" stroke="black" cx="71.02" cy="-86.15" rx="27" ry="18"></ellipse>
-<text text-anchor="middle" x="71.02" y="-81.95" font-family="Times,serif" font-size="14.00">intr</text>
-</g>
-<!-- run&#45;&#45;intr -->
-<g id="edge1" class="edge">
-<title>run--intr</title>
-<path fill="none" stroke="black" d="M39.5,-127.2C45.5,-119.39 52.66,-110.06 58.64,-102.27"></path>
-</g>
-<!-- runbl -->
-<g id="node3" class="node">
-<title>runbl</title>
-<ellipse fill="none" stroke="black" cx="95.13" cy="-18" rx="31.34" ry="18"></ellipse>
-<text text-anchor="middle" x="95.13" y="-13.8" font-family="Times,serif" font-size="14.00">runbl</text>
-</g>
-<!-- intr&#45;&#45;runbl -->
-<g id="edge2" class="edge">
-<title>intr--runbl</title>
-<path fill="none" stroke="black" d="M77.23,-68.6C80.8,-58.51 85.27,-45.86 88.85,-35.73"></path>
-</g>
-</g>
-</svg>
-</div>
-<p></p></figure><p></p>
-</div>
+<div id="htmlwidget-a298be74087e0b6304d7" style="width:66vw;height:100vh;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a298be74087e0b6304d7">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addProviderTiles","args":["CartoDB.DarkMatter",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]}],"setView":[[31,-99],5,[]]},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>

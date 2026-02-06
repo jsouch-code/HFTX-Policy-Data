@@ -29,23 +29,30 @@ Here's a little non-scrolling interlude before our next scrolly section!
 This is a scatterplot. @cr-scatter
 
 :::{#cr-scatter}
-```{r}
-#| echo: false
 
-plot(mtcars$mpg, mtcars$dist)
-```
+::: {.cell}
+::: {.cell-output-display}
+![](index_files/figure-html/unnamed-chunk-1-1.png){width=672}
+:::
+:::
+
 :::
 
 This is a histogram. @cr-hist
 
 :::{#cr-hist}
-```{r}
-#| echo: true
-#| fig-cap: "This is a caption."
-#| fig-height: 4
 
+::: {.cell}
+
+```{.r .cell-code}
 hist(mtcars$mpg)
 ```
+
+::: {.cell-output-display}
+![This is a caption.](index_files/figure-html/unnamed-chunk-2-1.png){width=672}
+:::
+:::
+
 :::
 
 This is a poem. It's called ["Bellringer", by Rita Dove](https://www.newyorker.com/culture/2019-in-review/our-year-in-poems). @cr-intro
@@ -81,11 +88,18 @@ The phrase 'highlight this' is quite important here! [@cr-text]{hlz="cr-text1"}
 
 
 :::{#cr-map}
-```{r}
-library(leaflet)
 
-leaflet(height = "100vh", width  = "66vw") |> addProviderTiles("CartoDB.DarkMatter") |> setView(-99, 31, zoom = 5)
+::: {.cell}
+::: {.cell-output-display}
+
+```{=html}
+<div id="htmlwidget-4df8a02cd82ef6e1390a" style="width:66vw;height:100vh;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4df8a02cd82ef6e1390a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addProviderTiles","args":["CartoDB.DarkMatter",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]}],"setView":[[31,-99],5,[]]},"evals":[],"jsHooks":[]}</script>
 ```
+
+:::
+:::
+
 :::
 This is a mermaid diagram @cr-map
 
