@@ -6,6 +6,9 @@
   padding-block-start: 10svh !important;
 }
 */
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
 .cr-section {
   display: grid;
   grid-template-rows: 1fr;
@@ -78,11 +81,11 @@
   transition: color 0.7s linear;
 }
 .cr-section .sticky-col .sticky-col-stack .cr-active.cr-hl-within div.line-block span[id^=lb].cr-hl {
-  color: rgb(0, 0, 0);
+  color: #D24699;
   transition: color 0.7s linear;
 }
 .cr-section .sticky-col .sticky-col-stack .cr-active.cr-hl-within div.line-block span[id^=lb] span.cr-hl {
-  color: rgb(0, 0, 0);
+  color: #D24699;
   transition: color 0.7s linear;
 }
 
@@ -260,9 +263,23 @@ body.cr-removeheaderspace #quarto-content main#quarto-document-content .quarto-t
   --cr-narrative-outer-margin: 5%;
   --cr-narrative-font-family: var(--bs-body-font-family);
   --cr-narrative-font-size: 1.15rem;
-  --cr-poem-font-family: Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  --cr-poem-font-family: Rubik;
   --cr-narrative-sidebar-width: 1fr;
-  --cr-section-background-color: #FFBF3C;
+  --cr-section-background-color: white;
 }
+
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+
+/* Apply Rubik to the entire document body */
+body {
+  font-family: 'Rubik', sans-serif !important;
+}
+
+/* Optional: Apply to headings as well */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Rubik', sans-serif !important;
+}
+
 
 /*# sourceMappingURL=closeread.css.map */

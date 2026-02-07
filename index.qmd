@@ -2,6 +2,11 @@
 format: closeread-html
 ---
 
+# The Geography of Care
+## A case study mobile care units in texas.
+
+### Introduction
+
 ::::{.cr-section layout="overlay-center"}
 
 :::{.progress-block}
@@ -12,6 +17,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+
+**Use the bar on the left to scroll through this story**
 :::
 
 :::{#cr-myimage}
@@ -20,9 +27,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 :::
 ::::
 
-::::{.column-screen-inset style="background-color: #dddddd; padding: 50px;"}
-Here's a little non-scrolling interlude before our next scrolly section!
-::::
+
 
 ::::{.cr-section}
 
@@ -32,7 +37,19 @@ This is a scatterplot. @cr-scatter
 ```{r}
 #| echo: false
 
-plot(mtcars$mpg, mtcars$dist)
+library(leaflet)
+library(leaflet.extras)
+library(sf)
+library(rmapshaper)
+library(htmlwidgets)
+
+
+texas_WRA <- st_read("J:/Shared drives/Policy & Research/Mobile Units/FPPWRA100.geojson", quiet=TRUE)
+texas_WRA <- st_transform(texas_WRA, 4326)
+texas_WRA <- ms_simplify(texas_WRA, keep = 0.05, keep_shapes = TRUE)
+
+
+plot(texas_WRA)
 ```
 :::
 
@@ -40,11 +57,23 @@ This is a histogram. @cr-hist
 
 :::{#cr-hist}
 ```{r}
+
+library(leaflet)
+library(leaflet.extras)
+library(sf)
+library(rmapshaper)
+library(htmlwidgets)
+
+
 #| echo: true
 #| fig-cap: "This is a caption."
 #| fig-height: 4
 
-hist(mtcars$mpg)
+texas_WRA <- st_read("J:/Shared drives/Policy & Research/Mobile Units/FPPWRA100.geojson", quiet=TRUE)
+texas_WRA <- st_transform(texas_WRA, 4326)
+texas_WRA <- ms_simplify(texas_WRA, keep = 0.05, keep_shapes = TRUE)
+
+hist(texas_WRA$FPP.per.1KWRA)
 ```
 :::
 
@@ -80,22 +109,63 @@ Let's look at a small limerick. @cr-mylimerick
 The phrase 'highlight this' is quite important here! [@cr-text]{hlz="cr-text1"}
 
 
-:::{#cr-map}
-```{r}
-library(leaflet)
-
-leaflet(height = "100vh", width  = "66vw") |> addProviderTiles("CartoDB.DarkMatter") |> setView(-99, 31, zoom = 5)
-```
-:::
-This is a mermaid diagram @cr-map
-
-::: {focus-on="cr-map"}
-Map 1 is active here.
-
-
-:::
-
 
 ::::
 
-# The End
+
+
+::::{.cr-section}
+@cr-map
+
+This map shows counties that <describe data formula>. Use the pan tool to view the map.  
+
+:::{#cr-map}
+```{r, message=FALSE}
+library(leaflet)
+library(leaflet.extras)
+library(sf)
+library(rmapshaper)
+library(htmlwidgets)
+
+center_lng <- -97.3; center_lat <- 31.0
+
+
+texas_WRA <- st_read("J:/Shared drives/Policy & Research/Mobile Units/FPPWRA100.geojson", quiet=TRUE)
+texas_WRA <- st_transform(texas_WRA, 4326)
+texas_WRA <- ms_simplify(texas_WRA, keep = 0.05, keep_shapes = TRUE)
+
+
+
+m <- leaflet(height = "100vh", width = "60vw") |>
+  setView(lng = center_lng, lat = center_lat, zoom = 6) |> 
+  addPolygons(
+    data = texas_WRA,
+    fillColor = "#53284F",
+    weight = 2, color = "white", fillOpacity = 1, stroke = TRUE,
+    highlightOptions = highlightOptions(
+      weight = 5, opacity = 1,
+      color = "#D24699"),
+    label = ~paste(" There are", texas_WRA$FPP.per.1000.WRA., "providers per 1000 women aged 15 to 49 in this county."),
+    # Add labelOptions here:
+    labelOptions = labelOptions(
+      textsize = "15px",                    # Quickest way to set size
+      style = list("font-weight" = "bold")  # Optional: make it stand out more
+    )
+  ) %>%
+  setMapWidgetStyle(list(background = "white")) # Use any valid CSS color or hex code
+m
+
+```
+
+::::
+
+
+| where high- population communities have few or sometimes no access to nearby
+| clinics providing essential services
+| like contraception, cancer screenings, and preventive care. Underfunding,
+| clinic closures,and restrictive and changing policies have widened these gaps,
+| leaving low-income, rural,
+
+::::
+
+
