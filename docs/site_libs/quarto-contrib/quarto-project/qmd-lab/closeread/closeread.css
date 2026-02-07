@@ -5,7 +5,6 @@
 .cr-section .narrative-col > *:first-child {
   padding-block-start: 10svh !important;
 }
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 */
 .cr-section {
   display: grid;
@@ -20,7 +19,6 @@
 .cr-section .narrative-col {
   grid-row: 1;
   font-family: var(--cr-narrative-font-family);
-  font-family: 'Rubik', sans-serif;
   font-size: var(--cr-narrative-font-size);
 }
 .cr-section .narrative-col .trigger {
@@ -81,12 +79,10 @@
 }
 .cr-section .sticky-col .sticky-col-stack .cr-active.cr-hl-within div.line-block span[id^=lb].cr-hl {
   color: rgb(0, 0, 0);
-  color: rgb(210, 70, 153);
   transition: color 0.7s linear;
 }
 .cr-section .sticky-col .sticky-col-stack .cr-active.cr-hl-within div.line-block span[id^=lb] span.cr-hl {
   color: rgb(0, 0, 0);
-  color: rgb(210, 70, 153);
   transition: color 0.7s linear;
 }
 
@@ -266,7 +262,7 @@ body.cr-removeheaderspace #quarto-content main#quarto-document-content .quarto-t
   --cr-narrative-font-size: 1.15rem;
   --cr-poem-font-family: Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
   --cr-narrative-sidebar-width: 1fr;
-  --cr-section-background-color: lightgrey;
+  --cr-section-background-color: #FFBF3C;
 }
 
 /*# sourceMappingURL=closeread.css.map */
