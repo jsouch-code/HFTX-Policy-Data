@@ -2,22 +2,22 @@
 format: closeread-html
 ---
 
-::::{.cr-section}
+::::{.cr-section layout="overlay-center"}
 
-# Test other sticky block types
+:::{.progress-block}
+Lorem ipsum. @cr-myimage
 
-First paragraph.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
 
-::: {}
-Welcome to my scrollytelling story. 
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
 :::
 
-:::{focus-on="cr-pink"}
-This is an test site.
+:::{#cr-myimage}
+![Caption goes here](txlandscape.jpeg)
+
 :::
-
-
-
 ::::
 
 ::::{.column-screen-inset style="background-color: #dddddd; padding: 50px;"}
