@@ -35,14 +35,8 @@ This is a scatterplot. @cr-scatter
 
 :::{#cr-scatter}
 ```{r}
+
 #| echo: false
-
-library(leaflet)
-library(leaflet.extras)
-library(sf)
-library(rmapshaper)
-library(htmlwidgets)
-
 
 texas_WRA <- st_read("J:/Shared drives/Policy & Research/Mobile Units/FPPWRA100.geojson", quiet=TRUE)
 texas_WRA <- st_transform(texas_WRA, 4326)
@@ -57,22 +51,14 @@ This is a histogram. @cr-hist
 
 :::{#cr-hist}
 ```{r}
-
-library(leaflet)
-library(leaflet.extras)
-library(sf)
-library(rmapshaper)
-library(htmlwidgets)
-
-
 #| echo: true
 #| fig-cap: "This is a caption."
 #| fig-height: 4
+#| 
 
 texas_WRA <- st_read("J:/Shared drives/Policy & Research/Mobile Units/FPPWRA100.geojson", quiet=TRUE)
 texas_WRA <- st_transform(texas_WRA, 4326)
 texas_WRA <- ms_simplify(texas_WRA, keep = 0.05, keep_shapes = TRUE)
-
 hist(texas_WRA$FPP.per.1KWRA)
 ```
 :::
