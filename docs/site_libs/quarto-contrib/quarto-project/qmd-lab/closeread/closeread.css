@@ -282,4 +282,66 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+
+@media (max-width: 768px) {
+
+  /* --- A) Full-bleed map --- */
+
+  /* Escape Quarto page gutters */
+  .page-columns,
+  .page-columns.page-full,
+  .page-columns.page-full > * {
+    grid-column: 1 / -1 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Make sticky map column full viewport width */
+  .cr-section.cr-column-screen .sticky-col,
+  .cr-section.cr-column-screen .sticky-col-stack {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: calc(-50vw + 50%) !important;
+    margin-right: calc(-50vw + 50%) !important;
+  }
+
+  /* Give Leaflet a real size */
+  .cr-section.cr-column-screen .leaflet-container {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 80vh !important;        /* tweak */
+    border-radius: 0 !important;
+    position: relative !important;
+  }
+
+  /* --- B) Make the map actually clickable --- */
+
+  /* Put the sticky/map layer ABOVE any overlay narrative layers */
+  .cr-section.cr-column-screen .sticky-col,
+  .cr-section.cr-column-screen .sticky-col-stack,
+  .cr-section.cr-column-screen .leaflet-container {
+    z-index: 9999 !important;
+  }
+
+  /* The narrative layer is the touch blocker: make it click-through */
+  .cr-section.cr-column-screen .narrative-col {
+    pointer-events: none !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  /* But keep the actual story blocks interactive */
+  .cr-section.cr-column-screen .narrative-col .trigger,
+  .cr-section.cr-column-screen .narrative-col .trigger * {
+    pointer-events: auto !important;
+  }
+
+  /* Mobile touch behavior for Leaflet */
+  .leaflet-container {
+    touch-action: pan-x pan-y !important;
+  }
+}
+
+
+
 /*# sourceMappingURL=closeread.css.map */

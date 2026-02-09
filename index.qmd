@@ -111,9 +111,7 @@ The phrase 'highlight this' is quite important here! [@cr-text]{hlz="cr-text1"}
 
 
 ::::{.cr-section layout="overlay-left"}
-@cr-map
-
-This map shows counties that <describe data formula>. Use the pan tool to view the map.  
+@cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.  
 
 :::{#cr-map}
 ```{r, message=FALSE}
