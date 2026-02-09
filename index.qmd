@@ -67,7 +67,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 
 
-::::{.cr-section layout="overlay-left"}
+::::{.cr-section layout="sidebar-left"}
 
 This is a scatterplot. @cr-scatter
 
@@ -110,7 +110,7 @@ The phrase 'highlight this' is quite important here! [@cr-text]{hlz="cr-text1"}
 
 
 
-::::{.cr-section layout="overlay-left"}
+::::{.cr-section layout="sidebar-left"}
 @cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.  
 
 :::{#cr-map}
