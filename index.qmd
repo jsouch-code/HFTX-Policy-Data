@@ -21,14 +21,41 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 **Use the bar on the left to scroll through this story**
 :::
 
-
 ::: {#cr-myimage}
-```{r, echo=FALSE}
-htmltools::HTML(
-  '<video autoplay muted controls playsinline style="width:100%; max-width:100vw;">
-     <source src="output_video.mp4" type="video/mp4">
-   </video>'
-)
+```{=html}
+
+
+<style>
+.hero-video {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-video video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+}
+</style>
+
+<div class="hero-video">
+  <video autoplay muted loop playsinline preload="auto">
+    <source src="output_video.mp4" type="video/mp4">
+  </video>
+</div>
+
+
+
+
+
 ```
 
 :::
@@ -40,41 +67,11 @@ htmltools::HTML(
 
 
 
-::::{.cr-section}
+::::{.cr-section layout="overlay-left"}
 
 This is a scatterplot. @cr-scatter
 
-:::{#cr-scatter}
-```{r}
 
-#| echo: false
-
-library(sf)
-library(rmapshaper)
-texas_WRA <- st_read("J:/Shared drives/Policy & Research/Mobile Units/FPPWRA100.geojson", quiet=TRUE)
-texas_WRA <- st_transform(texas_WRA, 4326)
-texas_WRA <- ms_simplify(texas_WRA, keep = 0.05, keep_shapes = TRUE)
-
-
-plot(texas_WRA)
-```
-:::
-
-This is a histogram. @cr-hist
-
-:::{#cr-hist}
-```{r}
-#| echo: true
-#| fig-cap: "This is a caption."
-#| fig-height: 4
-#| 
-
-texas_WRA <- st_read("J:/Shared drives/Policy & Research/Mobile Units/FPPWRA100.geojson", quiet=TRUE)
-texas_WRA <- st_transform(texas_WRA, 4326)
-texas_WRA <- ms_simplify(texas_WRA, keep = 0.05, keep_shapes = TRUE)
-hist(texas_WRA$FPP.per.1KWRA)
-```
-:::
 
 This is a poem. It's called ["Bellringer", by Rita Dove](https://www.newyorker.com/culture/2019-in-review/our-year-in-poems). @cr-intro
 
@@ -113,7 +110,7 @@ The phrase 'highlight this' is quite important here! [@cr-text]{hlz="cr-text1"}
 
 
 
-::::{.cr-section}
+::::{.cr-section layout="overlay-left"}
 @cr-map
 
 This map shows counties that <describe data formula>. Use the pan tool to view the map.  
