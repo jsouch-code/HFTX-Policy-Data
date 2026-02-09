@@ -7,7 +7,7 @@ format: closeread-html
 
 ### Introduction
 
-::::{.cr-section layout="overlay-center"}
+::::{.cr-section layout="overlay-left"}
 
 :::{.progress-block}
 Lorem ipsum. @cr-myimage
