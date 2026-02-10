@@ -4,7 +4,7 @@ format: closeread-html
 
 
 ::: {style="text-align: center;"}
-![](twhc-logo.png){width="10vw"}
+![](twhc-logo.jpg){width="10vw"}
 :::
 
 
