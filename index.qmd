@@ -68,7 +68,6 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 
 ```
-
 :::
 
 
@@ -127,7 +126,7 @@ The author refers to their birth twice: one here... [@cr-intro]{hlz="cr-h1,cr-h2
 @cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.  
 
 :::{#cr-map}
-```{r, message=FALSE}
+```{r map, message=FALSE}
 library(leaflet)
 library(leaflet.extras)
 library(sf)
@@ -232,17 +231,57 @@ More text... [@cr-text1]{hlz="cr-h3,cr-h4"}
 
 ### Section 7: On the ground
 
+::::{.cr-section layout="overlay-left"}
+
+:::{.progress-block}
+Lorem ipsum. @cr-myvid
+
+Lorem ipsum dolor sit amet, consectetur adipiscinge elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+
+**Use the bar on the left to scroll through this story**
+:::
+
+
+::: {#cr-myvid}
 ```{=html}
 
-<iframe
-  src="twhc_tour.mp4"
-  width="100%"
-  height="450"
-  frameborder="0"
-  allow="autoplay; encrypted-media; picture-in-picture"
-  allowfullscreen>
-</iframe>
+
+<style>
+.hero-video {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-video video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+}
+</style>
+
+<div class="hero-video">
+  <video autoplay muted loop playsinline preload="auto">
+    <source src="twhc_tour.mp4" type="video/mp4">
+  </video>
+</div>
+
+
+
+
 
 ```
+:::
 
-### Section 8: What’s next
+::::
