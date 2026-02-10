@@ -2,31 +2,28 @@
 format: closeread-html
 ---
 
-
 ::: {style="text-align: center;"}
 ![](twhc-logo.jpg){width="10vw"}
 :::
 
-
 # THE GEOGRAPHY OF HEALTHCARE
-##  MOBILE WOMEN’S HEALTH CLINICS IN TEXAS
+
+## MOBILE WOMEN’S HEALTH CLINICS IN TEXAS
 
 ### Highlighting Need
 
-::::{.cr-section layout="overlay-left"}
-
-:::{.progress-block}
+:::::: {.cr-section layout="overlay-left"}
+::: progress-block
 Lorem ipsum. @cr-myimage
 
-Lorem ipsum dolor sit amet, consectetur adipiscinge elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+Lorem ipsum dolor sit amet, consectetur adipiscinge elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
 
 **Use the bar on the left to scroll through this story**
 :::
-
 
 ::: {#cr-myimage1}
 ![](txlandscape.jpeg)
@@ -66,32 +63,22 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 
 
-
 ```
 :::
+::::::
 
-
-
-
-::::
-
-
-
-::::{.cr-section layout="overlay-left"}
-
+::: {.cr-section layout="overlay-left"}
 This is a scatterplot. @cr-scatter
-
-
 
 This is a poem. It's called ["Bellringer", by Rita Dove](https://www.newyorker.com/culture/2019-in-review/our-year-in-poems). @cr-intro
 
-| {#cr-intro .cr-text  .scale-to-fill}
+| {#cr-intro .cr-text .scale-to-fill}
 | Across the [268,597 square miles of Texas]{#cr-h1}
-| access to women’s 
-| healthcare is deeply uneven. 
-| Large regions of the state function 
-| as [“healthcare deserts,”]{#cr-h2} 
-| where high- population communities 
+| access to women’s
+| healthcare is deeply uneven.
+| Large regions of the state function
+| as [“healthcare deserts,”]{#cr-h2}
+| where high- population communities
 | have few or sometimes no access to nearby
 | clinics providing essential services
 | like contraception, cancer screenings,
@@ -100,32 +87,25 @@ This is a poem. It's called ["Bellringer", by Rita Dove](https://www.newyorker.c
 | changing policies have widened these gaps,
 | leaving low-income, rural,
 | and underserved Texans facing
-| [long travel distances]{#cr-b1}, 
+| [long travel distances]{#cr-b1},
 | limited transportation options, and
-| months-long wait times. These barriers make timely, 
+| months-long wait times. These barriers make timely,
 | comprehensive healthcare out of reach
 | for many, underscoring the urgent need for
 | solutions that meet people where they are.
 | That’s where mobile health care units come in
 
+The author refers to their birth twice: one here... @cr-intro
 
-The author refers to their birth twice: one here... [@cr-intro]{hlz="cr-h1,cr-h2"}
-
-
-
-
-
-... ADD SOME TEXT. [@cr-intro]{hlz="cr-b1,cr-b2"}
-
-::::
+... ADD SOME TEXT. @cr-intro
+:::
 
 ### Section 2: Expand on need.
 
+:::: {.cr-section layout="overlay-left"}
+@cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.
 
-::::{.cr-section layout="overlay-left"}
-@cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.  
-
-:::{#cr-map}
+::: {#cr-map}
 ```{r map, message=FALSE}
 library(leaflet)
 library(leaflet.extras)
@@ -200,51 +180,38 @@ m
 
 
 ```
-::::
+:::
 ::::
 
 ### Section 3: Maternal/sexual health outcomes
 
-::::{.cr-section layout="overlay-left"}
+::: {.cr-section layout="overlay-left"}
+This is a text. @cr-intro
 
-
-This is a text.  @cr-intro
-
-| {#cr-text1 .cr-text  .scale-to-fill}
+| {#cr-text1 .cr-text .scale-to-fill}
 | Across Texas, [1.75 million women]{#cr-h3} in need live in
 | contraceptive deserts, where access to affordable birth control
-| is limited or nonexistent. 
+| is limited or nonexistent.
 | In [153,040 women]{#cr-h4} live in counties without a
 | single health center offering a full range of birth control methods.
 
-
-More text... [@cr-text1]{hlz="cr-h3,cr-h4"}
-
-
-::::
+More text... @cr-text1
+:::
 
 ### Section 4: Introduce the concept of mobile clinics
 
 ### Section 5: Legislation
 
-### Section 6: On the road 
+### Section 6: On the road
 
 ### Section 7: On the ground
 
-::::{.cr-section layout="overlay-left"}
-
-:::{.progress-block}
-Lorem ipsum. @cr-myvid
-
-Lorem ipsum dolor sit amet, consectetur adipiscinge elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+::::: {.cr-section layout="overlay-left"}
+::: progress-block
+@cr-myvid
 
 **Use the bar on the left to scroll through this story**
 :::
-
 
 ::: {#cr-myvid}
 ```{=html}
@@ -252,36 +219,34 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 <style>
 .hero-video {
-  position: relative;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  margin-left: calc(50% - 50vw);
+  background: #FFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.hero-video video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  transform: translate(-50%, -50%);
-  object-fit: cover;
+.hero-video iframe {
+  width: min(100vw, calc(100vh * (16/9)));
+  height: min(100vh, calc(100vw * (9/16)));
+  border: 0;
 }
 </style>
 
 <div class="hero-video">
-  <video autoplay muted loop playsinline preload="auto">
-    <source src="twhc_tour.mp4" type="video/mp4">
-  </video>
+  <iframe
+    src="https://www.youtube.com/embed/rwSMgGkb8sI?autoplay=1&mute=0&playsinline=1&controls=0&modestbranding=1&rel=0"
+    allow="autoplay; encrypted-media"
+    allowfullscreen>
+  </iframe>
 </div>
-
-
 
 
 
 ```
 :::
+:::::
 
-::::
+### Section 7: On the ground
