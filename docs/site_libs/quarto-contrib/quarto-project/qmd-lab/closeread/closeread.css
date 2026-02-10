@@ -78,15 +78,15 @@
 }
 .cr-section .sticky-col .sticky-col-stack .cr-active.cr-hl-within div.line-block span[id^=lb] {
   color: rgba(0, 0, 0, 0.4);
-  transition: color 0.7s linear;
+  transition: color 1s linear;
 }
 .cr-section .sticky-col .sticky-col-stack .cr-active.cr-hl-within div.line-block span[id^=lb].cr-hl {
   color: #D24699;
-  transition: color 0.7s linear;
+  transition: color 1s linear;
 }
 .cr-section .sticky-col .sticky-col-stack .cr-active.cr-hl-within div.line-block span[id^=lb] span.cr-hl {
   color: #D24699;
-  transition: color 0.7s linear;
+  transition: color 1s linear;
 }
 
 /* mobile sizing (bootstrap: xs) is always overlay-center */
@@ -253,7 +253,7 @@ body.cr-removeheaderspace #quarto-content main#quarto-document-content .quarto-t
 
 /* configurable style variables. use bootstrap variables where possible */
 :root {
-  --cr-narrative-background-color-overlay: #708090e1;
+  --cr-narrative-background-color-overlay: #0075a9;
   --cr-narrative-text-color-overlay: white;
   --cr-narrative-background-color-sidebar: transparent;
   --cr-narrative-text-color-sidebar: black;
