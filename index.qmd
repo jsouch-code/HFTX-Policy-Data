@@ -235,7 +235,7 @@ More text... [@cr-text1]{hlz="cr-h3,cr-h4"}
 ```{=html}
 
 <iframe
-  src="https://www.youtube.com/embed/rwSMgGkb8sI?autoplay=1&mute=1&playsinline=1&loop=1&playlist=rwSMgGkb8sI"
+  src="twhc_tour.mp4"
   width="100%"
   height="450"
   frameborder="0"
