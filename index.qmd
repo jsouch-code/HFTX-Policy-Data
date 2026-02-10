@@ -209,7 +209,6 @@ m
 ::::{.cr-section layout="overlay-left"}
 
 
-
 This is a text.  @cr-intro
 
 | {#cr-text1 .cr-text  .scale-to-fill}
