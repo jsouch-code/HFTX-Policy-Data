@@ -114,6 +114,7 @@ The phrase 'highlight this' is quite important here! [@cr-text]{hlz="cr-text1"}
 
 ::::
 
+## Care on the map.
 
 
 ::::{.cr-section layout="overlay-left"}
@@ -130,30 +131,68 @@ library(htmlwidgets)
 center_lng <- -97.3; center_lat <- 31.0
 
 
-texas_WRA <- st_read("J:/Shared drives/Policy & Research/Mobile Units/FPPWRA100.geojson", quiet=TRUE)
-texas_WRA <- st_transform(texas_WRA, 4326)
-texas_WRA <- ms_simplify(texas_WRA, keep = 0.05, keep_shapes = TRUE)
+
+texas_map <- st_read("HTWFFPProvidersPerK.geojson", quiet=TRUE)
+texas_map <- st_transform(texas_map, 4326)
+texas_map <- ms_simplify(texas_map, keep = 0.05, keep_shapes = TRUE)
+
+providers <- st_read("ProviderLocations.geojson", quiet=TRUE)
+providers <- st_transform(providers, 4326)
+
+texas_map$Providers.per.1000_num <- as.numeric(texas_map$Providers.per.1000)
+
+# Recreate filled variable deterministically
+texas_map$Providers.per.1000_filled <- texas_map$Providers.per.1000
+min_val <- min(texas_map$Providers.per.1000_filled, na.rm = TRUE)
+texas_map$Providers.per.1000_filled[is.na(texas_map$Providers.per.1000_filled)] <- min_val
+
+# Palette (your brand color)
+pal <- colorNumeric(
+  palette = c("#E6D9E4", "#53284F"),
+  domain  = texas_map$Providers.per.1000_filled
+)
 
 
 
-m <- leaflet(height = "100vh", width = "60vw") |>
-  setView(lng = center_lng, lat = center_lat, zoom = 6) |> 
+
+m <- leaflet(height = "100vh", width = "68vw") |>
+  setView(lng = center_lng-5.2, lat = center_lat, zoom = 6.45) |>
   addPolygons(
-    data = texas_WRA,
-    fillColor = "#53284F",
-    weight = 2, color = "white", fillOpacity = 1, stroke = TRUE,
+    data = texas_map,
+    fillColor = ~pal(Providers.per.1000_filled),
+    weight = 2,
+    color = "white",
+    fillOpacity = 1,
+    stroke = TRUE,
     highlightOptions = highlightOptions(
-      weight = 5, opacity = 1,
-      color = "#D24699"),
-    label = ~paste(" There are", texas_WRA$FPP.per.1000.WRA., "providers per 1000 women aged 15 to 49 in this county."),
-    # Add labelOptions here:
+      weight = 5,
+      opacity = 1,
+      color = "#D24699"
+    ),
+    label = ~paste(
+      "There are",
+      round(Providers.per.1000_filled, 2),
+      "providers per 1,000 women aged 15–49 in this county."
+    ),
     labelOptions = labelOptions(
-      textsize = "15px",                    # Quickest way to set size
-      style = list("font-weight" = "bold")  # Optional: make it stand out more
+      textsize = "15px",
+      style = list(
+        "font-weight" = "bold",
+        "padding" = "6px"
+      )
     )
-  ) %>%
-  setMapWidgetStyle(list(background = "white")) # Use any valid CSS color or hex code
+  ) |>
+  addLegend(
+    pal = pal,
+    values = texas_map$Providers.per.1000_filled,
+    title = "Providers per 1,000 women (15–49)",
+    opacity = 1
+  ) |>
+  setMapWidgetStyle(list(background = "white"))
+
 m
+
+
 
 ```
 
