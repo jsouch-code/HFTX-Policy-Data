@@ -12,18 +12,16 @@ format: closeread-html
 
 ### Highlighting Need
 
-Across the 268,597 square miles of Texas, access to women’s healthcare is deeply uneven. Large regions of the state function as “healthcare deserts,” where high- population communities have few or sometimes no access to nearby clinics providing essential services like contraception, cancer screenings, and preventive care. Many rural Texans face long travel distances, limited transportation options, and months-long wait times. 
+Across the 268,597 square miles of Texas, access to women’s healthcare is deeply uneven. Large regions of the state function as “healthcare deserts,” where high- population communities have few or sometimes no access to nearby clinics providing essential services like contraception, cancer screenings, and preventive care. Many rural Texans face long travel distances, limited transportation options, and months-long wait times.
 
+| {#cr-intro .cr-text .scale-to-fill}
+| Across the [268,597 square miles of Texas]{#cr-h1}
 
 :::::: {.cr-section layout="overlay-left"}
 ::: progress-block
-Lorem ipsum. @cr-myimage
+These barriers make timely, comprehensive healthcare out of reach for many, underscoring the urgent need for solutions that meet people where they are. @cr-myimage
 
-Lorem ipsum dolor sit amet, consectetur adipiscinge elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+That’s where mobile health care units come in.
 
 **Use the bar on the left to scroll through this story**
 :::
@@ -65,14 +63,11 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 
 
-
 ```
 :::
 ::::::
 
 ::: {.cr-section layout="overlay-left"}
-This is a scatterplot. @cr-scatter
-
 This is a poem. It's called ["Bellringer", by Rita Dove](https://www.newyorker.com/culture/2019-in-review/our-year-in-poems). @cr-intro
 
 | {#cr-intro .cr-text .scale-to-fill}
@@ -240,12 +235,11 @@ More text... @cr-text1
 
 <div class="hero-video">
   <iframe
-    src="https://www.youtube.com/embed/rwSMgGkb8sI?autoplay=1&mute=0&playsinline=1&controls=0&modestbranding=1&rel=0"
+    src="https://www.youtube.com/embed/rwSMgGkb8sI?autoplay=&mute=0&playsinline=1&controls=0&modestbranding=1&rel=0"
     allow="autoplay; encrypted-media"
     allowfullscreen>
   </iframe>
 </div>
-
 
 
 ```
