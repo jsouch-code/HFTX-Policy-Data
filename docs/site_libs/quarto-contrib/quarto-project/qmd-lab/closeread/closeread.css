@@ -78,15 +78,15 @@
 }
 .cr-section .sticky-col .sticky-col-stack .cr-active.cr-hl-within div.line-block span[id^=lb] {
   color: rgba(0, 0, 0, 0.4);
-  transition: color 1s linear;
+  transition: color 0.7s linear;
 }
 .cr-section .sticky-col .sticky-col-stack .cr-active.cr-hl-within div.line-block span[id^=lb].cr-hl {
   color: #D24699;
-  transition: color 1s linear;
+  transition: color 0.7s linear;
 }
 .cr-section .sticky-col .sticky-col-stack .cr-active.cr-hl-within div.line-block span[id^=lb] span.cr-hl {
   color: #D24699;
-  transition: color 1s linear;
+  transition: color 0.7s linear;
 }
 
 /* mobile sizing (bootstrap: xs) is always overlay-center */
@@ -253,7 +253,7 @@ body.cr-removeheaderspace #quarto-content main#quarto-document-content .quarto-t
 
 /* configurable style variables. use bootstrap variables where possible */
 :root {
-  --cr-narrative-background-color-overlay: #0075a9;
+  --cr-narrative-background-color-overlay: #0075A9E6;
   --cr-narrative-text-color-overlay: white;
   --cr-narrative-background-color-sidebar: transparent;
   --cr-narrative-text-color-sidebar: black;
@@ -279,37 +279,6 @@ body {
 /* Optional: Apply to headings as well */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Rubik', sans-serif !important;
-}
-
-
-/* MOBILE ONLY: make sticky map span full viewport width */
-@media (max-width: 768px) {
-
-  /* 1) Break the Quarto page grid */
-  .page-columns,
-  .page-columns.page-full,
-  .page-columns.page-full > * {
-    grid-column: 1 / -1 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  /* 2) Force closeread sticky column full width */
-  .cr-section.cr-column-screen .sticky-col,
-  .cr-section.cr-column-screen .sticky-col-stack {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    margin-left: calc(-50vw + 50%) !important;
-    margin-right: calc(-50vw + 50%) !important;
-  }
-
-  /* 3) Full-bleed Leaflet container */
-  .cr-section.cr-column-screen .leaflet-container {
-    width: 100vw !important;
-    height: 80vh !important;   /* adjust as needed */
-    max-width: 100vw !important;
-    border-radius: 0 !important;
-  }
 }
 
 

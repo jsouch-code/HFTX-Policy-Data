@@ -12,16 +12,16 @@ format: closeread-html
 
 ### Highlighting Need
 
-Across the 268,597 square miles of Texas, access to women’s healthcare is deeply uneven. Large regions of the state function as “healthcare deserts,” where high- population communities have few or sometimes no access to nearby clinics providing essential services like contraception, cancer screenings, and preventive care. Many rural Texans face long travel distances, limited transportation options, and months-long wait times.
+Across the 268,597 square miles of Texas, access to women’s healthcare is deeply uneven. Large regions of the state function as “healthcare deserts,” where high- population communities have few or sometimes no access to nearby clinics providing essential services like contraception, cancer screenings, and preventive care. Many rural Texans face long travel distances, limited transportation options, and months-long wait times. 
 
-| {#cr-intro .cr-text .scale-to-fill}
-| Across the [268,597 square miles of Texas]{#cr-h1}
 
 :::::: {.cr-section layout="overlay-left"}
 ::: progress-block
+
+
 These barriers make timely, comprehensive healthcare out of reach for many, underscoring the urgent need for solutions that meet people where they are. @cr-myimage
 
-That’s where mobile health care units come in.
+That’s where mobile health care units come in. 
 
 **Use the bar on the left to scroll through this story**
 :::
@@ -63,43 +63,43 @@ That’s where mobile health care units come in.
 
 
 
+
 ```
 :::
 ::::::
 
-::: {.cr-section layout="overlay-left"}
-This is a poem. It's called ["Bellringer", by Rita Dove](https://www.newyorker.com/culture/2019-in-review/our-year-in-poems). @cr-intro
 
-| {#cr-intro .cr-text .scale-to-fill}
-| Across the [268,597 square miles of Texas]{#cr-h1}
-| access to women’s
-| healthcare is deeply uneven.
-| Large regions of the state function
-| as [“healthcare deserts,”]{#cr-h2}
-| where high- population communities
-| have few or sometimes no access to nearby
-| clinics providing essential services
-| like contraception, cancer screenings,
-| and preventive care. Underfunding,
-| clinic closures,and restrictive and
-| changing policies have widened these gaps,
-| leaving low-income, rural,
-| and underserved Texans facing
-| [long travel distances]{#cr-b1},
-| limited transportation options, and
-| months-long wait times. These barriers make timely,
-| comprehensive healthcare out of reach
-| for many, underscoring the urgent need for
-| solutions that meet people where they are.
-| That’s where mobile health care units come in
 
-The author refers to their birth twice: one here... @cr-intro
 
-... ADD SOME TEXT. @cr-intro
-:::
+### Section 2: Health Outcomes.
 
-### Section 2: Expand on need.
+::::{.cr-section layout="overlay-left"}
 
+
+Learn more. @cr-mytext1
+
+
+| {#cr-mytext1 .cr-text .scale-to-fill}
+| The impact on women’s health has been
+| especially severe. Nearly half of
+| Texas counties (46.5%) are classified as
+| [maternity care deserts]{#cr-t1}, 
+| meaning they lack access to
+| birthing facilities
+| or maternity care providers altogether.
+| For thousands of women, even basic
+| pregnancy care requires
+| traveling far from home,
+| [4.6% of Texas women]{#cr-t2} live
+| more than 30 minutes from
+| the nearest birthing hospital. 
+|                               
+This is quite important here! [@cr-mytext1]{hlz="cr-t1,cr-t2"}
+
+::::
+
+
+### Section 3: Mapping Need.
 :::: {.cr-section layout="overlay-left"}
 @cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.
 
@@ -181,34 +181,28 @@ m
 :::
 ::::
 
-### Section 3: Maternal/sexual health outcomes
-
-::: {.cr-section layout="overlay-left"}
-This is a text. @cr-intro
-
-| {#cr-text1 .cr-text .scale-to-fill}
-| Across Texas, [1.75 million women]{#cr-h3} in need live in
-| contraceptive deserts, where access to affordable birth control
-| is limited or nonexistent.
-| In [153,040 women]{#cr-h4} live in counties without a
-| single health center offering a full range of birth control methods.
-
-More text... @cr-text1
-:::
-
 ### Section 4: Introduce the concept of mobile clinics
+
+Mobile healthcare units are designed to close gaps by bringing services directly to patients and communities, especially in rural areas. Mobile clinics reduce the distance, time, and cost barriers that prevent many women from accessing care. Mobile clinics set up in trusted community spaces and adapt their routes based on need. They offer a flexible, efficient way to deliver essential women’s health services, such as birth control, cancer screenings, prenatal care, and preventive visits. For women who don’t have reliable access to transportation, mobile clinics can be a literal lifeline. When speaking to patients, they praise the convenience, as they are no longer required to travel hours from home, miss work, school, or childcare. Mobile clinics don’t just expand access; they help ensure care happens earlier, more consistently, and on patients’ terms. 
 
 ### Section 5: Legislation
 
+::: {#cr-myimage1}
+![](txcapitol.gif)
+:::
+
+During the 89th Legislative Session, the Texas Women’s Healthcare Coalition and its partners secured $20 million in new state funding to expand mobile women's health units across Texas, doubling down on a commitment to meet women where they are. This investment represents $10 million more than the amount secured in 2023, signaling growing legislative recognition of mobile healthcare as a critical solution to access gaps. This funding is the direct result of sustained, collective advocacy and a willingness by providers to find innovative solutions to reach the counties around them.
+
 ### Section 6: On the road
+
+A single mobile health unit can extend care across multiple counties that aren’t served by brick-and-mortar clinics. This map illustrates how mobile units move across regions with limited or no permanent healthcare infrastructures, reaching women who would otherwise face transportation barriers, or even no access at all. 
+
 
 ### Section 7: On the ground
 
 ::::: {.cr-section layout="overlay-left"}
 ::: progress-block
 @cr-myvid
-
-**Use the bar on the left to scroll through this story**
 :::
 
 ::: {#cr-myvid}
@@ -240,6 +234,7 @@ More text... @cr-text1
     allowfullscreen>
   </iframe>
 </div>
+
 
 
 ```
