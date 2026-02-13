@@ -247,10 +247,7 @@ Learn more. @cr-mytext2
 
 
 | {#cr-mytext2 .cr-text .scale-to-fill}
-| "Now we're able to do a
-| [full clinic]{#cr-t1},
-| just like a brick-and-mortar clinic, 
-| [just on wheels]{#cr-t2}."
+| "Now we're able to do a [full clinic]{#cr-t1}, just like a brick-and-mortar clinic, [just on wheels]{#cr-t2}."
 | — Dr. Perales, DNP, APRN, CNS-BC
 | Clinic Service Director, STFPHC
 |                               
