@@ -73,7 +73,7 @@ That’s where mobile health care units come in.
 
 ### Section 2: Health Outcomes.
 
-::::{.cr-section layout="overlay-left"}
+::::{.cr-section layout="overlay-left" .quote-section}
 
 
 Learn more. @cr-mytext1
@@ -200,47 +200,60 @@ A single mobile health unit can extend care across multiple counties that aren�
 
 ### Section 7: On the ground
 
-::::: {.cr-section layout="overlay-left"}
-::: progress-block
-@cr-myvid
-:::
 
-::: {#cr-myvid}
+
+::: {.column-screen}
 ```{=html}
 
-
 <style>
-.hero-video {
-  width: 100vw;
-  height: 100vh;
-  margin-left: calc(50% - 50vw);
-  background: #FFFFF;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+/* remove default padding that creates the “white gutter” */
+.column-screen { padding-left: 0 !important; padding-right: 0 !important; }
+.column-screen > * { margin-left: 0 !important; margin-right: 0 !important; }
 
-.hero-video iframe {
-  width: min(100vw, calc(100vh * (16/9)));
-  height: min(100vh, calc(100vw * (9/16)));
+.video-wrap{
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 100vh;
+  position: relative;
+  background: #0075A9E6;
+}
+.video-wrap iframe{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   border: 0;
 }
 </style>
 
-<div class="hero-video">
+<div class="video-wrap">
   <iframe
-    src="https://www.youtube.com/embed/rwSMgGkb8sI?autoplay=&mute=0&playsinline=1&controls=0&modestbranding=1&rel=0"
-    allow="autoplay; encrypted-media"
+    src="https://www.youtube.com/embed/rwSMgGkb8sI?controls=0&modestbranding=1&rel=0&playsinline=1"
+    allow="encrypted-media; picture-in-picture"
     allowfullscreen>
   </iframe>
 </div>
 
 
-
 ```
 :::
-:::::
 
-### Section 7: On the ground
 
-Test text.
+
+::::{.cr-section layout="overlay-left" .quote-section}
+
+
+Learn more. @cr-mytext2
+
+
+| {#cr-mytext2 .cr-text .scale-to-fill}
+| "Now we're able to do a
+| [full clinic]{#cr-t1},
+| just like a brick-and-mortar clinic, 
+| [just on wheels]{#cr-t2}."
+| — Dr. Perales, DNP, APRN, CNS-BC
+| Clinic Service Director, STFPHC
+|                               
+Scroll on. [@cr-mytext2]{hlz="cr-t1,cr-t2"}
+
+::::

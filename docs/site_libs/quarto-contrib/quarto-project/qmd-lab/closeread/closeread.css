@@ -281,6 +281,39 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Rubik', sans-serif !important;
 }
 
-/*test*/
+
+
+/* HARD override: paint everything inside this section */
+.quote-section,
+.quote-section * {
+  /* don't set background here; too aggressive */
+}
+
+/* Section background (some layouts use this) */
+.quote-section {
+  background: #FFBF3C !important;
+}
+
+/* Common closeread containers that may hold the visible background */
+.quote-section .cr-content,
+.quote-section .cr-sticky,
+.quote-section .cr-overlay,
+.quote-section .cr-overlay-content,
+.quote-section .cr-panel,
+.quote-section .cr-viewport {
+  background: #FFBF3C!important;
+  color: #fff !important;
+}
+
+/* Quote block itself (often has its own background) */
+.quote-section .cr-text,
+.quote-section blockquote,
+.quote-section .quote,
+.quote-section .callout {
+  background: transparent !important;
+  color: #fff !important;
+}
+
+
 
 /*# sourceMappingURL=closeread.css.map */
