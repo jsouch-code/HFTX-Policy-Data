@@ -101,6 +101,8 @@ Learn more. @cr-mytext1
   let currentMode = "population";
 
   function setMode(mode){
+    if (mode !== "providers") mode = "population";
+    if (mode === currentMode && window._txMap && window._txMap.layerManager) return;
     currentMode = mode;
 
     if (!window._txMap || !window._txMap.layerManager) return;
@@ -119,48 +121,55 @@ Learn more. @cr-mytext1
     }
   }
 
+  const mapTriggers = Array.from(document.querySelectorAll('.new-trigger[data-map-mode]'));
+  if (mapTriggers.length === 0) return;
+
+  // Pick whichever trigger center is closest to viewport center.
+  function updateModeFromScroll(){
+    const viewportMid = window.innerHeight / 2;
+    let bestEl = null;
+    let bestDistance = Infinity;
+
+    mapTriggers.forEach(function(el){
+      const rect = el.getBoundingClientRect();
+      const center = rect.top + rect.height / 2;
+      const distance = Math.abs(center - viewportMid);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestEl = el;
+      }
+    });
+
+    if (!bestEl) return;
+    setMode(bestEl.getAttribute('data-map-mode') || 'population');
+  }
+
   // Keep trying briefly until htmlwidgets has initialized the map.
   let attempts = 0;
   const timer = setInterval(function(){
     attempts += 1;
-    setMode(currentMode);
-    if (window._txMap || attempts >= 60) clearInterval(timer);
+    updateModeFromScroll();
+    if ((window._txMap && window._txMap.layerManager) || attempts >= 80) {
+      clearInterval(timer);
+    }
   }, 150);
 
-  const mapTriggers = Array.from(document.querySelectorAll('.new-trigger[data-map-mode]'));
-  if (mapTriggers.length === 0) return;
-
-  if (window.scrollama) {
-    const scroller = window.scrollama();
-    scroller
-      .setup({ step: '.new-trigger[data-map-mode]', offset: 0.5, progress: false })
-      .onStepEnter(function(step){
-        const mode = step.element.getAttribute('data-map-mode') || 'population';
-        setMode(mode);
-      });
-    window.addEventListener('resize', function(){ scroller.resize(); });
-  } else if (window.IntersectionObserver) {
-    const ratios = new Map();
-    const observer = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){ ratios.set(entry.target, entry.intersectionRatio); });
-      let bestEl = null;
-      let bestRatio = 0;
-      mapTriggers.forEach(function(el){
-        const ratio = ratios.get(el) || 0;
-        if (ratio > bestRatio) {
-          bestRatio = ratio;
-          bestEl = el;
-        }
-      });
-      if (!bestEl || bestRatio < 0.35) return;
-      setMode(bestEl.getAttribute('data-map-mode') || 'population');
-    }, { threshold: [0.2, 0.35, 0.6, 0.8] });
-
-    mapTriggers.forEach(function(el){ observer.observe(el); });
+  let ticking = false;
+  function onScrollOrResize(){
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function(){
+      updateModeFromScroll();
+      ticking = false;
+    });
   }
 
-  // Default map state should match the first trigger.
-  setMode('population');
+  window.addEventListener('scroll', onScrollOrResize, { passive: true });
+  window.addEventListener('resize', onScrollOrResize);
+  window.addEventListener('load', updateModeFromScroll);
+
+  // Default map state should match the nearest trigger on load.
+  updateModeFromScroll();
 })();
 </script>
 ```
