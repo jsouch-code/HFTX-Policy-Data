@@ -86,20 +86,24 @@ Learn more. @cr-mytext1
 :::: {.cr-section layout="sidebar-left"}
 @cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.
 
-## Trigger: Population Need {#map-population}
-Focus on county-level population estimates for women ages 15-49.
-
-## Trigger: Provider Availability {#map-providers}
-Switch to provider density and locations for FPP and HTW providers.
-
-
 ```{=html}
-<script>
-// Switch Leaflet groups (and grouped legends) based on the visible closeread trigger.
-(function(){
-  function setMode(mode){
-    if (!window._txMap || !window._txMap.layerManager) return;
+<div class="trigger new-trigger" data-focus-on="cr-map" data-map-mode="population">
+<p><strong>Population Need:</strong> Focus on county-level population estimates for women ages 15-49.</p>
+</div>
 
+<div class="trigger new-trigger" data-focus-on="cr-map" data-map-mode="providers">
+<p><strong>Provider Availability:</strong> Switch to provider density and locations for FPP and HTW providers.</p>
+</div>
+
+<script>
+// Switch Leaflet groups (and grouped legends) using explicit closeread triggers.
+(function(){
+  let currentMode = "population";
+
+  function setMode(mode){
+    currentMode = mode;
+
+    if (!window._txMap || !window._txMap.layerManager) return;
     const lm = window._txMap.layerManager;
 
     if (mode === "providers") {
@@ -115,26 +119,48 @@ Switch to provider density and locations for FPP and HTW providers.
     }
   }
 
-  const populationTrigger = document.getElementById("map-population");
-  const providerTrigger = document.getElementById("map-providers");
-  if (!populationTrigger || !providerTrigger) return;
+  // Keep trying briefly until htmlwidgets has initialized the map.
+  let attempts = 0;
+  const timer = setInterval(function(){
+    attempts += 1;
+    setMode(currentMode);
+    if (window._txMap || attempts >= 60) clearInterval(timer);
+  }, 150);
 
-  const obs = new IntersectionObserver((entries) => {
-    let best = null;
-    for (const entry of entries) {
-      if (!best || entry.intersectionRatio > best.intersectionRatio) best = entry;
-    }
-    if (!best || best.intersectionRatio < 0.35) return;
+  const mapTriggers = Array.from(document.querySelectorAll('.new-trigger[data-map-mode]'));
+  if (mapTriggers.length === 0) return;
 
-    if (best.target.id === "map-providers") setMode("providers");
-    else setMode("population");
-  }, { threshold: [0.35, 0.6, 0.8] });
+  if (window.scrollama) {
+    const scroller = window.scrollama();
+    scroller
+      .setup({ step: '.new-trigger[data-map-mode]', offset: 0.5, progress: false })
+      .onStepEnter(function(step){
+        const mode = step.element.getAttribute('data-map-mode') || 'population';
+        setMode(mode);
+      });
+    window.addEventListener('resize', function(){ scroller.resize(); });
+  } else if (window.IntersectionObserver) {
+    const ratios = new Map();
+    const observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){ ratios.set(entry.target, entry.intersectionRatio); });
+      let bestEl = null;
+      let bestRatio = 0;
+      mapTriggers.forEach(function(el){
+        const ratio = ratios.get(el) || 0;
+        if (ratio > bestRatio) {
+          bestRatio = ratio;
+          bestEl = el;
+        }
+      });
+      if (!bestEl || bestRatio < 0.35) return;
+      setMode(bestEl.getAttribute('data-map-mode') || 'population');
+    }, { threshold: [0.2, 0.35, 0.6, 0.8] });
 
-  obs.observe(populationTrigger);
-  obs.observe(providerTrigger);
+    mapTriggers.forEach(function(el){ observer.observe(el); });
+  }
 
   // Default map state should match the first trigger.
-  setMode("population");
+  setMode('population');
 })();
 </script>
 ```
