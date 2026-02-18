@@ -86,6 +86,81 @@ Learn more. @cr-mytext1
 :::: {.cr-section layout="sidebar-left"}
 @cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.
 
+```{=html}
+<div class="trigger new-trigger" data-focus-on="cr-map" data-map-mode="population">
+<p><strong>Population Need:</strong> Focus on county-level population estimates for women ages 15-49.</p>
+</div>
+
+<div class="trigger new-trigger" data-focus-on="cr-map" data-map-mode="providers">
+<p><strong>Provider Availability:</strong> Switch to provider density and locations for FPP and HTW providers.</p>
+</div>
+```
+
+```{ojs}
+// Closeread publishes crTriggerIndex via OJS. Use it to switch map groups.
+mapModeByTriggerIndex = {
+  const allTriggers = Array.from(document.querySelectorAll('.new-trigger'))
+  const modeTriggers = Array.from(document.querySelectorAll('.new-trigger[data-map-mode]'))
+
+  const map = new Map()
+  modeTriggers.forEach((el) => {
+    const idx = allTriggers.indexOf(el)
+    if (idx >= 0) map.set(idx, el.getAttribute('data-map-mode') || 'population')
+  })
+  return map
+}
+
+activeMapMode = {
+  if (!mapModeByTriggerIndex.size) return 'population'
+
+  const direct = mapModeByTriggerIndex.get(crTriggerIndex)
+  if (direct) return direct
+
+  // If the active trigger isn't a map trigger, hold the most recent map mode.
+  let latest = 'population'
+  for (const [idx, mode] of mapModeByTriggerIndex.entries()) {
+    if (idx <= crTriggerIndex) latest = mode
+  }
+  return latest
+}
+
+applyMapMode = (mode) => {
+  const widget = window._txWidget || null
+  const map = window._txMap || (widget && widget.getMap ? widget.getMap() : null)
+  const lm = (map && map.layerManager) || (widget && widget.layerManager)
+
+  if (!lm) return false
+
+  if (mode === 'providers') {
+    lm.hideGroup('Population')
+    lm.showGroup('Total Providers per 1,000 Women 15-49')
+    lm.showGroup('FPP Providers')
+    lm.showGroup('HTW Providers')
+  } else {
+    lm.showGroup('Population')
+    lm.hideGroup('Total Providers per 1,000 Women 15-49')
+    lm.hideGroup('FPP Providers')
+    lm.hideGroup('HTW Providers')
+  }
+
+  return true
+}
+
+{
+  const mode = activeMapMode
+
+  // Retry briefly in case map initialization lags behind OJS updates.
+  let tries = 0
+  const timer = setInterval(() => {
+    tries += 1
+    const applied = applyMapMode(mode)
+    if (applied || tries >= 80) clearInterval(timer)
+  }, 150)
+
+  invalidation.then(() => clearInterval(timer))
+}
+```
+
 
 This map shows counties that <describe data formula>. Use the pan tool to view the map.
 
@@ -221,8 +296,12 @@ m <- leaflet(height = "90vh", width = "68vw", options =leafletOptions(zoomDelta 
     title = "Total Providers per 1,000  women (15–49)",
     opacity = 1
   ) |>
+  hideGroup("Total Providers per 1,000 Women 15-49") |>
+  hideGroup("FPP Providers") |>
+  hideGroup("HTW Providers") |>
   setMapWidgetStyle(list(background = "white")) |>
-   addResetMapButton()
+  addResetMapButton() |>
+  onRender("function(el, x){\n  window._txWidget = this;\n  window._txMap = this.getMap ? this.getMap() : this;\n}")
 
 
 m
