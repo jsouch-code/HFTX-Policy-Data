@@ -1,0 +1,130 @@
+---
+title: "Minimal Closeread + Leaflet (JS toggled layers)"
+format: closeread-html
+execute:
+  echo: true
+  message: false
+  warning: false
+---
+
+# One map, layers toggle by scroll targets
+
+:::::{.cr-section layout="sidebar-left"}
+
+@cr-map
+
+Scroll down. When the **Layer A** target is in view, the map shows Layer A.  
+When the **Layer B** target is in view, the map switches to Layer B.
+
+## Target: Layer A {#mode-a}
+This text block is the trigger for Layer A.
+
+## Target: Layer B {#mode-b}
+This text block is the trigger for Layer B.
+
+```{=html}
+<script>
+// Observe which target (mode-a / mode-b) is currently in view and toggle map layers accordingly.
+(function(){
+  function setMode(mode){
+    if (!window._txMap || !window._txMap.layerManager) return;
+
+    const lm = window._txMap.layerManager;
+
+    if (mode === "b") {
+      lm.hideGroup("Layer A");
+      lm.showGroup("Layer B");
+    } else {
+      lm.hideGroup("Layer B");
+      lm.showGroup("Layer A");
+    }
+  }
+
+  const a = document.getElementById("mode-a");
+  const b = document.getElementById("mode-b");
+  if (!a || !b) return;
+
+  const obs = new IntersectionObserver((entries) => {
+    // pick the most visible entry
+    let best = null;
+    for (const e of entries) {
+      if (!best || e.intersectionRatio > best.intersectionRatio) best = e;
+    }
+    if (!best || best.intersectionRatio < 0.35) return;
+
+    if (best.target.id === "mode-b") setMode("b");
+    else setMode("a");
+  }, { threshold: [0.35, 0.6, 0.8] });
+
+  obs.observe(a);
+  obs.observe(b);
+
+  // default
+  setMode("a");
+})();
+</script>
+```
+::: {#cr-map}
+
+```{r}
+
+library(sf)
+library(leaflet)
+library(htmlwidgets)
+
+# --- Self-contained geometry: a 2x2 grid of squares ---
+bbox <- st_as_sfc(st_bbox(c(xmin = -100, ymin = 30, xmax = -98, ymax = 32), crs = 4326))
+grid <- st_make_grid(bbox, n = c(2, 2)) |> st_sf(geometry = _)
+
+# Two variables
+grid$val_a <- c(1, 2, 3, 4)
+grid$val_b <- c(4, 3, 2, 1)
+
+pal_a <- colorNumeric(c("#E6D9E4", "#53284F"), domain = grid$val_a)
+pal_b <- colorNumeric(c("#E6D9E4", "#53284F"), domain = grid$val_b)
+
+m <- leaflet(width = "100%", height = 600) |>
+  addTiles() |>
+  fitBounds(lng1 = -100, lat1 = 30, lng2 = -98, lat2 = 32) |>
+
+  # Layer A polygons + legend
+  addPolygons(
+    data = grid,
+    group = "Layer A",
+    fillColor = ~pal_a(val_a),
+    weight = 2, color = "white", fillOpacity = 1,
+    highlightOptions = highlightOptions(weight = 5, color = "#D24699", opacity = 1, bringToFront = TRUE),
+    label = ~paste0("Layer A value: ", val_a)
+  ) |>
+  addLegend(
+    pal = pal_a, values = grid$val_a, title = "Layer A legend",
+    group = "Layer A", opacity = 1
+  ) |>
+
+  # Layer B polygons + legend
+  addPolygons(
+    data = grid,
+    group = "Layer B",
+    fillColor = ~pal_b(val_b),
+    weight = 2, color = "white", fillOpacity = 1,
+    highlightOptions = highlightOptions(weight = 5, color = "#D24699", opacity = 1, bringToFront = TRUE),
+    label = ~paste0("Layer B value: ", val_b)
+  ) |>
+  addLegend(
+    pal = pal_b, values = grid$val_b, title = "Layer B legend",
+    group = "Layer B", opacity = 1
+  ) |>
+  hideGroup("Layer B")
+
+# Expose the Leaflet map object so the script can call layerManager.showGroup/hideGroup
+m <- onRender(m, "
+function(el, x){
+  window._txMap = this;
+}
+")
+
+m
+```
+:::
+
+:::::

@@ -10,7 +10,7 @@ format: closeread-html
 
 ## MOBILE WOMEN’S HEALTH CLINICS IN TEXAS
 
-### Highlighting Need
+### Section 1: Highlighting Need
 
 Across the 268,597 square miles of Texas, access to women’s healthcare is deeply uneven. Large regions of the state function as “healthcare deserts,” where high- population communities have few or sometimes no access to nearby clinics providing essential services like contraception, cancer screenings, and preventive care. Many rural Texans face long travel distances, limited transportation options, and months-long wait times. 
 
@@ -26,33 +26,13 @@ That’s where mobile health care units come in.
 **Use the bar on the left to scroll through this story**
 :::
 
-::: {#cr-myimage1}
-![](txlandscape.jpeg)
-:::
-
 ::: {#cr-myimage}
 ```{=html}
 
 
 <style>
-.hero-video {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.hero-video video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  transform: translate(-50%, -50%);
-  object-fit: cover;
-}
+.hero-video { width: 100%; height: 100vh; overflow: hidden; }
+.hero-video video { width: 100vw; height: 100%; object-fit: cover; display: block; }
 </style>
 
 <div class="hero-video">
@@ -100,7 +80,7 @@ This is quite important here! [@cr-mytext1]{hlz="cr-t1,cr-t2"}
 
 
 ### Section 3: Mapping Need.
-:::: {.cr-section layout="overlay-left"}
+:::: {.cr-section layout="sidebar-left"}
 @cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.
 
 ::: {#cr-map}
@@ -151,6 +131,88 @@ m <- leaflet(height = "100vh", width = "68vw") |>
       weight = 5,
       opacity = 1,
       color = "#D24699"
+    ),
+    label = ~paste(
+      "There are",
+      round(Providers.per.1000_filled, 2),
+      "providers per 1,000 women aged 15–49 in this county."
+    ),
+    labelOptions = labelOptions(
+      textsize = "15px",
+      style = list(
+        "font-weight" = "bold",
+        "padding" = "6px"
+      )
+    )
+  ) |>
+  addLegend(
+    pal = pal,
+    values = texas_map$Providers.per.1000_filled,
+    title = "Providers per 1,000 women (15–49)",
+    opacity = 1
+  ) |>
+  setMapWidgetStyle(list(background = "white"))
+
+m
+
+
+
+```
+:::
+::::
+
+### Section 3: Mapping Need.
+:::: {.cr-section layout="sidebar-left"}
+@cr-map1 This map shows counties that <describe data formula>. Use the pan tool to view the map.
+
+::: {#cr-map1}
+```{r map1, message=FALSE}
+library(leaflet)
+library(leaflet.extras)
+library(sf)
+library(rmapshaper)
+library(htmlwidgets)
+
+center_lng <- -97.3; center_lat <- 31.0
+
+
+
+texas_map <- st_read("HTWFFPProvidersPerK.geojson", quiet=TRUE)
+texas_map <- st_transform(texas_map, 4326)
+texas_map <- ms_simplify(texas_map, keep = 0.05, keep_shapes = TRUE)
+
+providers <- st_read("ProviderLocations.geojson", quiet=TRUE)
+providers <- st_transform(providers, 4326)
+
+texas_map$Providers.per.1000_num <- as.numeric(texas_map$Providers.per.1000)
+
+# Recreate filled variable deterministically
+texas_map$Providers.per.1000_filled <- texas_map$Providers.per.1000
+min_val <- min(texas_map$Providers.per.1000_filled, na.rm = TRUE)
+texas_map$Providers.per.1000_filled[is.na(texas_map$Providers.per.1000_filled)] <- min_val
+
+# Palette (your brand color)
+pal <- colorNumeric(
+  palette = c("#E6D9E4", "#53284F"),
+  domain  = texas_map$Providers.per.1000_filled
+)
+
+
+
+
+m <- leaflet(height = "100vh", width = "68vw") |>
+  setView(lng = center_lng-5.2, lat = center_lat, zoom = 6.45) |>
+  addPolygons(
+    data = texas_map,
+    fillColor = ~pal(Providers.per.1000_filled),
+    weight = 2,
+    color = "white",
+    fillOpacity = 1,
+    stroke = TRUE,
+    highlightOptions = highlightOptions(
+      weight = 5,
+      opacity = 1,
+      color = "red"
     ),
     label = ~paste(
       "There are",
