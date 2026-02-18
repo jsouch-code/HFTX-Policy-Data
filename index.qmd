@@ -98,7 +98,7 @@ Learn more. @cr-mytext1
 
 ```{ojs}
 // Closeread publishes crTriggerIndex via OJS. Use it to switch map groups.
-const mapModeByTriggerIndex = {
+mapModeByTriggerIndex = {
   const allTriggers = Array.from(document.querySelectorAll('.new-trigger'))
   const modeTriggers = Array.from(document.querySelectorAll('.new-trigger[data-map-mode]'))
 
@@ -110,7 +110,7 @@ const mapModeByTriggerIndex = {
   return map
 }
 
-const activeMapMode = {
+activeMapMode = {
   if (!mapModeByTriggerIndex.size) return 'population'
 
   const direct = mapModeByTriggerIndex.get(crTriggerIndex)
@@ -124,7 +124,7 @@ const activeMapMode = {
   return latest
 }
 
-const applyMapMode = (mode) => {
+applyMapMode = (mode) => {
   if (!window._txMap || !window._txMap.layerManager) return false
   const lm = window._txMap.layerManager
 
