@@ -98,34 +98,38 @@ center_lng <- -97.3; center_lat <- 31.0
 
 
 
-texas_map <- st_read("HTWFFPProvidersPerK.geojson", quiet=TRUE)
+texas_map <- st_read("GHWMI_PCWT_2023.geojson", quiet=TRUE)
 texas_map <- st_transform(texas_map, 4326)
 texas_map <- ms_simplify(texas_map, keep = 0.05, keep_shapes = TRUE)
 
 providers <- st_read("ProviderLocations.geojson", quiet=TRUE)
 providers <- st_transform(providers, 4326)
+providers <- providers[!is.na(providers$Latitude), ]
 
-texas_map$Providers.per.1000_num <- as.numeric(texas_map$Providers.per.1000)
+
+texas_map$population <- as.numeric(texas_map$PWCT_TX_2023_pop)
 
 # Recreate filled variable deterministically
-texas_map$Providers.per.1000_filled <- texas_map$Providers.per.1000
-min_val <- min(texas_map$Providers.per.1000_filled, na.rm = TRUE)
-texas_map$Providers.per.1000_filled[is.na(texas_map$Providers.per.1000_filled)] <- min_val
+texas_map$population <- texas_map$PWCT_TX_2023_pop
+min_val <- min(texas_map$population, na.rm = TRUE)
+texas_map$population[is.na(texas_map$population)] <- min_val
 
 # Palette (your brand color)
 pal <- colorNumeric(
   palette = c("#E6D9E4", "#53284F"),
-  domain  = texas_map$Providers.per.1000_filled
-)
+  domain  = texas_map$population
+) 
 
 
 
-
-m <- leaflet(height = "100vh", width = "68vw") |>
-  setView(lng = center_lng-5.2, lat = center_lat, zoom = 6.45) |>
+m <- leaflet(height = "100vh", width = "68vw", leafletOptions(zoomDelta = 0.15)) |>
+  # 1. ADD A BASE TILE (Crucial for clustering plugin)
+  addProviderTiles("CartoDB.Positron", options = providerTileOptions(opacity = 0)) |> 
+  
+  setView(lng = center_lng - 5.2, lat = center_lat, zoom = 6.45) |>
   addPolygons(
     data = texas_map,
-    fillColor = ~pal(Providers.per.1000_filled),
+    fillColor = ~pal(population),
     weight = 2,
     color = "white",
     fillOpacity = 1,
@@ -137,8 +141,8 @@ m <- leaflet(height = "100vh", width = "68vw") |>
     ),
     label = ~paste(
       "There are",
-      round(Providers.per.1000_filled, 2),
-      "providers per 1,000 women aged 15–49 in this county."
+      round(population, 2),
+      "women aged 15–49 in this county."
     ),
     labelOptions = labelOptions(
       textsize = "15px",
@@ -147,104 +151,27 @@ m <- leaflet(height = "100vh", width = "68vw") |>
         "padding" = "6px"
       )
     )
+  )|>
+  addMarkers(
+    data = providers,
+    lat = ~Latitude,
+    lng = ~Longitude,
+    popup = providers$Provider.Name,
+    clusterOptions = markerClusterOptions(), # Automatically displays counts
+    group = "Providers"
   ) |>
-  addLegend(
-    pal = pal,
-    values = texas_map$Providers.per.1000_filled,
-    title = "Providers per 1,000 women (15–49)",
-    opacity = 1
-  ) |>
-  setMapWidgetStyle(list(background = "white"))
+  addLayersControl(
+    overlayGroups = c("Population", "Providers"),
+    options = layersControlOptions(collapsed = FALSE)
+  )|>
+    setMapWidgetStyle(list(background = "white"))
+
 
 m
-
-
-
 ```
 :::
 ::::
 
-### Section 3: Mapping Need.
-:::: {.cr-section layout="sidebar-left"}
-@cr-map1 This map shows counties that <describe data formula>. Use the pan tool to view the map.
-
-::: {#cr-map1}
-```{r map1, message=FALSE}
-library(leaflet)
-library(leaflet.extras)
-library(sf)
-library(rmapshaper)
-library(htmlwidgets)
-
-center_lng <- -97.3; center_lat <- 31.0
-
-
-
-texas_map <- st_read("HTWFFPProvidersPerK.geojson", quiet=TRUE)
-texas_map <- st_transform(texas_map, 4326)
-texas_map <- ms_simplify(texas_map, keep = 0.05, keep_shapes = TRUE)
-
-providers <- st_read("ProviderLocations.geojson", quiet=TRUE)
-providers <- st_transform(providers, 4326)
-
-texas_map$Providers.per.1000_num <- as.numeric(texas_map$Providers.per.1000)
-
-# Recreate filled variable deterministically
-texas_map$Providers.per.1000_filled <- texas_map$Providers.per.1000
-min_val <- min(texas_map$Providers.per.1000_filled, na.rm = TRUE)
-texas_map$Providers.per.1000_filled[is.na(texas_map$Providers.per.1000_filled)] <- min_val
-
-# Palette (your brand color)
-pal <- colorNumeric(
-  palette = c("#E6D9E4", "#53284F"),
-  domain  = texas_map$Providers.per.1000_filled
-)
-
-
-
-
-m <- leaflet(height = "100vh", width = "68vw") |>
-  setView(lng = center_lng-5.2, lat = center_lat, zoom = 6.45) |>
-  addPolygons(
-    data = texas_map,
-    fillColor = ~pal(Providers.per.1000_filled),
-    weight = 2,
-    color = "white",
-    fillOpacity = 1,
-    stroke = TRUE,
-    highlightOptions = highlightOptions(
-      weight = 5,
-      opacity = 1,
-      color = "red"
-    ),
-    label = ~paste(
-      "There are",
-      round(Providers.per.1000_filled, 2),
-      "providers per 1,000 women aged 15–49 in this county."
-    ),
-    labelOptions = labelOptions(
-      textsize = "15px",
-      style = list(
-        "font-weight" = "bold",
-        "padding" = "6px"
-      )
-    )
-  ) |>
-  addLegend(
-    pal = pal,
-    values = texas_map$Providers.per.1000_filled,
-    title = "Providers per 1,000 women (15–49)",
-    opacity = 1
-  ) |>
-  setMapWidgetStyle(list(background = "white"))
-
-m
-
-
-
-```
-:::
-::::
 
 ### Section 4: Introduce the concept of mobile clinics
 
