@@ -128,7 +128,7 @@ pal2 <- colorNumeric(
 ) 
 
 
-m <- leaflet(height = "90vh", width = "68vw", options =leafletOptions(zoomDelta = 0.01, dragging = FALSE)) |>
+m <- leaflet(height = "90vh", width = "68vw", options =leafletOptions(zoomDelta = 0.01, dragging = TRUE)) |>
   # 1. ADD A BASE TILE (Crucial for clustering plugin)
   addProviderTiles("CartoDB.Positron", options = providerTileOptions(opacity = 0)) |> 
   
