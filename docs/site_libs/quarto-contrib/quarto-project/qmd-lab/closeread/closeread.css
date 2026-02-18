@@ -169,6 +169,11 @@ body {
   margin-left: var(--cr-narrative-outer-margin);
 }
 
+
+.overlay-left .narrative-col .narrative {
+  max-width: min(360px, 98vw) !important;
+}
+
 .overlay-center .narrative-col {
   justify-self: center;
 }
@@ -224,7 +229,7 @@ body {
 .presentation-mode.sidebar-right .narrative-col {
   grid-column: 1 !important;
   z-index: 1 !important;
-  margin-inline: 30% !important;
+  margin-inline: 10% !important;
   opacity: 0 !important;
   transition: opacity 0.5s ease-in-out;
 }
@@ -271,11 +276,11 @@ body.cr-removeheaderspace #quarto-content main#quarto-document-content .quarto-t
   --cr-narrative-border-radius: 1em;
   --cr-narrative-overlay-max-width: 527.98px;
   --cr-narrative-overlay-min-width: none;
-  --cr-narrative-outer-margin: 0%;
+  --cr-narrative-outer-margin: 2.5%;
   --cr-narrative-font-family: var(--bs-body-font-family);
   --cr-narrative-font-size: 1.15rem;
   --cr-poem-font-family: Rubik;
-  --cr-narrative-sidebar-width: 1fr;
+  --cr-narrative-sidebar-width: 0.75fr;
   --cr-section-background-color: white;
 }
 
@@ -297,13 +302,14 @@ h3, h4, h5, h6 {
   font-family: 'Rubik', sans-serif !important;
   position: sticky;
   top: 1%;
-  background: white;
   z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.80);
   padding: 0.5rem 1rem;
-  opacity: 80%;
   border-radius: 10px;
-  width: 90%;
+  width: 100vw;
   margin: 0 auto;
+  backdrop-filter: blur(60px);
+  -webkit-backdrop-filter: blur(60px);
 }
 
 /* HARD override: paint everything inside this section */
