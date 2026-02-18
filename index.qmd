@@ -86,6 +86,9 @@ Learn more. @cr-mytext1
 :::: {.cr-section layout="sidebar-left"}
 @cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.
 
+
+This map shows counties that <describe data formula>. Use the pan tool to view the map.
+
 ::: {#cr-map}
 ```{r map, message=FALSE}
 library(leaflet)
@@ -94,8 +97,7 @@ library(sf)
 library(rmapshaper)
 library(htmlwidgets)
 
-center_lng <- -97.3; center_lat <- 31.0
-
+center_lng <- -95.3; center_lat <- 31.0
 
 
 texas_map <- st_read("GHWMI_PCWT_2023.geojson", quiet=TRUE)
@@ -126,13 +128,14 @@ pal2 <- colorNumeric(
 ) 
 
 
-m <- leaflet(height = "100vh", width = "68vw", leafletOptions(zoomDelta = 0.15)) |>
+m <- leaflet(height = "90vh", width = "68vw", options =leafletOptions(zoomDelta = 0.01, dragging = FALSE)) |>
   # 1. ADD A BASE TILE (Crucial for clustering plugin)
   addProviderTiles("CartoDB.Positron", options = providerTileOptions(opacity = 0)) |> 
   
-  setView(lng = center_lng - 5.2, lat = center_lat, zoom = 6.45) |>
+  setView(lng = center_lng, lat = center_lat, zoom = 6.49) |>
   addPolygons(
     data = texas_map,
+    group = "Population",
     fillColor = ~pal(population),
     weight = 2,
     color = "white",
@@ -199,10 +202,27 @@ m <- leaflet(height = "100vh", width = "68vw", leafletOptions(zoomDelta = 0.15))
     group = "HTW Providers"
   ) |>
   addLayersControl(
-    overlayGroups = c("Population", "Total Providers per 1,000 Women 15-49", "FPP Providers", "HTW Providers"),
-    options = layersControlOptions(collapsed = FALSE)
+    overlayGroups = c( "Population", "Total Providers per 1,000 Women 15-49", "FPP Providers", "HTW Providers"),
+    position = "bottomright",
+    options = layersControlOptions(collapsed = TRUE)
   )|>
-    setMapWidgetStyle(list(background = "white"))
+    setMapWidgetStyle(list(background = "white")) |>
+    addLegend(
+    pal = pal,
+    group = "Population",
+    values = texas_map$population,
+    title = "Population of women (15–49)",
+    opacity = 1
+  ) |>
+  addLegend(
+    pal = pal2,
+    group = "Total Providers per 1,000 Women 15-49",
+    values = texas_map$PWCT_TX_2023_total_PerK,
+    title = "Total Providers per 1,000  women (15–49)",
+    opacity = 1
+  ) |>
+  setMapWidgetStyle(list(background = "white")) |>
+   addResetMapButton()
 
 
 m
