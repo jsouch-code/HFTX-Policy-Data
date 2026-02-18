@@ -12,6 +12,7 @@ format: closeread-html
 
 ### Section 1: Highlighting Need
 
+
 Across the 268,597 square miles of Texas, access to women’s healthcare is deeply uneven. Large regions of the state function as “healthcare deserts,” where high- population communities have few or sometimes no access to nearby clinics providing essential services like contraception, cancer screenings, and preventive care. Many rural Texans face long travel distances, limited transportation options, and months-long wait times. 
 
 
@@ -56,7 +57,7 @@ That’s where mobile health care units come in.
 ::::{.cr-section layout="overlay-left" .quote-section}
 
 
-Learn more. @cr-mytext1
+Learn more. @cr-mytext1 
 
 
 | {#cr-mytext1 .cr-text .scale-to-fill}
@@ -73,8 +74,10 @@ Learn more. @cr-mytext1
 | [4.6% of Texas women]{#cr-t2} live
 | more than 30 minutes from
 | the nearest birthing hospital. 
-|                               
-This is quite important here! [@cr-mytext1]{hlz="cr-t1,cr-t2"}
+
+
+                               
+[@cr-mytext1]{hlz="cr-t1,cr-t2"} This is quite important here! 
 
 ::::
 
