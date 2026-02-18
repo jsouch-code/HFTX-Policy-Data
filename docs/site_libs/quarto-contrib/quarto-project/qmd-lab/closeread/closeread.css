@@ -9,8 +9,16 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
+.cr-section {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+}
 
-
+body {
+  overflow-x: hidden;
+}
 
 .cr-section {
   display: grid;
