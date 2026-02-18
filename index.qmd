@@ -86,6 +86,59 @@ Learn more. @cr-mytext1
 :::: {.cr-section layout="sidebar-left"}
 @cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.
 
+## Trigger: Population Need {#map-population}
+Focus on county-level population estimates for women ages 15-49.
+
+## Trigger: Provider Availability {#map-providers}
+Switch to provider density and locations for FPP and HTW providers.
+
+
+```{=html}
+<script>
+// Switch Leaflet groups (and grouped legends) based on the visible closeread trigger.
+(function(){
+  function setMode(mode){
+    if (!window._txMap || !window._txMap.layerManager) return;
+
+    const lm = window._txMap.layerManager;
+
+    if (mode === "providers") {
+      lm.hideGroup("Population");
+      lm.showGroup("Total Providers per 1,000 Women 15-49");
+      lm.showGroup("FPP Providers");
+      lm.showGroup("HTW Providers");
+    } else {
+      lm.showGroup("Population");
+      lm.hideGroup("Total Providers per 1,000 Women 15-49");
+      lm.hideGroup("FPP Providers");
+      lm.hideGroup("HTW Providers");
+    }
+  }
+
+  const populationTrigger = document.getElementById("map-population");
+  const providerTrigger = document.getElementById("map-providers");
+  if (!populationTrigger || !providerTrigger) return;
+
+  const obs = new IntersectionObserver((entries) => {
+    let best = null;
+    for (const entry of entries) {
+      if (!best || entry.intersectionRatio > best.intersectionRatio) best = entry;
+    }
+    if (!best || best.intersectionRatio < 0.35) return;
+
+    if (best.target.id === "map-providers") setMode("providers");
+    else setMode("population");
+  }, { threshold: [0.35, 0.6, 0.8] });
+
+  obs.observe(populationTrigger);
+  obs.observe(providerTrigger);
+
+  // Default map state should match the first trigger.
+  setMode("population");
+})();
+</script>
+```
+
 
 This map shows counties that <describe data formula>. Use the pan tool to view the map.
 
@@ -221,8 +274,12 @@ m <- leaflet(height = "90vh", width = "68vw", options =leafletOptions(zoomDelta 
     title = "Total Providers per 1,000  women (15–49)",
     opacity = 1
   ) |>
+  hideGroup("Total Providers per 1,000 Women 15-49") |>
+  hideGroup("FPP Providers") |>
+  hideGroup("HTW Providers") |>
   setMapWidgetStyle(list(background = "white")) |>
-   addResetMapButton()
+  addResetMapButton() |>
+  onRender("function(el, x){ window._txMap = this; }")
 
 
 m
