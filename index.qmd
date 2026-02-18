@@ -125,8 +125,11 @@ activeMapMode = {
 }
 
 applyMapMode = (mode) => {
-  if (!window._txMap || !window._txMap.layerManager) return false
-  const lm = window._txMap.layerManager
+  const widget = window._txWidget || null
+  const map = window._txMap || (widget && widget.getMap ? widget.getMap() : null)
+  const lm = (map && map.layerManager) || (widget && widget.layerManager)
+
+  if (!lm) return false
 
   if (mode === 'providers') {
     lm.hideGroup('Population')
@@ -298,7 +301,7 @@ m <- leaflet(height = "90vh", width = "68vw", options =leafletOptions(zoomDelta 
   hideGroup("HTW Providers") |>
   setMapWidgetStyle(list(background = "white")) |>
   addResetMapButton() |>
-  onRender("function(el, x){ window._txMap = this; }")
+  onRender("function(el, x){\n  window._txWidget = this;\n  window._txMap = this.getMap ? this.getMap() : this;\n}")
 
 
 m
