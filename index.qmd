@@ -94,84 +94,68 @@ Learn more. @cr-mytext1
 <div class="trigger new-trigger" data-focus-on="cr-map" data-map-mode="providers">
 <p><strong>Provider Availability:</strong> Switch to provider density and locations for FPP and HTW providers.</p>
 </div>
+```
 
-<script>
-// Switch Leaflet groups (and grouped legends) using explicit closeread triggers.
-(function(){
-  let currentMode = "population";
+```{ojs}
+// Closeread publishes crTriggerIndex via OJS. Use it to switch map groups.
+const mapModeByTriggerIndex = {
+  const allTriggers = Array.from(document.querySelectorAll('.new-trigger'))
+  const modeTriggers = Array.from(document.querySelectorAll('.new-trigger[data-map-mode]'))
 
-  function setMode(mode){
-    if (mode !== "providers") mode = "population";
-    if (mode === currentMode && window._txMap && window._txMap.layerManager) return;
-    currentMode = mode;
+  const map = new Map()
+  modeTriggers.forEach((el) => {
+    const idx = allTriggers.indexOf(el)
+    if (idx >= 0) map.set(idx, el.getAttribute('data-map-mode') || 'population')
+  })
+  return map
+}
 
-    if (!window._txMap || !window._txMap.layerManager) return;
-    const lm = window._txMap.layerManager;
+const activeMapMode = {
+  if (!mapModeByTriggerIndex.size) return 'population'
 
-    if (mode === "providers") {
-      lm.hideGroup("Population");
-      lm.showGroup("Total Providers per 1,000 Women 15-49");
-      lm.showGroup("FPP Providers");
-      lm.showGroup("HTW Providers");
-    } else {
-      lm.showGroup("Population");
-      lm.hideGroup("Total Providers per 1,000 Women 15-49");
-      lm.hideGroup("FPP Providers");
-      lm.hideGroup("HTW Providers");
-    }
+  const direct = mapModeByTriggerIndex.get(crTriggerIndex)
+  if (direct) return direct
+
+  // If the active trigger isn't a map trigger, hold the most recent map mode.
+  let latest = 'population'
+  for (const [idx, mode] of mapModeByTriggerIndex.entries()) {
+    if (idx <= crTriggerIndex) latest = mode
+  }
+  return latest
+}
+
+const applyMapMode = (mode) => {
+  if (!window._txMap || !window._txMap.layerManager) return false
+  const lm = window._txMap.layerManager
+
+  if (mode === 'providers') {
+    lm.hideGroup('Population')
+    lm.showGroup('Total Providers per 1,000 Women 15-49')
+    lm.showGroup('FPP Providers')
+    lm.showGroup('HTW Providers')
+  } else {
+    lm.showGroup('Population')
+    lm.hideGroup('Total Providers per 1,000 Women 15-49')
+    lm.hideGroup('FPP Providers')
+    lm.hideGroup('HTW Providers')
   }
 
-  const mapTriggers = Array.from(document.querySelectorAll('.new-trigger[data-map-mode]'));
-  if (mapTriggers.length === 0) return;
+  return true
+}
 
-  // Pick whichever trigger center is closest to viewport center.
-  function updateModeFromScroll(){
-    const viewportMid = window.innerHeight / 2;
-    let bestEl = null;
-    let bestDistance = Infinity;
+{
+  const mode = activeMapMode
 
-    mapTriggers.forEach(function(el){
-      const rect = el.getBoundingClientRect();
-      const center = rect.top + rect.height / 2;
-      const distance = Math.abs(center - viewportMid);
-      if (distance < bestDistance) {
-        bestDistance = distance;
-        bestEl = el;
-      }
-    });
+  // Retry briefly in case map initialization lags behind OJS updates.
+  let tries = 0
+  const timer = setInterval(() => {
+    tries += 1
+    const applied = applyMapMode(mode)
+    if (applied || tries >= 80) clearInterval(timer)
+  }, 150)
 
-    if (!bestEl) return;
-    setMode(bestEl.getAttribute('data-map-mode') || 'population');
-  }
-
-  // Keep trying briefly until htmlwidgets has initialized the map.
-  let attempts = 0;
-  const timer = setInterval(function(){
-    attempts += 1;
-    updateModeFromScroll();
-    if ((window._txMap && window._txMap.layerManager) || attempts >= 80) {
-      clearInterval(timer);
-    }
-  }, 150);
-
-  let ticking = false;
-  function onScrollOrResize(){
-    if (ticking) return;
-    ticking = true;
-    window.requestAnimationFrame(function(){
-      updateModeFromScroll();
-      ticking = false;
-    });
-  }
-
-  window.addEventListener('scroll', onScrollOrResize, { passive: true });
-  window.addEventListener('resize', onScrollOrResize);
-  window.addEventListener('load', updateModeFromScroll);
-
-  // Default map state should match the nearest trigger on load.
-  updateModeFromScroll();
-})();
-</script>
+  invalidation.then(() => clearInterval(timer))
+}
 ```
 
 
