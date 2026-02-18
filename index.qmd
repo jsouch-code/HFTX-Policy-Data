@@ -120,6 +120,10 @@ pal <- colorNumeric(
   domain  = texas_map$population
 ) 
 
+pal2 <- colorNumeric(
+  palette = c("#E6D9E4", "#53284F"),
+  domain  = texas_map$PWCT_TX_2023_total_PerK
+) 
 
 
 m <- leaflet(height = "100vh", width = "68vw", leafletOptions(zoomDelta = 0.15)) |>
@@ -152,16 +156,50 @@ m <- leaflet(height = "100vh", width = "68vw", leafletOptions(zoomDelta = 0.15))
       )
     )
   )|>
+    addPolygons(
+    data = texas_map,
+    group = "Total Providers per 1,000 Women 15-49",
+    fillColor = ~pal2(PWCT_TX_2023_total_PerK),
+    weight = 2,
+    color = "white",
+    fillOpacity = 1,
+    stroke = TRUE,
+    highlightOptions = highlightOptions(
+      weight = 5,
+      opacity = 1,
+      color = "#D24699"
+    ),
+    label = ~paste(
+      "There are",
+      round(population, 2),
+      "Total providers per women aged 15–49 in this county."
+    ),
+    labelOptions = labelOptions(
+      textsize = "15px",
+      style = list(
+        "font-weight" = "bold",
+        "padding" = "6px"
+      )
+    )
+  )|>
   addMarkers(
-    data = providers,
+    data = providers[providers$Grantee == "FPP",],
     lat = ~Latitude,
     lng = ~Longitude,
-    popup = providers$Provider.Name,
+    popup = paste(providers$Provider.Name, "is an FPP provider."),
     clusterOptions = markerClusterOptions(), # Automatically displays counts
-    group = "Providers"
+    group = "FPP Providers"
+  ) |>
+    addMarkers(
+    data = providers[providers$Grantee == "HTW",],
+    lat = ~Latitude,
+    lng = ~Longitude,
+    popup = paste(providers$Provider.Name,"is an HTW provider."),
+    clusterOptions = markerClusterOptions(), # Automatically displays counts
+    group = "HTW Providers"
   ) |>
   addLayersControl(
-    overlayGroups = c("Population", "Providers"),
+    overlayGroups = c("Population", "Total Providers per 1,000 Women 15-49", "FPP Providers", "HTW Providers"),
     options = layersControlOptions(collapsed = FALSE)
   )|>
     setMapWidgetStyle(list(background = "white"))
