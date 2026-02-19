@@ -131,11 +131,7 @@ m <- leaflet(
   options = leafletOptions(zoomDelta = 0.5, zoomSnap = 0, dragging = FALSE, minZoom = 6.4999)
 ) |>
   addProviderTiles("CartoDB.Positron", options = providerTileOptions(opacity = 0)) |>
-<<<<<<< HEAD
   setView(lng = center_lng-3, lat = center_lat, zoom = 6.4999) |>
-=======
-  setView(lng = center_lng-0.5, lat = center_lat, zoom = 6.4999) |>
->>>>>>> b65f7acaf9df71f42e113f76b1962c040203bfff
 
   # --- BASE LAYERS (radio) ---
   addPolygons(
