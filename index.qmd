@@ -133,7 +133,6 @@ leaflet(sf, elementId = "test_map", width = "68vw", height = "75vh") |>
 
 ::::
 
-
 ```{ojs}
 {
   const mapId = "test_map";
