@@ -1,0 +1,43 @@
+---
+format: closeread-html
+---
+
+library(leaflet)
+library(htmlwidgets)
+
+m <- leaflet(options = leafletOptions(zoomControl = FALSE)) |>
+  addProviderTiles(providers$CartoDB.Positron, group = "Base: Light") |>
+  addProviderTiles(providers$Esri.WorldImagery, group = "Base: Imagery") |>
+  addCircleMarkers(
+    lng = c(-99.1332), lat = c(31.9686),
+    radius = 12, fillOpacity = 0.9,
+    group = "Overlay: Dots"
+  ) |>
+  addPolylines(
+    lng = c(-106.4850, -97.7431), lat = c(31.7619, 30.2672),
+    weight = 4,
+    group = "Overlay: Routes"
+  ) |>
+  hideGroup("Base: Imagery") |>
+  hideGroup("Overlay: Routes") |>
+  addLayersControl(
+    baseGroups = c("Base: Light", "Base: Imagery"),
+    overlayGroups = c("Overlay: Dots", "Overlay: Routes"),
+    options = layersControlOptions(collapsed = TRUE)
+  ) |>
+  onRender("
+    function(el, x) {
+      // expose the map + the layer groups so OJS can toggle them
+      window.__cr_leaflet_map__ = this;
+
+      window.__cr_leaflet_groups__ = {
+        light:  this.layerManager.getLayerGroup('Base: Light'),
+        img:    this.layerManager.getLayerGroup('Base: Imagery'),
+        dots:   this.layerManager.getLayerGroup('Overlay: Dots'),
+        routes: this.layerManager.getLayerGroup('Overlay: Routes')
+      };
+    }
+  ")
+
+m
+
