@@ -83,14 +83,24 @@ Learn more. @cr-mytext1
 
 
 ### Section 3: Mapping Need.
+
 :::: {.cr-section layout="sidebar-left"}
-@cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.
 
+**Population** \
+The following map shows the population of women of reproductive age (15-49) in 2023. @cr-map
 
-This map shows counties that <describe data formula>. Use the pan tool to view the map.
+**Providers per 1,000** \
+Here are all providers per 1,000 women of reproductive age (15-49) in 2023. @cr-map
+
+FPP Providers. @cr-map
+
+HTW Providers. @cr-map
+
 
 ::: {#cr-map}
-```{r map, message=FALSE}
+```{r}
+#| message: false
+#| warning: false
 library(leaflet)
 library(leaflet.extras)
 library(sf)
@@ -99,137 +109,281 @@ library(htmlwidgets)
 
 center_lng <- -95.3; center_lat <- 31.0
 
+texas_map <- st_read("GHWMI_PCWT_2023.geojson", quiet=TRUE) |> 
+  st_transform(4326) |>
+  ms_simplify(keep = 0.05, keep_shapes = TRUE)
 
-texas_map <- st_read("GHWMI_PCWT_2023.geojson", quiet=TRUE)
-texas_map <- st_transform(texas_map, 4326)
-texas_map <- ms_simplify(texas_map, keep = 0.05, keep_shapes = TRUE)
-
-providers <- st_read("ProviderLocations.geojson", quiet=TRUE)
-providers <- st_transform(providers, 4326)
+providers <- st_read("ProviderLocations.geojson", quiet=TRUE) |>
+  st_transform(4326)
 providers <- providers[!is.na(providers$Latitude), ]
 
-
 texas_map$population <- as.numeric(texas_map$PWCT_TX_2023_pop)
-
-# Recreate filled variable deterministically
-texas_map$population <- texas_map$PWCT_TX_2023_pop
 min_val <- min(texas_map$population, na.rm = TRUE)
 texas_map$population[is.na(texas_map$population)] <- min_val
 
-# Palette (your brand color)
-pal <- colorNumeric(
-  palette = c("#E6D9E4", "#53284F"),
-  domain  = texas_map$population
-) 
+pal_pop <- colorNumeric(palette = c("#E6D9E4", "#53284F"), domain = texas_map$population)
+pal_perk <- colorNumeric(palette = c("#E6D9E4", "#53284F"), domain = texas_map$PWCT_TX_2023_total_PerK)
 
-pal2 <- colorNumeric(
-  palette = c("#E6D9E4", "#53284F"),
-  domain  = texas_map$PWCT_TX_2023_total_PerK
-) 
+m <- leaflet(
+  elementId = "test_map",
+  height = "90vh",
+  width  = "68vw",
+  options = leafletOptions(zoomDelta = 0.5, zoomSnap = 0, dragging = FALSE, minZoom = 6.4999)
+) |>
+  addProviderTiles("CartoDB.Positron", options = providerTileOptions(opacity = 0)) |>
+  setView(lng = center_lng-1, lat = center_lat, zoom = 6.4999) |>
 
-
-m <- leaflet(height = "90vh", width = "68vw", options =leafletOptions(zoomDelta = 0.01, dragging = TRUE)) |>
-  # 1. ADD A BASE TILE (Crucial for clustering plugin)
-  addProviderTiles("CartoDB.Positron", options = providerTileOptions(opacity = 0)) |> 
-  
-  setView(lng = center_lng, lat = center_lat, zoom = 6.49) |>
+  # --- BASE LAYERS (radio) ---
   addPolygons(
     data = texas_map,
-    group = "Population",
-    fillColor = ~pal(population),
-    weight = 2,
-    color = "white",
-    fillOpacity = 1,
-    stroke = TRUE,
-    highlightOptions = highlightOptions(
-      weight = 5,
-      opacity = 1,
-      color = "#D24699"
-    ),
-    label = ~paste(
-      "There are",
-      round(population, 2),
-      "women aged 15–49 in this county."
-    ),
-    labelOptions = labelOptions(
-      textsize = "15px",
-      style = list(
-        "font-weight" = "bold",
-        "padding" = "6px"
-      )
-    )
-  )|>
-    addPolygons(
+    group = "Population",                 # baseGroups label
+    fillColor = ~pal_pop(population),
+    weight = 2, color = "white",
+    fillOpacity = 1, stroke = TRUE,
+    highlightOptions = highlightOptions(weight = 5, opacity = 1, color = "#D24699", bringToFront = TRUE),
+    label = ~paste("There are", round(population, 0), "women aged 15–49 in this county."),
+    popup = paste(texas_map$CNTY_NM, "County"),
+    labelOptions = labelOptions(textsize = "15px", style = list("font-weight"="bold","padding"="6px"))
+  ) |>
+  addPolygons(
     data = texas_map,
-    group = "Total Providers per 1,000 Women 15-49",
-    fillColor = ~pal2(PWCT_TX_2023_total_PerK),
-    weight = 2,
-    color = "white",
-    fillOpacity = 1,
-    stroke = TRUE,
-    highlightOptions = highlightOptions(
-      weight = 5,
-      opacity = 1,
-      color = "#D24699"
-    ),
-    label = ~paste(
-      "There are",
-      round(population, 2),
-      "Total providers per women aged 15–49 in this county."
-    ),
-    labelOptions = labelOptions(
-      textsize = "15px",
-      style = list(
-        "font-weight" = "bold",
-        "padding" = "6px"
-      )
-    )
-  )|>
+    group = "Total Providers per 1,000 Women 15-49",   # baseGroups label
+    fillColor = ~pal_perk(PWCT_TX_2023_total_PerK),
+    weight = 2, color = "white",
+    fillOpacity = 1, stroke = TRUE,
+    highlightOptions = highlightOptions(weight = 5, opacity = 1, color = "#D24699", bringToFront = TRUE),
+    label = ~paste("There are", round(PWCT_TX_2023_total_PerK, 2), "providers per 1,000 women (15–49) in this county."),
+    popup = paste(texas_map$CNTY_NM, "County"),
+    labelOptions = labelOptions(textsize = "15px", style = list("font-weight"="bold","padding"="6px"))
+  ) |>
+
+  # --- OVERLAYS (checkbox) ---
   addMarkers(
     data = providers[providers$Grantee == "FPP",],
-    lat = ~Latitude,
-    lng = ~Longitude,
-    popup = paste(providers$Provider.Name, "is an FPP provider."),
-    clusterOptions = markerClusterOptions(), # Automatically displays counts
+    lat = ~Latitude, lng = ~Longitude,
+    popup = ~paste0(Provider.Name, " is an FPP provider."),
+    clusterOptions = markerClusterOptions(),
     group = "FPP Providers"
   ) |>
-    addMarkers(
+  addMarkers(
     data = providers[providers$Grantee == "HTW",],
-    lat = ~Latitude,
-    lng = ~Longitude,
-    popup = paste(providers$Provider.Name,"is an HTW provider."),
-    clusterOptions = markerClusterOptions(), # Automatically displays counts
+    lat = ~Latitude, lng = ~Longitude,
+    popup = ~paste0(Provider.Name, " is an HTW provider."),
+    clusterOptions = markerClusterOptions(),
     group = "HTW Providers"
   ) |>
+
   addLayersControl(
-    overlayGroups = c( "Population", "Total Providers per 1,000 Women 15-49", "FPP Providers", "HTW Providers"),
+    baseGroups    = c("Population", "Total Providers per 1,000 Women 15-49"),
+    overlayGroups = c("FPP Providers", "HTW Providers"),
     position = "bottomright",
     options = layersControlOptions(collapsed = TRUE)
-  )|>
-    setMapWidgetStyle(list(background = "white")) |>
-    addLegend(
-    pal = pal,
-    group = "Population",
-    values = texas_map$population,
-    title = "Population of women (15–49)",
-    opacity = 1
   ) |>
-  addLegend(
-    pal = pal2,
-    group = "Total Providers per 1,000 Women 15-49",
-    values = texas_map$PWCT_TX_2023_total_PerK,
-    title = "Total Providers per 1,000  women (15–49)",
-    opacity = 1
-  ) |>
-  setMapWidgetStyle(list(background = "white")) |>
-   addResetMapButton()
 
+  # Legends tied to the SAME group names (so they toggle correctly)
+ addLegend(
+  pal = pal_pop, values = texas_map$population,
+  title = "Population of women (15–49)", opacity = 1,
+  group = "Population",
+  className = "legend-pop"
+) |>
+addLegend(
+  pal = pal_perk, values = texas_map$PWCT_TX_2023_total_PerK,
+  title = "Total providers per 1,000 women (15–49)", opacity = 1,
+  group = "Total Providers per 1,000 Women 15-49",
+  className = "legend-perk"
+)|>
+  setMapWidgetStyle(list(background = "white")) |>
+  addResetMapButton() |>
+
+  # Start state: show Population base, hide the other base layer (important)
+  hideGroup("Total Providers per 1,000 Women 15-49") |>
+  # Optional: start with overlays off
+  hideGroup("FPP Providers") |>
+  hideGroup("HTW Providers")
 
 m
+
 ```
+
 :::
+
+
 ::::
 
+```{ojs}
+{
+  const mapId = "test_map";
+
+  const baseLabels = [
+    "Population",
+    "Total Providers per 1,000 Women 15-49"
+  ];
+
+  const overlayLabels = [
+    "FPP Providers",
+    "HTW Providers"
+  ];
+
+  // These must match the className= you set in addLegend()
+  const legendClasses = {
+    Population: "legend-pop",
+    Providers: "legend-perk"
+  };
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  function getLeafletMap() {
+    const sel = `#${mapId}`;
+    try {
+      const w = globalThis.HTMLWidgets?.find?.(sel);
+      if (w?.getMap) return w.getMap();
+    } catch (e) {}
+    try {
+      const w2 = globalThis.HTMLWidgets?.find?.(mapId);
+      if (w2?.getMap) return w2.getMap();
+    } catch (e) {}
+    return null;
+  }
+
+  function getLayerControlRoot() {
+    const el = document.getElementById(mapId);
+    return el ? el.querySelector(".leaflet-control-layers") : null;
+  }
+
+  function getTriggersForSection() {
+    const mapEl = document.getElementById(mapId);
+    if (!mapEl) return [];
+    const section = mapEl.closest(".cr-section") || document;
+    return Array.from(section.querySelectorAll(".narrative-col .trigger"));
+  }
+
+  function activeTriggerIndex() {
+    const triggers = getTriggersForSection();
+    if (!triggers.length) return 0;
+
+    const vc = window.innerHeight / 2;
+    let bestIdx = 0;
+    let bestDist = Infinity;
+
+    for (let i = 0; i < triggers.length; i++) {
+      const r = triggers[i].getBoundingClientRect();
+      const c = (r.top + r.bottom) / 2;
+      const d = Math.abs(c - vc);
+      if (d < bestDist) {
+        bestDist = d;
+        bestIdx = i;
+      }
+    }
+    return Math.max(0, Math.min(3, bestIdx));
+  }
+
+  async function clickRadioByLabel(label) {
+    const control = getLayerControlRoot();
+    if (!control) return;
+
+    const all = Array.from(control.querySelectorAll("label"));
+    const target = all.find(l => (l.textContent || "").trim() === label);
+    if (!target) return;
+
+    const input = target.querySelector("input[type='radio']");
+    if (input && !input.checked) input.click();
+  }
+
+  async function setOverlays({ fpp = false, htw = false }) {
+    const map = getLeafletMap();
+    if (!map) return;
+
+    try { map.hideGroup(overlayLabels[0]); } catch (e) {}
+    try { map.hideGroup(overlayLabels[1]); } catch (e) {}
+
+    if (fpp) {
+      try { map.showGroup(overlayLabels[0]); } catch (e) {}
+    }
+    if (htw) {
+      try { map.showGroup(overlayLabels[1]); } catch (e) {}
+    }
+  }
+
+  function showOnlyLegend(which) {
+    // which = "Population" or "Providers"
+    const pop = document.querySelector(`.${legendClasses.Population}`);
+    const per = document.querySelector(`.${legendClasses.Providers}`);
+
+    if (pop) pop.style.display = (which === "Population") ? "" : "none";
+    if (per) per.style.display = (which === "Providers") ? "" : "none";
+  }
+
+  async function applyStep(step) {
+    // 0: Population, overlays off
+    // 1: Providers per 1,000, overlays off
+    // 2: Providers per 1,000, FPP on
+    // 3: Providers per 1,000, HTW on
+    if (step === 0) {
+      await clickRadioByLabel(baseLabels[0]);
+      showOnlyLegend("Population");
+      await setOverlays({ fpp: false, htw: false });
+    } else if (step === 1) {
+      await clickRadioByLabel(baseLabels[1]);
+      showOnlyLegend("Providers");
+      await setOverlays({ fpp: false, htw: false });
+    } else if (step === 2) {
+      await clickRadioByLabel(baseLabels[1]);
+      showOnlyLegend("Providers");
+      await setOverlays({ fpp: true, htw: false });
+    } else if (step === 3) {
+      await clickRadioByLabel(baseLabels[1]);
+      showOnlyLegend("Providers");
+      await setOverlays({ fpp: false, htw: true });
+    }
+  }
+
+  async function install() {
+    for (let i = 0; i < 120; i++) {
+      if (getLeafletMap() && getLayerControlRoot()) break;
+      await sleep(50);
+    }
+
+    const key = "__crStepSwitchInstalled";
+    if (globalThis[key]) return null;
+    globalThis[key] = true;
+
+    let lastStep = -1;
+    let ticking = false;
+
+    const update = async () => {
+      ticking = false;
+      const step = activeTriggerIndex();
+      if (step === lastStep) return;
+      lastStep = step;
+      await applyStep(step);
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    const triggers = getTriggersForSection();
+    if (triggers.length) {
+      const obs = new MutationObserver(onScroll);
+      for (const t of triggers) obs.observe(t, { attributes: true, attributeFilter: ["class", "style"] });
+    }
+
+    await update();
+    return null;
+  }
+
+  await install();
+  null
+}
+
+
+```
 
 ### Section 4: Introduce the concept of mobile clinics
 
