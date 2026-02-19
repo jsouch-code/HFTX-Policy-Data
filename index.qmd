@@ -82,154 +82,212 @@ Learn more. @cr-mytext1
 ::::
 
 
-### Section 3: Mapping Need.
+## Section: Test map switching
+
 :::: {.cr-section layout="sidebar-left"}
-@cr-map This map shows counties that <describe data formula>. Use the pan tool to view the map.
 
 
-This map shows counties that <describe data formula>. Use the pan tool to view the map.
+Layer A. @cr-map
+
+
+Layer B. @cr-map
+
 
 ::: {#cr-map}
-```{r map, message=FALSE}
+```{r}
 library(leaflet)
-library(leaflet.extras)
 library(sf)
-library(rmapshaper)
-library(htmlwidgets)
 
-center_lng <- -95.3; center_lat <- 31.0
+# Make a tiny square grid (self-contained)
+bbox <- st_bbox(c(xmin = -99, ymin = 29, xmax = -93, ymax = 33), crs = 4326)
+g <- st_make_grid(st_as_sfc(bbox), n = c(4, 4), what = "polygons")
+sf <- st_sf(id = seq_along(g), geometry = g)
 
+palA <- colorNumeric(c("#E6D9E4", "#53284F"), domain = sf$id)
+palB <- colorNumeric(c("#D9E6E4", "#284F53"), domain = sf$id)
 
-texas_map <- st_read("GHWMI_PCWT_2023.geojson", quiet=TRUE)
-texas_map <- st_transform(texas_map, 4326)
-texas_map <- ms_simplify(texas_map, keep = 0.05, keep_shapes = TRUE)
-
-providers <- st_read("ProviderLocations.geojson", quiet=TRUE)
-providers <- st_transform(providers, 4326)
-providers <- providers[!is.na(providers$Latitude), ]
-
-
-texas_map$population <- as.numeric(texas_map$PWCT_TX_2023_pop)
-
-# Recreate filled variable deterministically
-texas_map$population <- texas_map$PWCT_TX_2023_pop
-min_val <- min(texas_map$population, na.rm = TRUE)
-texas_map$population[is.na(texas_map$population)] <- min_val
-
-# Palette (your brand color)
-pal <- colorNumeric(
-  palette = c("#E6D9E4", "#53284F"),
-  domain  = texas_map$population
-) 
-
-pal2 <- colorNumeric(
-  palette = c("#E6D9E4", "#53284F"),
-  domain  = texas_map$PWCT_TX_2023_total_PerK
-) 
-
-
-m <- leaflet(height = "90vh", width = "68vw", options =leafletOptions(zoomDelta = 0.01, dragging = TRUE)) |>
-  # 1. ADD A BASE TILE (Crucial for clustering plugin)
-  addProviderTiles("CartoDB.Positron", options = providerTileOptions(opacity = 0)) |> 
-  
-  setView(lng = center_lng, lat = center_lat, zoom = 6.49) |>
+leaflet(sf, elementId = "test_map", width = "68vw", height = "75vh") |>
+  addProviderTiles("CartoDB.Positron") |>
   addPolygons(
-    data = texas_map,
-    group = "Population",
-    fillColor = ~pal(population),
-    weight = 2,
+    group = "Layer B",
+    fillColor = ~palB(id),
+    fillOpacity = 0.8,
     color = "white",
-    fillOpacity = 1,
-    stroke = TRUE,
-    highlightOptions = highlightOptions(
-      weight = 5,
-      opacity = 1,
-      color = "#D24699"
-    ),
-    label = ~paste(
-      "There are",
-      round(population, 2),
-      "women aged 15–49 in this county."
-    ),
-    labelOptions = labelOptions(
-      textsize = "15px",
-      style = list(
-        "font-weight" = "bold",
-        "padding" = "6px"
-      )
-    )
-  )|>
-    addPolygons(
-    data = texas_map,
-    group = "Total Providers per 1,000 Women 15-49",
-    fillColor = ~pal2(PWCT_TX_2023_total_PerK),
-    weight = 2,
+    weight = 1
+  ) |>
+  addPolygons(
+    group = "Layer A",
+    fillColor = ~palA(id),
+    fillOpacity = 0.8,
     color = "white",
-    fillOpacity = 1,
-    stroke = TRUE,
-    highlightOptions = highlightOptions(
-      weight = 5,
-      opacity = 1,
-      color = "#D24699"
-    ),
-    label = ~paste(
-      "There are",
-      round(population, 2),
-      "Total providers per women aged 15–49 in this county."
-    ),
-    labelOptions = labelOptions(
-      textsize = "15px",
-      style = list(
-        "font-weight" = "bold",
-        "padding" = "6px"
-      )
-    )
-  )|>
-  addMarkers(
-    data = providers[providers$Grantee == "FPP",],
-    lat = ~Latitude,
-    lng = ~Longitude,
-    popup = paste(providers$Provider.Name, "is an FPP provider."),
-    clusterOptions = markerClusterOptions(), # Automatically displays counts
-    group = "FPP Providers"
+    weight = 1
   ) |>
-    addMarkers(
-    data = providers[providers$Grantee == "HTW",],
-    lat = ~Latitude,
-    lng = ~Longitude,
-    popup = paste(providers$Provider.Name,"is an HTW provider."),
-    clusterOptions = markerClusterOptions(), # Automatically displays counts
-    group = "HTW Providers"
-  ) |>
+  # IMPORTANT: put the switchable layers in baseGroups (radio)
   addLayersControl(
-    overlayGroups = c( "Population", "Total Providers per 1,000 Women 15-49", "FPP Providers", "HTW Providers"),
-    position = "bottomright",
-    options = layersControlOptions(collapsed = TRUE)
-  )|>
-    setMapWidgetStyle(list(background = "white")) |>
-    addLegend(
-    pal = pal,
-    group = "Population",
-    values = texas_map$population,
-    title = "Population of women (15–49)",
-    opacity = 1
-  ) |>
-  addLegend(
-    pal = pal2,
-    group = "Total Providers per 1,000 Women 15-49",
-    values = texas_map$PWCT_TX_2023_total_PerK,
-    title = "Total Providers per 1,000  women (15–49)",
-    opacity = 1
-  ) |>
-  setMapWidgetStyle(list(background = "white")) |>
-   addResetMapButton()
-
-
-m
+    baseGroups = c("Layer A", "Layer B"),
+    options = layersControlOptions(collapsed = FALSE)) |>
+    hideGroup("Layer B")
 ```
 :::
+
+
 ::::
 
+
+```{ojs}
+{
+  const mapId = "test_map";
+  const labels = ["Layer A", "Layer B"];
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const clamp = (i) => Math.max(0, Math.min(labels.length - 1, Number(i ?? 0)));
+
+  function getLeafletMap() {
+    const sel = `#${mapId}`;
+    try {
+      const w = globalThis.HTMLWidgets?.find?.(sel);
+      if (w?.getMap) return w.getMap();
+    } catch (e) {}
+    try {
+      const w2 = globalThis.HTMLWidgets?.find?.(mapId);
+      if (w2?.getMap) return w2.getMap();
+    } catch (e) {}
+    return null;
+  }
+
+  function getLayerControlRoot() {
+    const el = document.getElementById(mapId);
+    return el ? el.querySelector(".leaflet-control-layers") : null;
+  }
+
+  function getTriggersForSection() {
+    const mapEl = document.getElementById(mapId);
+    if (!mapEl) return [];
+    const section = mapEl.closest(".cr-section") || document;
+    return Array.from(section.querySelectorAll(".narrative-col .trigger"));
+  }
+
+  function getActiveTriggerIndex() {
+    const triggers = getTriggersForSection();
+    if (!triggers.length) return 0;
+
+    // pick the trigger whose center is closest to viewport center
+    const vc = window.innerHeight / 2;
+    let bestIdx = 0;
+    let bestDist = Infinity;
+
+    for (let i = 0; i < triggers.length; i++) {
+      const r = triggers[i].getBoundingClientRect();
+      const c = (r.top + r.bottom) / 2;
+      const d = Math.abs(c - vc);
+      if (d < bestDist) {
+        bestDist = d;
+        bestIdx = i;
+      }
+    }
+    return clamp(bestIdx);
+  }
+
+  async function setBaseByLabel(label) {
+    const control = getLayerControlRoot();
+    if (!control) return;
+
+    const all = Array.from(control.querySelectorAll("label"));
+    const target = all.find(l => (l.textContent || "").trim().includes(label));
+    if (!target) return;
+
+    const input = target.querySelector("input[type='radio']");
+    if (input && !input.checked) input.click();
+  }
+
+  // Prevent feedback loops while we programmatically toggle layers
+  let suppressScrollToMapUntil = 0;
+
+  globalThis.__crSuppressScrollToMapUntil = () => suppressScrollToMapUntil;
+
+  globalThis.setLayer = async (idxRaw) => {
+    const idx = clamp(idxRaw);
+    suppressScrollToMapUntil = Date.now() + 450;
+
+    for (let i = 0; i < 60; i++) {
+      if (getLayerControlRoot()) break;
+      await sleep(50);
+    }
+
+    await setBaseByLabel(labels[idx]);
+    null;
+  };
+
+  async function installScrollDrivesLayer() {
+    // Wait for map + layer control to exist
+    for (let i = 0; i < 80; i++) {
+      const map = getLeafletMap();
+      if (map && getLayerControlRoot()) break;
+      await sleep(50);
+    }
+
+    // Avoid double-install
+    const key = "__crScrollDrivesLayerInstalled";
+    if (globalThis[key]) return;
+    globalThis[key] = true;
+
+    let lastIdx = -1;
+    let ticking = false;
+
+    const updateFromScroll = async () => {
+      ticking = false;
+      if (Date.now() < suppressScrollToMapUntil) return;
+
+      const idx = getActiveTriggerIndex();
+      if (idx === lastIdx) return;
+
+      lastIdx = idx;
+      await globalThis.setLayer(idx);
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(updateFromScroll);
+    };
+
+    // Drive layers from scroll position
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    // Also update when Closeread changes the active trigger without a “scroll” event
+    // (some implementations toggle classes / transforms). This is cheap and robust.
+    const triggers = getTriggersForSection();
+    if (triggers.length) {
+      const obs = new MutationObserver(onScroll);
+      for (const t of triggers) {
+        obs.observe(t, { attributes: true, attributeFilter: ["class", "style"] });
+      }
+    }
+
+    // Initial set based on current scroll position
+    await updateFromScroll();
+  }
+
+  // IMPORTANT: remove the baselayerchange -> scrollToTrigger behavior.
+  // The user can still click the layer control manually; it just won't force-scroll the narrative.
+  await installScrollDrivesLayer();
+  null
+}
+```
+
+
+
+```{ojs}
+{
+  if (typeof crTriggerIndex !== "undefined" && typeof globalThis.setLayer === "function") {
+    const until = globalThis.__crSuppressScrollToMapUntil?.() ?? 0;
+    if (Date.now() >= until) {
+      globalThis.setLayer(crTriggerIndex);
+    }
+  }
+  null
+}
+```
 
 ### Section 4: Introduce the concept of mobile clinics
 
