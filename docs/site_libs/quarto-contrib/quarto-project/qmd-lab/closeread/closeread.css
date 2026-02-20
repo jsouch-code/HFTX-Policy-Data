@@ -343,5 +343,11 @@ h3, h4, h5, h6 {
   color: #fff !important;
 }
 
+.cr-hover-content .tip{
+  font-size: 1.05rem;   /* increase as needed */
+  line-height: 1.35;
+}
+
+
 /*# sourceMappingURL=closeread.css.map */
 /*

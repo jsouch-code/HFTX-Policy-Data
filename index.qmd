@@ -2,10 +2,6 @@
 format: closeread-html
 ---
 
-::: {style="text-align: center;"}
-![](twhc-logo.jpg){width="10vw"}
-:::
-
 # THE GEOGRAPHY OF HEALTHCARE
 
 ## MOBILE WOMEN’S HEALTH CLINICS IN TEXAS
@@ -107,7 +103,7 @@ pal_perk <- colorNumeric(palette = c("#E6D9E4", "#53284F"), domain = texas_map$P
 
 m <- leaflet(
   elementId = "test_map",
-  height = "90vh",
+  height = "85vh",
   width  = "68vw",
   options = leafletOptions(zoomDelta = 0.5, zoomSnap = 0, dragging = FALSE, minZoom = 6.3999)
 ) |>
@@ -441,15 +437,20 @@ Route animation Explaining how mobile units can go to places where there aren’
 library(sf)
 library(dplyr)
 library(leaflet)
+library(rmapshaper)
 library(htmlwidgets)
 
 # --- Settings you can change ---
 marker_png <- "tracer_marker.png"  # file path relative to the rendered HTML
-marker_w <- 14
-marker_h <- 31
+marker_w <- 23
+marker_h <- 52
 
 
 routes_sf <- st_read("roads_route.gpkg", quiet = TRUE)
+
+texas_map <- st_read("GHWMI_PCWT_2023.geojson", quiet=TRUE) |> 
+  st_transform(4326) |>
+  ms_simplify(keep = 0.05, keep_shapes = TRUE)
 
 # Ensure order is integer and sorted
 routes_sf <- routes_sf %>%
@@ -476,7 +477,7 @@ m <- leaflet(width = "68vw", height = "90vh", options = leafletOptions(zoomContr
     group = "Population",                 # baseGroups label
     fillColor = "#FFBF3C",
     weight = 2, color = "white",
-    fillOpacity = 0.8, stroke = TRUE)
+    fillOpacity = 0.80, stroke = TRUE)
 
 # Attach JS: slow trace + gradient + moving PNG marker
 m <- onRender(
@@ -546,6 +547,43 @@ function(el, x) {
     iconAnchor: [%d, %d]
   });
   var tracer = null;
+  var tracerHeading = null;
+  var headingSmoothing = 0.18;   // lower = steadier, higher = more reactive
+  var headingMinDelta = 2.0;     // ignore tiny jitter changes (degrees)
+
+  function bearingDeg(a, b) {
+    var dLng = b[0] - a[0];
+    var dLat = b[1] - a[1];
+    return Math.atan2(dLng, dLat) * (180 / Math.PI);
+  }
+
+  function wrapAngle180(angleDeg) {
+    var a = angleDeg;
+    while (a > 180) a -= 360;
+    while (a < -180) a += 360;
+    return a;
+  }
+
+  function smoothHeading(targetDeg) {
+    if (tracerHeading === null) {
+      tracerHeading = targetDeg;
+      return tracerHeading;
+    }
+    var delta = wrapAngle180(targetDeg - tracerHeading);
+    if (Math.abs(delta) < headingMinDelta) return tracerHeading;
+    tracerHeading = tracerHeading + (delta * headingSmoothing);
+    return tracerHeading;
+  }
+
+  function setTracerRotation(marker, angleDeg) {
+    if (!marker || !marker._icon) return;
+    var el = marker._icon;
+    var base = el.style.transform || '';
+    base = base.replace(/\\s*rotate\\([^)]*\\)/g, '');
+    el.style.transformOrigin = '50%% 100%%';
+    var shownDeg = smoothHeading(angleDeg);
+    el.style.transform = base + ' rotate(' + shownDeg.toFixed(2) + 'deg)';
+  }
 
   // Densify coords -> N points (linear interpolation)
   function densify(coords, n) {
@@ -586,10 +624,8 @@ function(el, x) {
   }
 
   // Draw one part slowly by adding short colored segments
-  function drawPartSlow(coords, done) {
-    if (!coords || coords.length < 2) { done(); return; }
-
-    var pts = densify(coords, pointsPerPart);
+  function drawPartSlow(pts, gradientState, done) {
+    if (!pts || pts.length < 2) { done(); return; }
 
     // Create tracer marker if needed; place at first point
     if (!tracer) {
@@ -597,6 +633,8 @@ function(el, x) {
     } else {
       tracer.setLatLng([pts[0][1], pts[0][0]]);
     }
+    tracerHeading = null;
+    setTracerRotation(tracer, bearingDeg(pts[0], pts[1]));
 
     var idx = 1;
     var stepMs = Math.max(10, Math.floor(partMs / pointsPerPart));
@@ -608,8 +646,10 @@ function(el, x) {
         return;
       }
 
-      // Progress t for gradient along this part
-      var t = idx / (pts.length - 1);
+      // Progress t for gradient across the entire route
+      var t = (gradientState.totalSegs <= 1)
+        ? 1
+        : (gradientState.drawnSegs / (gradientState.totalSegs - 1));
       var segColor = colorAt(t);
 
       // Add a short segment from previous point to current point
@@ -622,18 +662,34 @@ function(el, x) {
 
       // Move tracer marker to current point
       tracer.setLatLng([b[1], b[0]]);
+      setTracerRotation(tracer, bearingDeg(a, b));
 
+      gradientState.drawnSegs++;
       idx++;
     }, stepMs);
   }
 
   function drawRouteSlow(feature, done) {
     var parts = getParts(feature);
-    var p = 0;
+    var denseParts = parts.map(function(coords) {
+      return densify(coords, pointsPerPart);
+    }).filter(function(pts) {
+      return pts && pts.length > 1;
+    });
 
+    var totalSegs = denseParts.reduce(function(sum, pts) {
+      return sum + (pts.length - 1);
+    }, 0);
+
+    var gradientState = {
+      drawnSegs: 0,
+      totalSegs: totalSegs
+    };
+
+    var p = 0;
     function nextPart() {
-      if (p >= parts.length) { setTimeout(done, pauseRouteMs); return; }
-      drawPartSlow(parts[p], function(){ p++; nextPart(); });
+      if (p >= denseParts.length) { setTimeout(done, pauseRouteMs); return; }
+      drawPartSlow(denseParts[p], gradientState, function(){ p++; nextPart(); });
     }
     nextPart();
   }
@@ -653,6 +709,9 @@ marker_png_safe, marker_w, marker_h, round(marker_w/2), marker_h
 )
 
 m
+
+
+
 
 ```
 :::
