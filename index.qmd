@@ -1,7 +1,5 @@
 ---
 format: closeread-html
-resources: 
-   - trace-marker.png
 ---
 
 ::: {style="text-align: center;"}
@@ -64,8 +62,8 @@ Learn more. @cr-mytext1
 | more than 30 minutes from
 | the nearest birthing hospital.
 
-@cr-mytext1 This is quite important here!
-:::
+[@cr-mytext1]{hlz="cr-t1,cr-t2"} This is quite important here!
+:::::
 
 ### Section 3: Mapping Need.
 
@@ -423,12 +421,11 @@ A single mobile health unit can extend care across multiple counties that aren�
 Learn more. @cr-mytext2
 
 | {#cr-mytext2 .cr-text .scale-to-fill}
-| "Now we're able to do a full clinic, just like a brick-and-mortar clinic, just on wheels."
+| "Now we're able to do a [full clinic]{#cr-t1}, just like a brick-and-mortar clinic, [just on wheels]{#cr-t2}."
 | — Dr. Perales, DNP, APRN, CNS-BC
 | Clinic Service Director, STFPHC
-| 
-
-Scroll on. @cr-mytext2
+|                               
+Scroll on. [@cr-mytext2]{hlz="cr-t1,cr-t2"} 
 :::
 
 ### Section 8: Showing where they go
@@ -514,7 +511,7 @@ function(el, x) {
   } catch(e) {}
 
   // ---- Controls ----
-  var pointsPerPart = 160; // smoothness (try 80–220)
+  var pointsPerPart = 200; // smoothness (try 80–220)
   var partMs = 1400;       // time to draw each part
   var pausePartMs = 120;   // pause between parts
   var pauseRouteMs = 220;  // pause between routes
