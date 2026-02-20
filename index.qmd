@@ -543,6 +543,21 @@ function(el, x) {
   });
   var tracer = null;
 
+  function bearingDeg(a, b) {
+    var dLng = b[0] - a[0];
+    var dLat = b[1] - a[1];
+    return Math.atan2(dLng, dLat) * (180 / Math.PI);
+  }
+
+  function setTracerRotation(marker, angleDeg) {
+    if (!marker || !marker._icon) return;
+    var el = marker._icon;
+    var base = el.style.transform || '';
+    base = base.replace(/\s*rotate\([^)]*\)/g, '');
+    el.style.transformOrigin = '50% 100%';
+    el.style.transform = base + ' rotate(' + angleDeg.toFixed(2) + 'deg)';
+  }
+
   // Densify coords -> N points (linear interpolation)
   function densify(coords, n) {
     var segLens = [], total = 0;
@@ -593,6 +608,7 @@ function(el, x) {
     } else {
       tracer.setLatLng([pts[0][1], pts[0][0]]);
     }
+    setTracerRotation(tracer, bearingDeg(pts[0], pts[1]));
 
     var idx = 1;
     var stepMs = Math.max(10, Math.floor(partMs / pointsPerPart));
@@ -618,6 +634,7 @@ function(el, x) {
 
       // Move tracer marker to current point
       tracer.setLatLng([b[1], b[0]]);
+      setTracerRotation(tracer, bearingDeg(a, b));
 
       idx++;
     }, stepMs);
