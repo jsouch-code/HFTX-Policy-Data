@@ -2,10 +2,6 @@
 format: closeread-html
 ---
 
-::: {style="text-align: center;"}
-![](twhc-logo.jpg){width="10vw"}
-:::
-
 # THE GEOGRAPHY OF HEALTHCARE
 
 ## MOBILE WOMEN’S HEALTH CLINICS IN TEXAS
@@ -107,7 +103,7 @@ pal_perk <- colorNumeric(palette = c("#E6D9E4", "#53284F"), domain = texas_map$P
 
 m <- leaflet(
   elementId = "test_map",
-  height = "90vh",
+  height = "85vh",
   width  = "68vw",
   options = leafletOptions(zoomDelta = 0.5, zoomSnap = 0, dragging = FALSE, minZoom = 6.3999)
 ) |>
@@ -445,8 +441,8 @@ library(htmlwidgets)
 
 # --- Settings you can change ---
 marker_png <- "tracer_marker.png"  # file path relative to the rendered HTML
-marker_w <- 14
-marker_h <- 31
+marker_w <- 23
+marker_h <- 52
 
 
 routes_sf <- st_read("roads_route.gpkg", quiet = TRUE)
@@ -469,7 +465,7 @@ routes_geojson_txt_safe <- gsub("`", "\\\\`", routes_geojson_txt_safe)
 marker_png_safe <- gsub("\\\\", "/", marker_png)
 
 # Build Leaflet widget
-m <- leaflet(width = "68vw", height = "90vh", options = leafletOptions(zoomControl = TRUE)) %>%
+m <- leaflet(width = "68vw", height = "85vh", options = leafletOptions(zoomControl = TRUE)) %>%
   addProviderTiles("CartoDB.Positron") |>
   addPolygons(
     data = texas_map,
