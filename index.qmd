@@ -542,11 +542,32 @@ function(el, x) {
     iconAnchor: [%d, %d]
   });
   var tracer = null;
+  var tracerHeading = null;
+  var headingSmoothing = 0.18;   // lower = steadier, higher = more reactive
+  var headingMinDelta = 2.0;     // ignore tiny jitter changes (degrees)
 
   function bearingDeg(a, b) {
     var dLng = b[0] - a[0];
     var dLat = b[1] - a[1];
     return Math.atan2(dLng, dLat) * (180 / Math.PI);
+  }
+
+  function wrapAngle180(angleDeg) {
+    var a = angleDeg;
+    while (a > 180) a -= 360;
+    while (a < -180) a += 360;
+    return a;
+  }
+
+  function smoothHeading(targetDeg) {
+    if (tracerHeading === null) {
+      tracerHeading = targetDeg;
+      return tracerHeading;
+    }
+    var delta = wrapAngle180(targetDeg - tracerHeading);
+    if (Math.abs(delta) < headingMinDelta) return tracerHeading;
+    tracerHeading = tracerHeading + (delta * headingSmoothing);
+    return tracerHeading;
   }
 
   function setTracerRotation(marker, angleDeg) {
@@ -555,7 +576,8 @@ function(el, x) {
     var base = el.style.transform || '';
     base = base.replace(/\\s*rotate\\([^)]*\\)/g, '');
     el.style.transformOrigin = '50%% 100%%';
-    el.style.transform = base + ' rotate(' + angleDeg.toFixed(2) + 'deg)';
+    var shownDeg = smoothHeading(angleDeg);
+    el.style.transform = base + ' rotate(' + shownDeg.toFixed(2) + 'deg)';
   }
 
   // Densify coords -> N points (linear interpolation)
@@ -608,6 +630,7 @@ function(el, x) {
     } else {
       tracer.setLatLng([pts[0][1], pts[0][0]]);
     }
+    tracerHeading = null;
     setTracerRotation(tracer, bearingDeg(pts[0], pts[1]));
 
     var idx = 1;
