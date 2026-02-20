@@ -568,7 +568,7 @@ function(el, x) {
     var icon = tracer.getElement();
     if (!icon) return;
     var t = icon.style.transform || '';
-    t = t.replace(/\srotate\([^)]*\)/g, '');
+    t = t.replace(/\\srotate\\([^)]*\\)/g, '');
     icon.style.transformOrigin = '50% 100%';
     icon.style.transform = t + ' rotate(' + angle.toFixed(2) + 'deg)';
   }
