@@ -554,7 +554,7 @@ function(el, x) {
     var el = marker._icon;
     var base = el.style.transform || '';
     base = base.replace(/\\s*rotate\\([^)]*\\)/g, '');
-    el.style.transformOrigin = '50% 100%';
+    el.style.transformOrigin = '50%% 100%%';
     el.style.transform = base + ' rotate(' + angleDeg.toFixed(2) + 'deg)';
   }
 
