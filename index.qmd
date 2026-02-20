@@ -452,7 +452,7 @@ marker_w <- 14
 marker_h <- 31
 
 
-routes_sf <- st_read("roads_route.gpkg")
+routes_sf <- st_read("roads_route.gpkg", quiet = TRUE)
 
 # Ensure order is integer and sorted
 routes_sf <- routes_sf %>%
@@ -473,7 +473,7 @@ marker_png_safe <- gsub("\\\\", "/", marker_png)
 
 # Build Leaflet widget
 m <- leaflet(width = "68vw", height = "90vh", options = leafletOptions(zoomControl = TRUE)) %>%
-  addProviderTiles("Stadia.StamenTonerLite") |>
+  addProviderTiles("CartoDB.Positron") |>
   addPolygons(
     data = texas_map,
     group = "Population",                 # baseGroups label
