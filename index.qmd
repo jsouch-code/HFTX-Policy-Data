@@ -481,6 +481,7 @@ m <- onRender(
 "
 function(el, x) {
   var map = this;
+  var hasStarted = false;
 
   // ---- Parse GeoJSON ----
   var gjText = `%s`;
@@ -507,8 +508,9 @@ function(el, x) {
   } catch(e) {}
 
   // ---- Controls ----
-  var pointsPerPart = 200; // smoothness (try 80–220)
-  var partMs = 1400;       // time to draw each part
+  var speedMps = 14;       // tracer speed (meters per second)
+  var stepMs = 40;         // animation cadence
+  var pointSpacingM = speedMps * (stepMs / 1000);
   var pausePartMs = 120;   // pause between parts
   var pauseRouteMs = 220;  // pause between routes
 
@@ -543,13 +545,60 @@ function(el, x) {
   });
   var tracer = null;
 
-  // Densify coords -> N points (linear interpolation)
-  function densify(coords, n) {
+  function normalizeDeg(deg) {
+    var out = deg;
+    while (out < 0) out += 360;
+    while (out >= 360) out -= 360;
+    return out;
+  }
+
+  function bearingDeg(a, b) {
+    var lon1 = a[0] * Math.PI/180;
+    var lat1 = a[1] * Math.PI/180;
+    var lon2 = b[0] * Math.PI/180;
+    var lat2 = b[1] * Math.PI/180;
+    var y = Math.sin(lon2 - lon1) * Math.cos(lat2);
+    var x = Math.cos(lat1) * Math.sin(lat2) -
+            Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1);
+    return normalizeDeg(Math.atan2(y, x) * 180/Math.PI);
+  }
+
+  function rotateTracer(angle) {
+    if (!tracer) return;
+    var icon = tracer.getElement();
+    if (!icon) return;
+    var t = icon.style.transform || '';
+    t = t.replace(/\srotate\([^)]*\)/g, '');
+    icon.style.transformOrigin = '50% 100%';
+    icon.style.transform = t + ' rotate(' + angle.toFixed(2) + 'deg)';
+  }
+
+  function updateTracer(point, angle) {
+    tracer.setLatLng([point[1], point[0]]);
+    requestAnimationFrame(function(){ rotateTracer(angle); });
+  }
+
+  function lineLengthM(coords) {
+    var total = 0;
+    for (var i=0; i<coords.length-1; i++) {
+      total += map.distance(
+        [coords[i][1], coords[i][0]],
+        [coords[i+1][1], coords[i+1][0]]
+      );
+    }
+    return total;
+  }
+
+  // Densify coords -> points with near-constant spacing (meters)
+  function densify(coords, spacingM) {
+    var totalLen = lineLengthM(coords);
+    var n = Math.max(2, Math.ceil(totalLen / Math.max(1, spacingM)) + 1);
     var segLens = [], total = 0;
     for (var i=0; i<coords.length-1; i++) {
-      var a = coords[i], b = coords[i+1];
-      var dx = b[0]-a[0], dy = b[1]-a[1];
-      var len = Math.sqrt(dx*dx + dy*dy);
+      var len = map.distance(
+        [coords[i][1], coords[i][0]],
+        [coords[i+1][1], coords[i+1][0]]
+      );
       segLens.push(len); total += len;
     }
     if (total === 0) return coords;
@@ -585,7 +634,7 @@ function(el, x) {
   function drawPartSlow(coords, done) {
     if (!coords || coords.length < 2) { done(); return; }
 
-    var pts = densify(coords, pointsPerPart);
+    var pts = densify(coords, pointSpacingM);
 
     // Create tracer marker if needed; place at first point
     if (!tracer) {
@@ -593,9 +642,9 @@ function(el, x) {
     } else {
       tracer.setLatLng([pts[0][1], pts[0][0]]);
     }
+    if (pts.length > 1) rotateTracer(bearingDeg(pts[0], pts[1]));
 
     var idx = 1;
-    var stepMs = Math.max(10, Math.floor(partMs / pointsPerPart));
 
     var timer = setInterval(function() {
       if (idx >= pts.length) {
@@ -616,8 +665,8 @@ function(el, x) {
         opacity: 1
       }).addTo(group);
 
-      // Move tracer marker to current point
-      tracer.setLatLng([b[1], b[0]]);
+      // Move tracer marker to current point and face direction of travel
+      updateTracer(b, bearingDeg(a, b));
 
       idx++;
     }, stepMs);
@@ -640,7 +689,27 @@ function(el, x) {
     drawRouteSlow(feats[i], function(){ i++; nextRoute(); });
   }
 
-  nextRoute();
+  function startAnimation() {
+    if (hasStarted) return;
+    hasStarted = true;
+    nextRoute();
+  }
+
+  var observedEl = el.closest('.cr-section') || el;
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries) {
+      for (var k=0; k<entries.length; k++) {
+        if (entries[k].isIntersecting) {
+          startAnimation();
+          obs.disconnect();
+          return;
+        }
+      }
+    }, { threshold: 0.45 });
+    obs.observe(observedEl);
+  } else {
+    startAnimation();
+  }
 }
 ",
 routes_geojson_txt_safe,
