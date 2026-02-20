@@ -1,5 +1,7 @@
 ---
 format: closeread-html
+resources: 
+   - trace-marker.png
 ---
 
 ::: {style="text-align: center;"}
@@ -12,19 +14,15 @@ format: closeread-html
 
 ### Section 1: Highlighting Need
 
+Across the 268,597 square miles of Texas, access to women’s healthcare is deeply uneven. Large regions of the state function as “healthcare deserts,” where high- population communities have few or sometimes no access to nearby clinics providing essential services like contraception, cancer screenings, and preventive care. Many rural Texans face long travel distances, limited transportation options, and months-long wait times.
 
-Across the 268,597 square miles of Texas, access to women’s healthcare is deeply uneven. Large regions of the state function as “healthcare deserts,” where high- population communities have few or sometimes no access to nearby clinics providing essential services like contraception, cancer screenings, and preventive care. Many rural Texans face long travel distances, limited transportation options, and months-long wait times. 
-
-
-:::::: {.cr-section layout="overlay-left"}
+::::: {.cr-section layout="overlay-left"}
 ::: progress-block
-
-
 These barriers make timely, comprehensive healthcare out of reach for many, underscoring the urgent need for solutions that meet people where they are. @cr-myimage
 
-That’s where mobile health care units come in. 
+That’s where mobile health care units come in.
 
-**Use the bar on the left to scroll through this story**
+**Use the bar on the right to scroll through this story**
 :::
 
 ::: {#cr-myimage}
@@ -42,29 +40,20 @@ That’s where mobile health care units come in.
   </video>
 </div>
 
-
-
-
 ```
 :::
-::::::
-
-
-
+:::::
 
 ### Section 2: Health Outcomes.
 
-::::{.cr-section layout="overlay-left" .quote-section}
-
-
-Learn more. @cr-mytext1 
-
+::: {.cr-section .quote-section layout="overlay-left"}
+Learn more. @cr-mytext1
 
 | {#cr-mytext1 .cr-text .scale-to-fill}
 | The impact on women’s health has been
 | especially severe. Nearly half of
 | Texas counties (46.5%) are classified as
-| [maternity care deserts]{#cr-t1}, 
+| [maternity care deserts]{#cr-t1},
 | meaning they lack access to
 | birthing facilities
 | or maternity care providers altogether.
@@ -73,29 +62,23 @@ Learn more. @cr-mytext1
 | traveling far from home,
 | [4.6% of Texas women]{#cr-t2} live
 | more than 30 minutes from
-| the nearest birthing hospital. 
+| the nearest birthing hospital.
 
-
-                               
-[@cr-mytext1]{hlz="cr-t1,cr-t2"} This is quite important here! 
-
-::::
-
+@cr-mytext1 This is quite important here!
+:::
 
 ### Section 3: Mapping Need.
 
 :::: {.cr-section layout="sidebar-left"}
-
-**Population** \
+**Population**\
 The following map shows the population of women of reproductive age (15-49) in 2023. @cr-map
 
-**Providers per 1,000** \
+**Providers per 1,000**\
 Here are all providers per 1,000 women of reproductive age (15-49) in 2023. @cr-map
 
 FPP Providers. @cr-map
 
 HTW Providers. @cr-map
-
 
 ::: {#cr-map}
 ```{r}
@@ -128,10 +111,12 @@ m <- leaflet(
   elementId = "test_map",
   height = "90vh",
   width  = "68vw",
-  options = leafletOptions(zoomDelta = 0.5, zoomSnap = 0, dragging = FALSE, minZoom = 6.4999)
+  options = leafletOptions(zoomDelta = 0.5, zoomSnap = 0, dragging = FALSE, minZoom = 6.3999)
 ) |>
   addProviderTiles("CartoDB.Positron", options = providerTileOptions(opacity = 0)) |>
-  setView(lng = center_lng-3, lat = center_lat, zoom = 6.4999) |>
+  setView(lng = center_lng-3, lat = center_lat, zoom = 6.4999) |>   
+  setMaxBounds(lng1 = -106.6, lat1 = 25.8, lng2 = -93.5, lat2 = 36.5) |>
+
 
   # --- BASE LAYERS (radio) ---
   addPolygons(
@@ -205,10 +190,7 @@ addLegend(
 m
 
 ```
-
 :::
-
-
 ::::
 
 ```{ojs}
@@ -387,7 +369,7 @@ m
 
 ### Section 4: Introduce the concept of mobile clinics
 
-Mobile healthcare units are designed to close gaps by bringing services directly to patients and communities, especially in rural areas. Mobile clinics reduce the distance, time, and cost barriers that prevent many women from accessing care. Mobile clinics set up in trusted community spaces and adapt their routes based on need. They offer a flexible, efficient way to deliver essential women’s health services, such as birth control, cancer screenings, prenatal care, and preventive visits. For women who don’t have reliable access to transportation, mobile clinics can be a literal lifeline. When speaking to patients, they praise the convenience, as they are no longer required to travel hours from home, miss work, school, or childcare. Mobile clinics don’t just expand access; they help ensure care happens earlier, more consistently, and on patients’ terms. 
+Mobile healthcare units are designed to close gaps by bringing services directly to patients and communities, especially in rural areas. Mobile clinics reduce the distance, time, and cost barriers that prevent many women from accessing care. Mobile clinics set up in trusted community spaces and adapt their routes based on need. They offer a flexible, efficient way to deliver essential women’s health services, such as birth control, cancer screenings, prenatal care, and preventive visits. For women who don’t have reliable access to transportation, mobile clinics can be a literal lifeline. When speaking to patients, they praise the convenience, as they are no longer required to travel hours from home, miss work, school, or childcare. Mobile clinics don’t just expand access; they help ensure care happens earlier, more consistently, and on patients’ terms.
 
 ### Section 5: Legislation
 
@@ -395,18 +377,15 @@ Mobile healthcare units are designed to close gaps by bringing services directly
 ![](txcapitol.gif)
 :::
 
-During the 89th Legislative Session, the Texas Women’s Healthcare Coalition and its partners secured $20 million in new state funding to expand mobile women's health units across Texas, doubling down on a commitment to meet women where they are. This investment represents $10 million more than the amount secured in 2023, signaling growing legislative recognition of mobile healthcare as a critical solution to access gaps. This funding is the direct result of sustained, collective advocacy and a willingness by providers to find innovative solutions to reach the counties around them.
+During the 89th Legislative Session, the Texas Women’s Healthcare Coalition and its partners secured \$20 million in new state funding to expand mobile women's health units across Texas, doubling down on a commitment to meet women where they are. This investment represents \$10 million more than the amount secured in 2023, signaling growing legislative recognition of mobile healthcare as a critical solution to access gaps. This funding is the direct result of sustained, collective advocacy and a willingness by providers to find innovative solutions to reach the counties around them.
 
 ### Section 6: On the road
 
-A single mobile health unit can extend care across multiple counties that aren’t served by brick-and-mortar clinics. This map illustrates how mobile units move across regions with limited or no permanent healthcare infrastructures, reaching women who would otherwise face transportation barriers, or even no access at all. 
-
+A single mobile health unit can extend care across multiple counties that aren’t served by brick-and-mortar clinics. This map illustrates how mobile units move across regions with limited or no permanent healthcare infrastructures, reaching women who would otherwise face transportation barriers, or even no access at all.
 
 ### Section 7: On the ground
 
-
-
-::: {.column-screen}
+::: column-screen
 ```{=html}
 
 <style>
@@ -437,24 +416,253 @@ A single mobile health unit can extend care across multiple counties that aren�
     allowfullscreen>
   </iframe>
 </div>
-
-
 ```
 :::
 
-
-
-::::{.cr-section layout="overlay-left" .quote-section}
-
-
+::: {.cr-section .quote-section layout="overlay-left"}
 Learn more. @cr-mytext2
 
-
 | {#cr-mytext2 .cr-text .scale-to-fill}
-| "Now we're able to do a [full clinic]{#cr-t1}, just like a brick-and-mortar clinic, [just on wheels]{#cr-t2}."
+| "Now we're able to do a full clinic, just like a brick-and-mortar clinic, just on wheels."
 | — Dr. Perales, DNP, APRN, CNS-BC
 | Clinic Service Director, STFPHC
-|                               
-Scroll on. [@cr-mytext2]{hlz="cr-t1,cr-t2"}
+| 
 
+Scroll on. @cr-mytext2
+:::
+
+### Section 8: Showing where they go
+
+:::: {.cr-section layout="sidebar-left"}
+Route animation Explaining how mobile units can go to places where there aren’t brick and mortar @cr-map2
+
+::: {#cr-map2}
+```{r map2}
+#| echo: false
+#| message: false
+#| warning: false
+library(sf)
+library(dplyr)
+library(leaflet)
+library(htmlwidgets)
+
+# --- Settings you can change ---
+marker_png <- "tracer_marker.png"  # file path relative to the rendered HTML
+marker_w <- 14
+marker_h <- 31
+
+
+routes_sf <- st_read("roads_route.gpkg")
+
+# Ensure order is integer and sorted
+routes_sf <- routes_sf %>%
+  mutate(order = as.integer(order)) %>%
+  arrange(order)
+
+# sf -> GeoJSON text (temp file)
+geojson_file <- tempfile(fileext = ".geojson")
+sf::st_write(routes_sf, geojson_file, driver = "GeoJSON", delete_dsn = TRUE, quiet = TRUE)
+routes_geojson_txt <- paste(readLines(geojson_file, warn = FALSE), collapse = "\n")
+
+# Safe embed in JS template literal
+routes_geojson_txt_safe <- gsub("\\\\", "\\\\\\\\", routes_geojson_txt)
+routes_geojson_txt_safe <- gsub("`", "\\\\`", routes_geojson_txt_safe)
+
+# Safe embed for marker URL (quotes)
+marker_png_safe <- gsub("\\\\", "/", marker_png)
+
+# Build Leaflet widget
+m <- leaflet(width = "68vw", height = "90vh", options = leafletOptions(zoomControl = TRUE)) %>%
+  addProviderTiles("Stadia.StamenTonerLite") |>
+  addPolygons(
+    data = texas_map,
+    group = "Population",                 # baseGroups label
+    fillColor = "#FFBF3C",
+    weight = 2, color = "white",
+    fillOpacity = 0.8, stroke = TRUE)
+
+# Attach JS: slow trace + gradient + moving PNG marker
+m <- onRender(
+  m,
+  JS(sprintf(
+"
+function(el, x) {
+  var map = this;
+
+  // ---- Parse GeoJSON ----
+  var gjText = `%s`;
+  var gj;
+  try { gj = JSON.parse(gjText); } catch(e) {
+    console.error('GeoJSON parse failed:', e); return;
+  }
+  if (!gj || !gj.features || !gj.features.length) return;
+
+  // ---- Sort by order ----
+  var feats = gj.features.slice().sort(function(a,b){
+    var ao = a && a.properties ? +a.properties.order : NaN;
+    var bo = b && b.properties ? +b.properties.order : NaN;
+    if (Number.isNaN(ao) && Number.isNaN(bo)) return 0;
+    if (Number.isNaN(ao)) return 1;
+    if (Number.isNaN(bo)) return -1;
+    return ao - bo;
+  });
+
+  // Fit bounds once
+  try {
+    var all = L.geoJSON(gj);
+    map.fitBounds(all.getBounds(), { padding: [20, 20] });
+  } catch(e) {}
+
+  // ---- Controls ----
+  var pointsPerPart = 160; // smoothness (try 80–220)
+  var partMs = 1400;       // time to draw each part
+  var pausePartMs = 120;   // pause between parts
+  var pauseRouteMs = 220;  // pause between routes
+
+  // Gradient endpoints:
+  // start: #0075A9E6  (RRGGBBAA)
+  // end:   #53284F    (RRGGBB)
+  var start = { r: 0x00, g: 0x75, b: 0xA9, a: 0xE6/255.0 };
+  var end   = { r: 0x53, g: 0x28, b: 0x4F, a: 1.0 };
+
+  function lerp(a, b, t) { return a + (b-a)*t; }
+  function rgba(c) {
+    return 'rgba(' + Math.round(c.r) + ',' + Math.round(c.g) + ',' + Math.round(c.b) + ',' + c.a.toFixed(3) + ')';
+  }
+  function colorAt(t) {
+    t = Math.max(0, Math.min(1, t));
+    return rgba({
+      r: lerp(start.r, end.r, t),
+      g: lerp(start.g, end.g, t),
+      b: lerp(start.b, end.b, t),
+      a: lerp(start.a, end.a, t)
+    });
+  }
+
+  // Layer group to hold all segments (accumulate)
+  var group = L.layerGroup().addTo(map);
+
+  // ---- PNG marker that traces ----
+  var markerIcon = L.icon({
+    iconUrl: '%s',
+    iconSize: [%d, %d],
+    iconAnchor: [%d, %d]
+  });
+  var tracer = null;
+
+  // Densify coords -> N points (linear interpolation)
+  function densify(coords, n) {
+    var segLens = [], total = 0;
+    for (var i=0; i<coords.length-1; i++) {
+      var a = coords[i], b = coords[i+1];
+      var dx = b[0]-a[0], dy = b[1]-a[1];
+      var len = Math.sqrt(dx*dx + dy*dy);
+      segLens.push(len); total += len;
+    }
+    if (total === 0) return coords;
+
+    var out = [];
+    for (var k=0; k<n; k++) {
+      var t = (k/(n-1)) * total;
+      var acc = 0;
+      for (var s=0; s<segLens.length; s++) {
+        var Ls = segLens[s];
+        if (acc + Ls >= t || s === segLens.length-1) {
+          var a = coords[s], b = coords[s+1];
+          var local = (Ls === 0) ? 0 : (t - acc)/Ls;
+          out.push([ a[0] + local*(b[0]-a[0]), a[1] + local*(b[1]-a[1]) ]);
+          break;
+        }
+        acc += Ls;
+      }
+    }
+    return out;
+  }
+
+  // Return parts without stitching (prevents long jump lines)
+  function getParts(feature) {
+    var g = feature.geometry;
+    if (!g) return [];
+    if (g.type === 'LineString') return [g.coordinates];
+    if (g.type === 'MultiLineString') return g.coordinates;
+    return [];
+  }
+
+  // Draw one part slowly by adding short colored segments
+  function drawPartSlow(coords, done) {
+    if (!coords || coords.length < 2) { done(); return; }
+
+    var pts = densify(coords, pointsPerPart);
+
+    // Create tracer marker if needed; place at first point
+    if (!tracer) {
+      tracer = L.marker([pts[0][1], pts[0][0]], { icon: markerIcon }).addTo(map);
+    } else {
+      tracer.setLatLng([pts[0][1], pts[0][0]]);
+    }
+
+    var idx = 1;
+    var stepMs = Math.max(10, Math.floor(partMs / pointsPerPart));
+
+    var timer = setInterval(function() {
+      if (idx >= pts.length) {
+        clearInterval(timer);
+        setTimeout(done, pausePartMs);
+        return;
+      }
+
+      // Progress t for gradient along this part
+      var t = idx / (pts.length - 1);
+      var segColor = colorAt(t);
+
+      // Add a short segment from previous point to current point
+      var a = pts[idx-1], b = pts[idx];
+      L.polyline([[a[1], a[0]], [b[1], b[0]]], {
+        color: segColor,
+        weight: 5,
+        opacity: 1
+      }).addTo(group);
+
+      // Move tracer marker to current point
+      tracer.setLatLng([b[1], b[0]]);
+
+      idx++;
+    }, stepMs);
+  }
+
+  function drawRouteSlow(feature, done) {
+    var parts = getParts(feature);
+    var p = 0;
+
+    function nextPart() {
+      if (p >= parts.length) { setTimeout(done, pauseRouteMs); return; }
+      drawPartSlow(parts[p], function(){ p++; nextPart(); });
+    }
+    nextPart();
+  }
+
+  var i = 0;
+  function nextRoute() {
+    if (i >= feats.length) return;
+    drawRouteSlow(feats[i], function(){ i++; nextRoute(); });
+  }
+
+  nextRoute();
+}
+",
+routes_geojson_txt_safe,
+marker_png_safe, marker_w, marker_h, round(marker_w/2), marker_h
+))
+)
+
+m
+
+```
+:::
 ::::
+
+### Section 9: What’s next
+
+::: {style="text-align: center;"}
+![](tracer_marker.png){width="10vw"}
+:::
