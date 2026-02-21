@@ -684,7 +684,7 @@ js_code <- paste0(
 ",
 "    var base = el.style.transform || '';
 ",
-"    base = base.replace(/\s*rotate\([^)]*\)/g, '');
+"    base = base.replace(/\\s*rotate\\([^)]*\\)/g, '');
 ",
 "    el.style.transformOrigin = '50% 100%';
 ",
