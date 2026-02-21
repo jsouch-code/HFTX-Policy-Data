@@ -649,7 +649,7 @@ function(el, x) {
       tracer = L.marker([pts[0][1], pts[0][0]], { icon: markerIcon }).addTo(map);
       tracer.bindTooltip(buildTracerTooltip(feature), {
         direction: 'top',
-        offset: [0, -marker_h],
+        offset: [0, -%d],
         opacity: 0.95
       });
     } else {
@@ -727,7 +727,7 @@ function(el, x) {
 }
 ",
 routes_geojson_txt_safe,
-marker_png_safe, marker_w, marker_h, round(marker_w/2), marker_h
+marker_png_safe, marker_w, marker_h, round(marker_w/2), marker_h, marker_h
 ))
 )
 
