@@ -470,7 +470,7 @@ routes_geojson_txt_safe <- gsub("`", "\\\\`", routes_geojson_txt_safe)
 marker_png_safe <- gsub("\\\\", "/", marker_png)
 
 # Build Leaflet widget
-m <- leaflet(width = "68vw", height = "90vh", options = leafletOptions(zoomControl = TRUE)) %>%
+m <- leaflet(width = "68vw", height = "85vh", options = leafletOptions(zoomControl = TRUE)) %>%
   addProviderTiles("CartoDB.Positron") |>
   addPolygons(
     data = texas_map,
