@@ -486,6 +486,33 @@ js_code <- paste0(
 "  var map = this;
 
 ",
+"  var readoutId = (el.id || 'route-map') + '-distance-readout';
+",
+"  var readoutEl = document.getElementById(readoutId);
+",
+"  if (!readoutEl) {
+",
+"    readoutEl = document.createElement('div');
+",
+"    readoutEl.id = readoutId;
+",
+"    readoutEl.style.marginTop = '10px';
+",
+"    readoutEl.style.fontWeight = '600';
+",
+"    readoutEl.style.fontSize = '0.95rem';
+",
+"    el.parentNode.appendChild(readoutEl);
+",
+"  }
+",
+"  function updateDistanceReadout(distanceDriven, totalDistance) {
+",
+"    readoutEl.textContent = 'Total miles driven: ' + distanceDriven.toFixed(1) + ' mi of ' + totalDistance.toFixed(1) + ' mi';
+",
+"  }
+
+",
 "  // ---- Parse GeoJSON ----
 ",
 "  var gjText = `", routes_geojson_txt_safe, "`;
@@ -611,6 +638,8 @@ js_code <- paste0(
 "    return sum + (Number.isFinite(dist) ? dist : 0);
 ",
 "  }, 0);
+",
+"  updateDistanceReadout(0, totalPlannedDistance);
 
 ",
 "  function buildTracerTooltip(feature, distanceDriven) {
@@ -788,6 +817,8 @@ js_code <- paste0(
 ",
 "    }
 ",
+"    updateDistanceReadout(gradientState.baseDistanceDriven, totalPlannedDistance);
+",
 "    tracerHeading = null;
 ",
 "    setTracerRotation(tracer, bearingDeg(pts[0], pts[1]));
@@ -819,6 +850,8 @@ js_code <- paste0(
 "      var distanceDriven = gradientState.baseDistanceDriven + (gradientState.featureDistance * progress);
 ",
 "      tracer.setPopupContent(buildTracerTooltip(feature, distanceDriven));
+",
+"      updateDistanceReadout(distanceDriven, totalPlannedDistance);
 ",
 "      idx++;
 ",
@@ -875,6 +908,8 @@ js_code <- paste0(
 "      var segDist = Number(props.distance);
 ",
 "      if (Number.isFinite(segDist)) completedDistance += segDist;
+",
+"      updateDistanceReadout(completedDistance, totalPlannedDistance);
 ",
 "      i++;
 ",
