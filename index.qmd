@@ -619,10 +619,8 @@ function(el, x) {
   }
 
   // Draw one part slowly by adding short colored segments
-  function drawPartSlow(coords, done) {
-    if (!coords || coords.length < 2) { done(); return; }
-
-    var pts = densify(coords, pointsPerPart);
+  function drawPartSlow(pts, gradientState, done) {
+    if (!pts || pts.length < 2) { done(); return; }
 
     // Create tracer marker if needed; place at first point
     if (!tracer) {
@@ -643,8 +641,10 @@ function(el, x) {
         return;
       }
 
-      // Progress t for gradient along this part
-      var t = idx / (pts.length - 1);
+      // Progress t for gradient across the entire route
+      var t = (gradientState.totalSegs <= 1)
+        ? 1
+        : (gradientState.drawnSegs / (gradientState.totalSegs - 1));
       var segColor = colorAt(t);
 
       // Add a short segment from previous point to current point
@@ -659,17 +659,32 @@ function(el, x) {
       tracer.setLatLng([b[1], b[0]]);
       setTracerRotation(tracer, bearingDeg(a, b));
 
+      gradientState.drawnSegs++;
       idx++;
     }, stepMs);
   }
 
   function drawRouteSlow(feature, done) {
     var parts = getParts(feature);
-    var p = 0;
+    var denseParts = parts.map(function(coords) {
+      return densify(coords, pointsPerPart);
+    }).filter(function(pts) {
+      return pts && pts.length > 1;
+    });
 
+    var totalSegs = denseParts.reduce(function(sum, pts) {
+      return sum + (pts.length - 1);
+    }, 0);
+
+    var gradientState = {
+      drawnSegs: 0,
+      totalSegs: totalSegs
+    };
+
+    var p = 0;
     function nextPart() {
-      if (p >= parts.length) { setTimeout(done, pauseRouteMs); return; }
-      drawPartSlow(parts[p], function(){ p++; nextPart(); });
+      if (p >= denseParts.length) { setTimeout(done, pauseRouteMs); return; }
+      drawPartSlow(denseParts[p], gradientState, function(){ p++; nextPart(); });
     }
     nextPart();
   }
