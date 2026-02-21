@@ -557,14 +557,23 @@ function(el, x) {
     return num.toFixed(digits);
   }
 
-  function buildTracerTooltip(feature) {
+  var totalPlannedDistance = feats.reduce(function(sum, feature) {
+    var props = (feature && feature.properties) ? feature.properties : {};
+    var dist = Number(props.distance);
+    return sum + (Number.isFinite(dist) ? dist : 0);
+  }, 0);
+
+  function buildTracerTooltip(feature, distanceDriven) {
     var props = (feature && feature.properties) ? feature.properties : {};
     return [
+      '<strong>Tracer details</strong>',
       'Segment: ' + (props.order ?? 'n/a'),
       'From: ' + (props.src ?? 'n/a'),
       'To: ' + (props.dst ?? 'n/a'),
       'Duration: ' + formatNumber(props.duration, 1) + ' min',
-      'Distance: ' + formatNumber(props.distance, 1) + ' mi'
+      'Segment distance: ' + formatNumber(props.distance, 1) + ' mi',
+      'Total distance driven: ' + formatNumber(distanceDriven, 1) + ' mi',
+      'Total route distance: ' + formatNumber(totalPlannedDistance, 1) + ' mi'
     ].join('<br>');
   }
 
@@ -647,14 +656,16 @@ function(el, x) {
     // Create tracer marker if needed; place at first point
     if (!tracer) {
       tracer = L.marker([pts[0][1], pts[0][0]], { icon: markerIcon }).addTo(map);
-      tracer.bindTooltip(buildTracerTooltip(feature), {
-        direction: 'top',
-        offset: [0, -%d],
-        opacity: 0.95
+      tracer.bindPopup(buildTracerTooltip(feature, gradientState.baseDistanceDriven), {
+        closeButton: true,
+        autoClose: false,
+        closeOnClick: false,
+        offset: [0, -%d]
       });
+      tracer.openPopup();
     } else {
       tracer.setLatLng([pts[0][1], pts[0][0]]);
-      tracer.setTooltipContent(buildTracerTooltip(feature));
+      tracer.setPopupContent(buildTracerTooltip(feature, gradientState.baseDistanceDriven));
     }
     tracerHeading = null;
     setTracerRotation(tracer, bearingDeg(pts[0], pts[1]));
@@ -688,11 +699,16 @@ function(el, x) {
       setTracerRotation(tracer, bearingDeg(a, b));
 
       gradientState.drawnSegs++;
+      var progress = (gradientState.totalSegs <= 0)
+        ? 1
+        : Math.min(1, gradientState.drawnSegs / gradientState.totalSegs);
+      var distanceDriven = gradientState.baseDistanceDriven + (gradientState.featureDistance * progress);
+      tracer.setPopupContent(buildTracerTooltip(feature, distanceDriven));
       idx++;
     }, stepMs);
   }
 
-  function drawRouteSlow(feature, done) {
+  function drawRouteSlow(feature, baseDistanceDriven, done) {
     var parts = getParts(feature);
     var denseParts = parts.map(function(coords) {
       return densify(coords, pointsPerPart);
@@ -704,9 +720,15 @@ function(el, x) {
       return sum + (pts.length - 1);
     }, 0);
 
+    var props = (feature && feature.properties) ? feature.properties : {};
+    var featureDistance = Number(props.distance);
+    if (!Number.isFinite(featureDistance)) featureDistance = 0;
+
     var gradientState = {
       drawnSegs: 0,
-      totalSegs: totalSegs
+      totalSegs: totalSegs,
+      baseDistanceDriven: baseDistanceDriven,
+      featureDistance: featureDistance
     };
 
     var p = 0;
@@ -718,9 +740,17 @@ function(el, x) {
   }
 
   var i = 0;
+  var completedDistance = 0;
   function nextRoute() {
     if (i >= feats.length) return;
-    drawRouteSlow(feats[i], function(){ i++; nextRoute(); });
+    var feature = feats[i];
+    drawRouteSlow(feature, completedDistance, function(){
+      var props = (feature && feature.properties) ? feature.properties : {};
+      var segDist = Number(props.distance);
+      if (Number.isFinite(segDist)) completedDistance += segDist;
+      i++;
+      nextRoute();
+    });
   }
 
   nextRoute();
