@@ -486,6 +486,7 @@ m <- onRender(
 "
 function(el, x) {
   var map = this;
+  var animationStartDate = new Date(2025, 0, 6);
 
   // ---- Parse GeoJSON ----
   var gjText = `%s`;
@@ -539,6 +540,67 @@ function(el, x) {
 
   // Layer group to hold all segments (accumulate)
   var group = L.layerGroup().addTo(map);
+
+  // ---- Date card in lower-left ----
+  var dateControl = L.control({ position: 'bottomleft' });
+  var dateCard;
+  dateControl.onAdd = function() {
+    dateCard = L.DomUtil.create('div', 'route-date-card');
+    dateCard.innerHTML = '<span class="route-date-label">Date</span><span class="route-date-value">January 6, 2025</span>';
+    return dateCard;
+  };
+  dateControl.addTo(map);
+
+  if (!document.getElementById('route-date-card-styles')) {
+    var style = document.createElement('style');
+    style.id = 'route-date-card-styles';
+    style.textContent = [
+      '@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap");',
+      '.route-date-card {',
+      '  background: rgba(255, 255, 255, 0.96);',
+      '  border-radius: 10px;',
+      '  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);',
+      '  padding: 10px 12px;',
+      '  margin: 0 0 14px 14px;',
+      '  min-width: 180px;',
+      '  font-family: "Rubik", sans-serif;',
+      '  line-height: 1.2;',
+      '}',
+      '.route-date-label {',
+      '  display: block;',
+      '  font-size: 12px;',
+      '  color: #5f6b72;',
+      '  letter-spacing: 0.04em;',
+      '  text-transform: uppercase;',
+      '  margin-bottom: 4px;',
+      '}',
+      '.route-date-value {',
+      '  display: block;',
+      '  font-size: 20px;',
+      '  font-weight: 600;',
+      '  color: #1f2933;',
+      '}'
+    ].join('\\n');
+    document.head.appendChild(style);
+  }
+
+  function updateDateCard(orderValue) {
+    if (!dateCard) return;
+    var routeOrder = Number(orderValue);
+    if (!Number.isFinite(routeOrder) || routeOrder < 1) routeOrder = 1;
+
+    var routeDate = new Date(animationStartDate.getTime());
+    routeDate.setDate(animationStartDate.getDate() + routeOrder - 1);
+
+    var formattedDate = routeDate.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    });
+
+    var valueEl = dateCard.querySelector('.route-date-value');
+    if (valueEl) valueEl.textContent = formattedDate;
+  }
 
   // ---- PNG marker that traces ----
   var markerIcon = L.icon({
@@ -697,6 +759,8 @@ function(el, x) {
   var i = 0;
   function nextRoute() {
     if (i >= feats.length) return;
+    var currentOrder = feats[i] && feats[i].properties ? feats[i].properties.order : (i + 1);
+    updateDateCard(currentOrder);
     drawRouteSlow(feats[i], function(){ i++; nextRoute(); });
   }
 
