@@ -551,6 +551,23 @@ function(el, x) {
   var headingSmoothing = 0.18;   // lower = steadier, higher = more reactive
   var headingMinDelta = 2.0;     // ignore tiny jitter changes (degrees)
 
+  function formatNumber(value, digits) {
+    var num = Number(value);
+    if (!Number.isFinite(num)) return 'n/a';
+    return num.toFixed(digits);
+  }
+
+  function buildTracerTooltip(feature) {
+    var props = (feature && feature.properties) ? feature.properties : {};
+    return [
+      'Segment: ' + (props.order ?? 'n/a'),
+      'From: ' + (props.src ?? 'n/a'),
+      'To: ' + (props.dst ?? 'n/a'),
+      'Duration: ' + formatNumber(props.duration, 1) + ' min',
+      'Distance: ' + formatNumber(props.distance, 1) + ' mi'
+    ].join('<br>');
+  }
+
   function bearingDeg(a, b) {
     var dLng = b[0] - a[0];
     var dLat = b[1] - a[1];
@@ -624,14 +641,20 @@ function(el, x) {
   }
 
   // Draw one part slowly by adding short colored segments
-  function drawPartSlow(pts, gradientState, done) {
+  function drawPartSlow(pts, gradientState, feature, done) {
     if (!pts || pts.length < 2) { done(); return; }
 
     // Create tracer marker if needed; place at first point
     if (!tracer) {
       tracer = L.marker([pts[0][1], pts[0][0]], { icon: markerIcon }).addTo(map);
+      tracer.bindTooltip(buildTracerTooltip(feature), {
+        direction: 'top',
+        offset: [0, -marker_h],
+        opacity: 0.95
+      });
     } else {
       tracer.setLatLng([pts[0][1], pts[0][0]]);
+      tracer.setTooltipContent(buildTracerTooltip(feature));
     }
     tracerHeading = null;
     setTracerRotation(tracer, bearingDeg(pts[0], pts[1]));
@@ -689,7 +712,7 @@ function(el, x) {
     var p = 0;
     function nextPart() {
       if (p >= denseParts.length) { setTimeout(done, pauseRouteMs); return; }
-      drawPartSlow(denseParts[p], gradientState, function(){ p++; nextPart(); });
+      drawPartSlow(denseParts[p], gradientState, feature, function(){ p++; nextPart(); });
     }
     nextPart();
   }
