@@ -480,233 +480,418 @@ m <- leaflet(width = "68vw", height = "85vh", options = leafletOptions(zoomContr
     fillOpacity = 0.80, stroke = TRUE)
 
 # Attach JS: slow trace + gradient + moving PNG marker
-m <- onRender(
-  m,
-  JS(sprintf(
-"
-function(el, x) {
-  var map = this;
-
-  // ---- Parse GeoJSON ----
-  var gjText = `%s`;
-  var gj;
-  try { gj = JSON.parse(gjText); } catch(e) {
-    console.error('GeoJSON parse failed:', e); return;
-  }
-  if (!gj || !gj.features || !gj.features.length) return;
-
-  // ---- Sort by order ----
-  var feats = gj.features.slice().sort(function(a,b){
-    var ao = a && a.properties ? +a.properties.order : NaN;
-    var bo = b && b.properties ? +b.properties.order : NaN;
-    if (Number.isNaN(ao) && Number.isNaN(bo)) return 0;
-    if (Number.isNaN(ao)) return 1;
-    if (Number.isNaN(bo)) return -1;
-    return ao - bo;
-  });
-
-  // Fit bounds once
-  try {
-    var all = L.geoJSON(gj);
-    map.fitBounds(all.getBounds(), { padding: [20, 20] });
-  } catch(e) {}
-
-  // ---- Controls ----
-  var pointsPerPart = 200; // smoothness (try 80–220)
-  var partMs = 1400;       // time to draw each part
-  var pausePartMs = 120;   // pause between parts
-  var pauseRouteMs = 220;  // pause between routes
-
-  // Gradient endpoints:
-  // start: #0075A9E6  (RRGGBBAA)
-  // end:   #53284F    (RRGGBB)
-  var start = { r: 0x00, g: 0x75, b: 0xA9, a: 0xE6/255.0 };
-  var end   = { r: 0x53, g: 0x28, b: 0x4F, a: 1.0 };
-
-  function lerp(a, b, t) { return a + (b-a)*t; }
-  function rgba(c) {
-    return 'rgba(' + Math.round(c.r) + ',' + Math.round(c.g) + ',' + Math.round(c.b) + ',' + c.a.toFixed(3) + ')';
-  }
-  function colorAt(t) {
-    t = Math.max(0, Math.min(1, t));
-    return rgba({
-      r: lerp(start.r, end.r, t),
-      g: lerp(start.g, end.g, t),
-      b: lerp(start.b, end.b, t),
-      a: lerp(start.a, end.a, t)
-    });
-  }
-
-  // Layer group to hold all segments (accumulate)
-  var group = L.layerGroup().addTo(map);
-
-  // ---- PNG marker that traces ----
-  var markerIcon = L.icon({
-    iconUrl: '%s',
-    iconSize: [%d, %d],
-    iconAnchor: [%d, %d]
-  });
-  var tracer = null;
-  var tracerHeading = null;
-  var headingSmoothing = 0.18;   // lower = steadier, higher = more reactive
-  var headingMinDelta = 2.0;     // ignore tiny jitter changes (degrees)
-
-  function bearingDeg(a, b) {
-    var dLng = b[0] - a[0];
-    var dLat = b[1] - a[1];
-    return Math.atan2(dLng, dLat) * (180 / Math.PI);
-  }
-
-  function wrapAngle180(angleDeg) {
-    var a = angleDeg;
-    while (a > 180) a -= 360;
-    while (a < -180) a += 360;
-    return a;
-  }
-
-  function smoothHeading(targetDeg) {
-    if (tracerHeading === null) {
-      tracerHeading = targetDeg;
-      return tracerHeading;
-    }
-    var delta = wrapAngle180(targetDeg - tracerHeading);
-    if (Math.abs(delta) < headingMinDelta) return tracerHeading;
-    tracerHeading = tracerHeading + (delta * headingSmoothing);
-    return tracerHeading;
-  }
-
-  function setTracerRotation(marker, angleDeg) {
-    if (!marker || !marker._icon) return;
-    var el = marker._icon;
-    var base = el.style.transform || '';
-    base = base.replace(/\\s*rotate\\([^)]*\\)/g, '');
-    el.style.transformOrigin = '50%% 100%%';
-    var shownDeg = smoothHeading(angleDeg);
-    el.style.transform = base + ' rotate(' + shownDeg.toFixed(2) + 'deg)';
-  }
-
-  // Densify coords -> N points (linear interpolation)
-  function densify(coords, n) {
-    var segLens = [], total = 0;
-    for (var i=0; i<coords.length-1; i++) {
-      var a = coords[i], b = coords[i+1];
-      var dx = b[0]-a[0], dy = b[1]-a[1];
-      var len = Math.sqrt(dx*dx + dy*dy);
-      segLens.push(len); total += len;
-    }
-    if (total === 0) return coords;
-
-    var out = [];
-    for (var k=0; k<n; k++) {
-      var t = (k/(n-1)) * total;
-      var acc = 0;
-      for (var s=0; s<segLens.length; s++) {
-        var Ls = segLens[s];
-        if (acc + Ls >= t || s === segLens.length-1) {
-          var a = coords[s], b = coords[s+1];
-          var local = (Ls === 0) ? 0 : (t - acc)/Ls;
-          out.push([ a[0] + local*(b[0]-a[0]), a[1] + local*(b[1]-a[1]) ]);
-          break;
-        }
-        acc += Ls;
-      }
-    }
-    return out;
-  }
-
-  // Return parts without stitching (prevents long jump lines)
-  function getParts(feature) {
-    var g = feature.geometry;
-    if (!g) return [];
-    if (g.type === 'LineString') return [g.coordinates];
-    if (g.type === 'MultiLineString') return g.coordinates;
-    return [];
-  }
-
-  // Draw one part slowly by adding short colored segments
-  function drawPartSlow(pts, gradientState, done) {
-    if (!pts || pts.length < 2) { done(); return; }
-
-    // Create tracer marker if needed; place at first point
-    if (!tracer) {
-      tracer = L.marker([pts[0][1], pts[0][0]], { icon: markerIcon }).addTo(map);
-    } else {
-      tracer.setLatLng([pts[0][1], pts[0][0]]);
-    }
-    tracerHeading = null;
-    setTracerRotation(tracer, bearingDeg(pts[0], pts[1]));
-
-    var idx = 1;
-    var stepMs = Math.max(10, Math.floor(partMs / pointsPerPart));
-
-    var timer = setInterval(function() {
-      if (idx >= pts.length) {
-        clearInterval(timer);
-        setTimeout(done, pausePartMs);
-        return;
-      }
-
-      // Progress t for gradient across the entire route
-      var t = (gradientState.totalSegs <= 1)
-        ? 1
-        : (gradientState.drawnSegs / (gradientState.totalSegs - 1));
-      var segColor = colorAt(t);
-
-      // Add a short segment from previous point to current point
-      var a = pts[idx-1], b = pts[idx];
-      L.polyline([[a[1], a[0]], [b[1], b[0]]], {
-        color: segColor,
-        weight: 5,
-        opacity: 1
-      }).addTo(group);
-
-      // Move tracer marker to current point
-      tracer.setLatLng([b[1], b[0]]);
-      setTracerRotation(tracer, bearingDeg(a, b));
-
-      gradientState.drawnSegs++;
-      idx++;
-    }, stepMs);
-  }
-
-  function drawRouteSlow(feature, done) {
-    var parts = getParts(feature);
-    var denseParts = parts.map(function(coords) {
-      return densify(coords, pointsPerPart);
-    }).filter(function(pts) {
-      return pts && pts.length > 1;
-    });
-
-    var totalSegs = denseParts.reduce(function(sum, pts) {
-      return sum + (pts.length - 1);
-    }, 0);
-
-    var gradientState = {
-      drawnSegs: 0,
-      totalSegs: totalSegs
-    };
-
-    var p = 0;
-    function nextPart() {
-      if (p >= denseParts.length) { setTimeout(done, pauseRouteMs); return; }
-      drawPartSlow(denseParts[p], gradientState, function(){ p++; nextPart(); });
-    }
-    nextPart();
-  }
-
-  var i = 0;
-  function nextRoute() {
-    if (i >= feats.length) return;
-    drawRouteSlow(feats[i], function(){ i++; nextRoute(); });
-  }
-
-  nextRoute();
-}
+js_code <- paste0(
+"function(el, x) {
 ",
-routes_geojson_txt_safe,
-marker_png_safe, marker_w, marker_h, round(marker_w/2), marker_h
-))
+"  var map = this;
+
+",
+"  // ---- Parse GeoJSON ----
+",
+"  var gjText = `", routes_geojson_txt_safe, "`;
+",
+"  var gj;
+",
+"  try { gj = JSON.parse(gjText); } catch(e) {
+",
+"    console.error('GeoJSON parse failed:', e); return;
+",
+"  }
+",
+"  if (!gj || !gj.features || !gj.features.length) return;
+
+",
+"  // ---- Sort by order ----
+",
+"  var feats = gj.features.slice().sort(function(a,b){
+",
+"    var ao = a && a.properties ? +a.properties.order : NaN;
+",
+"    var bo = b && b.properties ? +b.properties.order : NaN;
+",
+"    if (Number.isNaN(ao) && Number.isNaN(bo)) return 0;
+",
+"    if (Number.isNaN(ao)) return 1;
+",
+"    if (Number.isNaN(bo)) return -1;
+",
+"    return ao - bo;
+",
+"  });
+
+",
+"  try {
+",
+"    var all = L.geoJSON(gj);
+",
+"    map.fitBounds(all.getBounds(), { padding: [20, 20] });
+",
+"  } catch(e) {}
+
+",
+"  var pointsPerPart = 200;
+",
+"  var partMs = 1400;
+",
+"  var pausePartMs = 120;
+",
+"  var pauseRouteMs = 220;
+
+",
+"  var start = { r: 0x00, g: 0x75, b: 0xA9, a: 0xE6/255.0 };
+",
+"  var end   = { r: 0x53, g: 0x28, b: 0x4F, a: 1.0 };
+
+",
+"  function lerp(a, b, t) { return a + (b-a)*t; }
+",
+"  function rgba(c) {
+",
+"    return 'rgba(' + Math.round(c.r) + ',' + Math.round(c.g) + ',' + Math.round(c.b) + ',' + c.a.toFixed(3) + ')';
+",
+"  }
+",
+"  function colorAt(t) {
+",
+"    t = Math.max(0, Math.min(1, t));
+",
+"    return rgba({
+",
+"      r: lerp(start.r, end.r, t),
+",
+"      g: lerp(start.g, end.g, t),
+",
+"      b: lerp(start.b, end.b, t),
+",
+"      a: lerp(start.a, end.a, t)
+",
+"    });
+",
+"  }
+
+",
+"  var group = L.layerGroup().addTo(map);
+",
+"  var markerIcon = L.icon({
+",
+"    iconUrl: '", marker_png_safe, "',
+",
+"    iconSize: [", marker_w, ", ", marker_h, "],
+",
+"    iconAnchor: [", round(marker_w/2), ", ", marker_h, "]
+",
+"  });
+",
+"  var tracer = null;
+",
+"  var tracerHeading = null;
+",
+"  var headingSmoothing = 0.18;
+",
+"  var headingMinDelta = 2.0;
+
+",
+"  function formatNumber(value, digits) {
+",
+"    var num = Number(value);
+",
+"    if (!Number.isFinite(num)) return 'n/a';
+",
+"    return num.toFixed(digits);
+",
+"  }
+
+",
+"  var totalPlannedDistance = feats.reduce(function(sum, feature) {
+",
+"    var props = (feature && feature.properties) ? feature.properties : {};
+",
+"    var dist = Number(props.distance);
+",
+"    return sum + (Number.isFinite(dist) ? dist : 0);
+",
+"  }, 0);
+
+",
+"  function buildTracerTooltip(feature, distanceDriven) {
+",
+"    var props = (feature && feature.properties) ? feature.properties : {};
+",
+"    return [
+",
+"      '<strong>Tracer details</strong>',
+",
+"      'Segment: ' + (props.order ?? 'n/a'),
+",
+"      'From: ' + (props.src ?? 'n/a'),
+",
+"      'To: ' + (props.dst ?? 'n/a'),
+",
+"      'Duration: ' + formatNumber(props.duration, 1) + ' min',
+",
+"      'Segment distance: ' + formatNumber(props.distance, 1) + ' mi',
+",
+"      'Total distance driven: ' + formatNumber(distanceDriven, 1) + ' mi',
+",
+"      'Total route distance: ' + formatNumber(totalPlannedDistance, 1) + ' mi'
+",
+"    ].join('<br>');
+",
+"  }
+
+",
+"  function bearingDeg(a, b) {
+",
+"    var dLng = b[0] - a[0];
+",
+"    var dLat = b[1] - a[1];
+",
+"    return Math.atan2(dLng, dLat) * (180 / Math.PI);
+",
+"  }
+",
+"  function wrapAngle180(angleDeg) {
+",
+"    var a = angleDeg;
+",
+"    while (a > 180) a -= 360;
+",
+"    while (a < -180) a += 360;
+",
+"    return a;
+",
+"  }
+",
+"  function smoothHeading(targetDeg) {
+",
+"    if (tracerHeading === null) { tracerHeading = targetDeg; return tracerHeading; }
+",
+"    var delta = wrapAngle180(targetDeg - tracerHeading);
+",
+"    if (Math.abs(delta) < headingMinDelta) return tracerHeading;
+",
+"    tracerHeading = tracerHeading + (delta * headingSmoothing);
+",
+"    return tracerHeading;
+",
+"  }
+",
+"  function setTracerRotation(marker, angleDeg) {
+",
+"    if (!marker || !marker._icon) return;
+",
+"    var el = marker._icon;
+",
+"    var base = el.style.transform || '';
+",
+"    base = base.replace(/\\s*rotate\\([^)]*\\)/g, '');
+",
+"    el.style.transformOrigin = '50% 100%';
+",
+"    var shownDeg = smoothHeading(angleDeg);
+",
+"    el.style.transform = base + ' rotate(' + shownDeg.toFixed(2) + 'deg)';
+",
+"  }
+
+",
+"  function densify(coords, n) {
+",
+"    var segLens = [], total = 0;
+",
+"    for (var i=0; i<coords.length-1; i++) {
+",
+"      var a = coords[i], b = coords[i+1];
+",
+"      var dx = b[0]-a[0], dy = b[1]-a[1];
+",
+"      var len = Math.sqrt(dx*dx + dy*dy);
+",
+"      segLens.push(len); total += len;
+",
+"    }
+",
+"    if (total === 0) return coords;
+",
+"    var out = [];
+",
+"    for (var k=0; k<n; k++) {
+",
+"      var t = (k/(n-1)) * total;
+",
+"      var acc = 0;
+",
+"      for (var s=0; s<segLens.length; s++) {
+",
+"        var Ls = segLens[s];
+",
+"        if (acc + Ls >= t || s === segLens.length-1) {
+",
+"          var a = coords[s], b = coords[s+1];
+",
+"          var local = (Ls === 0) ? 0 : (t - acc)/Ls;
+",
+"          out.push([ a[0] + local*(b[0]-a[0]), a[1] + local*(b[1]-a[1]) ]);
+",
+"          break;
+",
+"        }
+",
+"        acc += Ls;
+",
+"      }
+",
+"    }
+",
+"    return out;
+",
+"  }
+",
+"  function getParts(feature) {
+",
+"    var g = feature.geometry;
+",
+"    if (!g) return [];
+",
+"    if (g.type === 'LineString') return [g.coordinates];
+",
+"    if (g.type === 'MultiLineString') return g.coordinates;
+",
+"    return [];
+",
+"  }
+
+",
+"  function drawPartSlow(pts, gradientState, feature, done) {
+",
+"    if (!pts || pts.length < 2) { done(); return; }
+",
+"    if (!tracer) {
+",
+"      tracer = L.marker([pts[0][1], pts[0][0]], { icon: markerIcon }).addTo(map);
+",
+"      tracer.bindPopup(buildTracerTooltip(feature, gradientState.baseDistanceDriven), {
+",
+"        closeButton: true, autoClose: false, closeOnClick: false,
+",
+"        offset: [0, -", marker_h, "]
+",
+"      });
+",
+"      tracer.openPopup();
+",
+"    } else {
+",
+"      tracer.setLatLng([pts[0][1], pts[0][0]]);
+",
+"      tracer.setPopupContent(buildTracerTooltip(feature, gradientState.baseDistanceDriven));
+",
+"    }
+",
+"    tracerHeading = null;
+",
+"    setTracerRotation(tracer, bearingDeg(pts[0], pts[1]));
+",
+"    var idx = 1;
+",
+"    var stepMs = Math.max(10, Math.floor(partMs / pointsPerPart));
+",
+"    var timer = setInterval(function() {
+",
+"      if (idx >= pts.length) { clearInterval(timer); setTimeout(done, pausePartMs); return; }
+",
+"      var t = (gradientState.totalSegs <= 1) ? 1 : (gradientState.drawnSegs / (gradientState.totalSegs - 1));
+",
+"      var segColor = colorAt(t);
+",
+"      var a = pts[idx-1], b = pts[idx];
+",
+"      L.polyline([[a[1], a[0]], [b[1], b[0]]], { color: segColor, weight: 5, opacity: 1 }).addTo(group);
+",
+"      tracer.setLatLng([b[1], b[0]]);
+",
+"      setTracerRotation(tracer, bearingDeg(a, b));
+",
+"      gradientState.drawnSegs++;
+",
+"      var progress = (gradientState.totalSegs <= 0) ? 1 : Math.min(1, gradientState.drawnSegs / gradientState.totalSegs);
+",
+"      var distanceDriven = gradientState.baseDistanceDriven + (gradientState.featureDistance * progress);
+",
+"      tracer.setPopupContent(buildTracerTooltip(feature, distanceDriven));
+",
+"      idx++;
+",
+"    }, stepMs);
+",
+"  }
+
+",
+"  function drawRouteSlow(feature, baseDistanceDriven, done) {
+",
+"    var parts = getParts(feature);
+",
+"    var denseParts = parts.map(function(coords) { return densify(coords, pointsPerPart); }).filter(function(pts) { return pts && pts.length > 1; });
+",
+"    var totalSegs = denseParts.reduce(function(sum, pts) { return sum + (pts.length - 1); }, 0);
+",
+"    var props = (feature && feature.properties) ? feature.properties : {};
+",
+"    var featureDistance = Number(props.distance);
+",
+"    if (!Number.isFinite(featureDistance)) featureDistance = 0;
+",
+"    var gradientState = { drawnSegs: 0, totalSegs: totalSegs, baseDistanceDriven: baseDistanceDriven, featureDistance: featureDistance };
+",
+"    var p = 0;
+",
+"    function nextPart() {
+",
+"      if (p >= denseParts.length) { setTimeout(done, pauseRouteMs); return; }
+",
+"      drawPartSlow(denseParts[p], gradientState, feature, function(){ p++; nextPart(); });
+",
+"    }
+",
+"    nextPart();
+",
+"  }
+
+",
+"  var i = 0;
+",
+"  var completedDistance = 0;
+",
+"  function nextRoute() {
+",
+"    if (i >= feats.length) return;
+",
+"    var feature = feats[i];
+",
+"    drawRouteSlow(feature, completedDistance, function(){
+",
+"      var props = (feature && feature.properties) ? feature.properties : {};
+",
+"      var segDist = Number(props.distance);
+",
+"      if (Number.isFinite(segDist)) completedDistance += segDist;
+",
+"      i++;
+",
+"      nextRoute();
+",
+"    });
+",
+"  }
+",
+"  nextRoute();
+",
+"}
+"
 )
+
+m <- onRender(m, JS(js_code))
+
 
 m
 
