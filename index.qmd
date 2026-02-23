@@ -446,6 +446,14 @@ marker_w <- 23
 marker_h <- 52
 
 
+
+mapboxmap <- "https://api.mapbox.com/styles/v1/hftx1/cmlzl9xiy004y01rz2bix892g/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJjaW9jenN1OGwwNGZsdjRrcWZnazh2OXVxIn0.QJrmnV9lJzdXHkH95ERdjw"
+
+mb_attribution <- "© <a href='https://www.mapbox.com/map-feedback/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
+
+
+
+
 routes_sf <- st_read("roads_route.gpkg", quiet = TRUE)
 
 texas_map <- st_read("GHWMI_PCWT_2023.geojson", quiet=TRUE) |> 
@@ -471,13 +479,14 @@ marker_png_safe <- gsub("\\\\", "/", marker_png)
 
 # Build Leaflet widget
 m <- leaflet(width = "68vw", height = "85vh", options = leafletOptions(zoomControl = TRUE)) %>%
-  addProviderTiles("CartoDB.Positron") |>
   addPolygons(
     data = texas_map,
     group = "Population",                 # baseGroups label
     fillColor = "#FFBF3C",
     weight = 2, color = "white",
-    fillOpacity = 0.80, stroke = TRUE)
+    fillOpacity = 0.70, stroke = TRUE) |>
+      addTiles(urlTemplate = mapboxmap, attribution = mb_attribution)
+
 
 # Attach JS: slow trace + gradient + moving PNG marker
 js_code <- paste0(
@@ -619,17 +628,7 @@ js_code <- paste0(
 ",
 "    return [
 ",
-"      '<strong>Tracer details</strong>',
-",
-"      'Segment: ' + (props.order ?? 'n/a'),
-",
-"      'From: ' + (props.src ?? 'n/a'),
-",
-"      'To: ' + (props.dst ?? 'n/a'),
-",
-"      'Duration: ' + formatNumber(props.duration, 1) + ' min',
-",
-"      'Segment distance: ' + formatNumber(props.distance, 1) + ' mi',
+"      '<strong>South Texas Family Planning & Health Corporation (STFPHC)</strong>',,
 ",
 "      'Total distance driven: ' + formatNumber(distanceDriven, 1) + ' mi',
 ",
