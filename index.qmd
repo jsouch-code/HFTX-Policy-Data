@@ -117,8 +117,8 @@ texas_map$population <- as.numeric(texas_map$PWCT_TX_2023_pop)
 min_val <- min(texas_map$population, na.rm = TRUE)
 texas_map$population[is.na(texas_map$population)] <- min_val
 
-pal_pop <- colorNumeric(palette = c("#E6D9E4", "#53284F"), domain = texas_map$population)
-pal_perk <- colorNumeric(palette = c("#E6D9E4", "#53284F"), domain = texas_map$PWCT_TX_2023_total_PerK)
+pal_pop <- colorNumeric(palette = c("#efe9ef", "#53284F"), domain = texas_map$population)
+pal_perk <- colorNumeric(palette = c("#efe9ef", "#53284F"), domain = texas_map$PWCT_TX_2023_total_PerK)
 
 m <- leaflet(
   elementId = "test_map",
