@@ -48,27 +48,46 @@ Learn more. @cr-mytext1
 | especially severe. Nearly half of
 | Texas counties (46.5%) are classified as
 | [maternity care deserts]{#cr-t1},
-| meaning they lack access to
-| birthing facilities
+| meaning they lack access to birthing facilities
 | or maternity care providers altogether.
 | For thousands of women, even basic
 | pregnancy care requires
-| traveling far from home,
-| [4.6% of Texas women]{#cr-t2} live
-| more than 30 minutes from
-| the nearest birthing hospital.
+| traveling far from home.
 
-[@cr-mytext1]{hlz="cr-t1,cr-t2"} This is quite important here!
+[@cr-mytext1]{highlight="cr-t1"} Scroll down.
 :::::
 
+
+::: {.cr-section .quote-section layout="overlay-left"}
+Learn more. @cr-mytext2
+
+| {#cr-mytext2 .cr-text .scale-to-fill}
+| Barriers to care extend beyond pregnancy.
+| Across Texas, [1.75 million women]{#cr-t5}
+| in need live in contraceptive deserts, where access to
+| affordable birth control is limited or nonexistent.
+| In Texas, [153,040 women]{#cr-t6}
+| live in counties without a
+| single health center offering a full range
+| of birth control methods.
+| Together, these gaps in maternal and
+| women’s healthcare make timely,
+| comprehensive care out of reach for many,
+| underscoring the urgent need for solutions
+| that meet people where they are. 
+
+
+[@cr-mytext2]{highlight="cr-t5,cr-t6"} Scroll down. 
+
+:::
 ### Section 3: Mapping Need.
 
 :::: {.cr-section layout="sidebar-left"}
 **Population**\
-The following map shows the population of women of reproductive age (15-49) in 2023. @cr-map
+This map shows the population of women of reproductive age (15-49) in 2023. @cr-map
 
 **Providers per 1,000**\
-Here are all providers per 1,000 women of reproductive age (15-49) in 2023. @cr-map
+This map shows the ratio of providers – such as doctors, nurses practitioners, or physician assistants – with at least 10 new birth control prescriptions per 1,000 women of reproductive age in 2023. 
 
 FPP Providers. @cr-map
 
@@ -105,11 +124,12 @@ m <- leaflet(
   elementId = "test_map",
   height = "85vh",
   width  = "68vw",
-  options = leafletOptions(zoomDelta = 0.5, zoomSnap = 0, dragging = FALSE, minZoom = 6.3999)
+  options = leafletOptions(zoomDelta = 0.5, zoomSnap = 0, dragging = FALSE, minZoom = 6.4999, scrollWheelZoom = FALSE)
 ) |>
   addProviderTiles("CartoDB.Positron", options = providerTileOptions(opacity = 0)) |>
   setView(lng = center_lng-3, lat = center_lat, zoom = 6.4999) |>   
   setMaxBounds(lng1 = -106.6, lat1 = 25.8, lng2 = -93.5, lat2 = 36.5) |>
+  mapOptions(zoomToLimits = "always") |>
 
 
   # --- BASE LAYERS (radio) ---
@@ -414,14 +434,15 @@ A single mobile health unit can extend care across multiple counties that aren�
 :::
 
 ::: {.cr-section .quote-section layout="overlay-left"}
-Learn more. @cr-mytext2
+Learn more. @cr-mytext3
 
-| {#cr-mytext2 .cr-text .scale-to-fill}
-| "Now we're able to do a [full clinic]{#cr-t1}, just like a brick-and-mortar clinic, [just on wheels]{#cr-t2}."
+| {#cr-mytext3 .cr-text .scale-to-fill}
+| "Now we're able to do a [full clinic]{#cr-t1},
+| just like a brick-and-mortar clinic, [just on wheels]{#cr-t2}."
 | — Dr. Perales, DNP, APRN, CNS-BC
 | Clinic Service Director, STFPHC
 |                               
-Scroll on. [@cr-mytext2]{hlz="cr-t1,cr-t2"} 
+Scroll on. [@cr-mytext3]{hlz="cr-t1,cr-t2"} 
 :::
 
 ### Section 8: Showing where they go
@@ -630,9 +651,9 @@ js_code <- paste0(
 ",
 "      '<strong>South Texas Family Planning & Health Corporation (STFPHC)</strong>',,
 ",
-"      'Total distance driven: ' + formatNumber(distanceDriven, 1) + ' mi',
+"      'Total distance driven: ' + formatNumber(distanceDriven*0.62, 1) + ' mi',
 ",
-"      'Total route distance: ' + formatNumber(totalPlannedDistance, 1) + ' mi'
+"      'Total route distance: ' + formatNumber(totalPlannedDistance*0.62, 1) + ' mi'
 ",
 "    ].join('<br>');
 ",
