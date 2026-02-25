@@ -124,7 +124,7 @@ m <- leaflet(
   elementId = "test_map",
   height = "85vh",
   width  = "68vw",
-  options = leafletOptions(zoomDelta = 0.5, zoomSnap = 0, dragging = FALSE, minZoom = 6.4999, scrollWheelZoom = FALSE)
+  options = leafletOptions(zoomDelta = 0.5, zoomSnap = 0, dragging = FALSE, minZoom = 6.2999, scrollWheelZoom = FALSE)
 ) |>
   addProviderTiles("CartoDB.Positron", options = providerTileOptions(opacity = 0)) |>
   setView(lng = center_lng-3, lat = center_lat, zoom = 6.4999) |>   
