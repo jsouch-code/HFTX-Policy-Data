@@ -280,6 +280,7 @@ body.cr-removeheaderspace #quarto-content main#quarto-document-content .quarto-t
   --cr-narrative-font-family: var(--bs-body-font-family);
   --cr-narrative-font-size: 1.15rem;
   --cr-poem-font-family: Rubik;
+  --cr-poem-font-size:1;
   --cr-narrative-sidebar-width: 0.75fr;
   --cr-section-background-color: white;
 }
@@ -331,6 +332,7 @@ h3, h4, h5, h6 {
 .quote-section .cr-panel,
 .quote-section .cr-viewport {
   background: #FFBF3C!important;
+  font-size: 1;
   color: #fff !important;
 }
 
