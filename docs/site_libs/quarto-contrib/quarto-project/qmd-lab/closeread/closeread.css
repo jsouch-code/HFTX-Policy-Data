@@ -50,6 +50,7 @@ body {
   padding-block: 0;
 }
 .cr-section .sticky-col {
+  font-size: 0.9rem;
   grid-row: 1;
 }
 .cr-section .sticky-col .sticky-col-stack {
@@ -57,7 +58,7 @@ body {
   height: 100dvh;
   position: sticky;
   overflow: hidden;
-  top: 0;
+  top: 5%;
 }
 .cr-section .sticky-col .sticky-col-stack .sticky {
   grid-area: 1/1;
@@ -280,7 +281,6 @@ body.cr-removeheaderspace #quarto-content main#quarto-document-content .quarto-t
   --cr-narrative-font-family: var(--bs-body-font-family);
   --cr-narrative-font-size: 1.15rem;
   --cr-poem-font-family: Rubik;
-  --cr-poem-font-size:1;
   --cr-narrative-sidebar-width: 0.75fr;
   --cr-section-background-color: white;
 }
