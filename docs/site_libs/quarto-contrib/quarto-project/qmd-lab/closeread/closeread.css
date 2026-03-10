@@ -50,7 +50,6 @@ body {
   padding-block: 0;
 }
 .cr-section .sticky-col {
-  font-size: 0.9rem;
   grid-row: 1;
 }
 .cr-section .sticky-col .sticky-col-stack {
@@ -58,7 +57,7 @@ body {
   height: 100dvh;
   position: sticky;
   overflow: hidden;
-  top: 5%;
+  top: 0;
 }
 .cr-section .sticky-col .sticky-col-stack .sticky {
   grid-area: 1/1;

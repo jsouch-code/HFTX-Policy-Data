@@ -16,7 +16,6 @@ These barriers make timely, comprehensive healthcare out of reach for many, unde
 
 That’s where mobile health care units come in.
 
-**Use the bar on the right to scroll through this story**
 :::
 
 ::: {#cr-myimage}
@@ -38,7 +37,7 @@ That’s where mobile health care units come in.
 :::
 :::::
 
-### Section 2: Health Outcomes.
+### Health Outcomes.
 
 ::: {.cr-section .quote-section layout="overlay-left"}
 Learn more. @cr-mytext1
@@ -54,7 +53,7 @@ Learn more. @cr-mytext1
 | pregnancy care requires
 | traveling far from home.
 
-[@cr-mytext1]{highlight="cr-t1"} Scroll down.
+[@cr-mytext1]{highlight="cr-t1"} Keep scrolling to learn more.
 :::::
 
 
@@ -63,21 +62,15 @@ Learn more. @cr-mytext2
 
 | {#cr-mytext2 .cr-text .scale-to-fill}
 | Barriers to care extend beyond pregnancy.
-| Across Texas, [1.75 million women]{#cr-t5}
-| in need live in contraceptive deserts, where access to
-| affordable birth control is limited or nonexistent.
-| In Texas, [153,040 women]{#cr-t6}
-| live in counties without a
-| single health center offering a full range
-| of birth control methods.
-| Together, these gaps in maternal and
-| women’s healthcare make timely,
-| comprehensive care out of reach for many,
-| underscoring the urgent need for solutions
+| Across Texas, [1.75 million women]{#cr-t5} in need live in contraceptive deserts, where access to
+| affordable birth control is limited or nonexistent. In Texas, [153,040 women]{#cr-t6} live in counties
+| without a single health center offering a full range of birth control methods.
+| Together, these gaps in maternal and women’s healthcare make timely,
+| comprehensive care out of reach for many, underscoring the urgent need for solutions
 | that meet people where they are. 
 
 
-[@cr-mytext2]{highlight="cr-t5,cr-t6"} Scroll down. 
+[@cr-mytext2]{highlight="cr-t5,cr-t6"} Keep scrolling. 
 
 :::
 ### Section 3: Mapping Need.
@@ -151,7 +144,7 @@ m <- leaflet(
     weight = 2, color = "white",
     fillOpacity = 1, stroke = TRUE,
     highlightOptions = highlightOptions(weight = 5, opacity = 1, color = "#D24699", bringToFront = TRUE),
-    label = ~paste("There are", round(PWCT_TX_2023_total_PerK, 2), "providers per 1,000 women (15–49) in this county."),
+    label = ~paste("There were", round(PWCT_TX_2023_total_PerK, 2), "providers per 1,000 women (15–49) in", texas_map$CNTY_NM,"County in 2023."),
     popup = paste(texas_map$CNTY_NM, "County"),
     labelOptions = labelOptions(textsize = "15px", style = list("font-weight"="bold","padding"="6px"))
   ) |>
@@ -385,70 +378,32 @@ m
 
 Mobile healthcare units are designed to close gaps by bringing services directly to patients and communities, especially in rural areas. Mobile clinics reduce the distance, time, and cost barriers that prevent many women from accessing care. Mobile clinics set up in trusted community spaces and adapt their routes based on need. They offer a flexible, efficient way to deliver essential women’s health services, such as birth control, cancer screenings, prenatal care, and preventive visits. For women who don’t have reliable access to transportation, mobile clinics can be a literal lifeline. When speaking to patients, they praise the convenience, as they are no longer required to travel hours from home, miss work, school, or childcare. Mobile clinics don’t just expand access; they help ensure care happens earlier, more consistently, and on patients’ terms.
 
-### Section 5: Legislation
-
-::: {#cr-myimage1}
-![](txcapitol.gif)
-:::
-
-During the 89th Legislative Session, the Texas Women’s Healthcare Coalition and its partners secured \$20 million in new state funding to expand mobile women's health units across Texas, doubling down on a commitment to meet women where they are. This investment represents \$10 million more than the amount secured in 2023, signaling growing legislative recognition of mobile healthcare as a critical solution to access gaps. This funding is the direct result of sustained, collective advocacy and a willingness by providers to find innovative solutions to reach the counties around them.
-
-### Section 6: On the road
-
-A single mobile health unit can extend care across multiple counties that aren’t served by brick-and-mortar clinics. This map illustrates how mobile units move across regions with limited or no permanent healthcare infrastructures, reaching women who would otherwise face transportation barriers, or even no access at all.
-
-### Section 7: On the ground
-
-::: column-screen
-```{=html}
-
-<style>
-/* remove default padding that creates the “white gutter” */
-.column-screen { padding-left: 0 !important; padding-right: 0 !important; }
-.column-screen > * { margin-left: 0 !important; margin-right: 0 !important; }
-
-.video-wrap{
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  max-height: 100vh;
-  position: relative;
-  background: #0075A9E6;
-}
-.video-wrap iframe{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-</style>
-
-<div class="video-wrap">
-  <iframe
-    src="https://www.youtube.com/embed/rwSMgGkb8sI?controls=0&modestbranding=1&rel=0&playsinline=1"
-    allow="encrypted-media; picture-in-picture"
-    allowfullscreen>
-  </iframe>
-</div>
-```
-:::
 
 ::: {.cr-section .quote-section layout="overlay-left"}
-Learn more. @cr-mytext3
 
-| {#cr-mytext3 .cr-text .scale-to-fill}
-| "Now we're able to do a [full clinic]{#cr-t1},
-| just like a brick-and-mortar clinic, [just on wheels]{#cr-t2}."
-| — Dr. Perales, DNP, APRN, CNS-BC
-| Clinic Service Director, STFPHC
-|                               
-Scroll on. [@cr-mytext3]{hlz="cr-t1,cr-t2"} 
+Keep scrolling. @cr-mytext0
+
+| {#cr-mytext0 .cr-text .scale-to-fill}
+| **One patient told a Texas mobile clinic provider**, “I got scared after my neighbor
+| died of breast cancer. She came to me one day and showed me her left breast.
+| I told her she needed to go to a doctor, but it was too late.
+| She suffered for a year and died of breast cancer, because she [couldn’t find the right medical services]{#cr-t1}.
+| I then decided I needed to find a way to live for my family.When I discovered your clinic and learned
+| about the services you all provide, [I found hope again]{#cr-t2}.  I feel that my health is important to my family, because
+| without me, I don’t know how they would be able to take care of themselves.”
+
+                            
+Keep scrolling. [@cr-mytext0]{hlz="cr-t1,cr-t2"} 
 :::
 
-### Section 8: Showing where they go
+
+
+### Section 5: Showing where they go
 
 :::: {.cr-section layout="sidebar-left"}
 Route animation Explaining how mobile units can go to places where there aren’t brick and mortar @cr-map2
+
+A single mobile health unit can extend care across multiple counties that aren’t served by brick-and-mortar clinics. This map illustrates how mobile units move across regions with limited or no permanent healthcare infrastructures, reaching women who would otherwise face transportation barriers, or even no access at all.
 
 ::: {#cr-map2}
 ```{r map2}
@@ -920,7 +875,68 @@ m
 
 ```
 :::
+
 ::::
+
+
+### Section 6: Legislation
+
+::: {#cr-myimage1}
+![](txcapitol.gif)
+:::
+
+During the 89th Legislative Session, the Texas Women’s Healthcare Coalition and its partners secured \$20 million in new state funding to expand mobile women's health units across Texas, doubling down on a commitment to meet women where they are. This investment represents \$10 million more than the amount secured in 2023, signaling growing legislative recognition of mobile healthcare as a critical solution to access gaps. This funding is the direct result of sustained, collective advocacy and a willingness by providers to find innovative solutions to reach the counties around them.
+
+
+### Section 7: On the ground
+
+::: column-screen
+```{=html}
+
+<style>
+/* remove default padding that creates the “white gutter” */
+.column-screen { padding-left: 0 !important; padding-right: 0 !important; }
+.column-screen > * { margin-left: 0 !important; margin-right: 0 !important; }
+
+.video-wrap{
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 100vh;
+  position: relative;
+  background: #0075A9E6;
+}
+.video-wrap iframe{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+</style>
+
+<div class="video-wrap">
+  <iframe
+    src="https://www.youtube.com/embed/rwSMgGkb8sI?controls=0&modestbranding=1&rel=0&playsinline=1"
+    allow="encrypted-media; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+</div>
+```
+:::
+
+::: {.cr-section .quote-section layout="overlay-left"}
+Learn more. @cr-mytext3
+
+| {#cr-mytext3 .cr-text .scale-to-fill}
+| "Now we're able to do a [full clinic]{#cr-t1},
+| just like a brick-and-mortar clinic, [just on wheels]{#cr-t2}."
+| — Dr. Perales, DNP, APRN, CNS-BC
+| Clinic Service Director, STFPHC
+|                               
+Scroll on. [@cr-mytext3]{hlz="cr-t1,cr-t2"} 
+:::
+
+
 
 ### Section 9: What’s next
 
