@@ -269,6 +269,10 @@ m
 ::::
 
 ```{ojs}
+//| message: false
+//| warning: false
+//| output: false
+
 {
   const mapId = "test_map";
 
