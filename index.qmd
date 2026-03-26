@@ -247,14 +247,15 @@ m <- leaflet(
     group = "Population",
     className = "legend-pop"
   ) |>
+ 
   addLegend(
-    pal = pal_perk,
-    values = texas_map$PWCT_TX_2023_total_PerK,
-    title = "Total providers per 1,000 women (15–49)",
-    opacity = 1,
-    group = "Total Providers per 1,000 Women 15-49",
-    className = "legend-perk"
-  ) |>
+  pal = pal_perk,
+  values = texas_map$PWCT_TX_2023_total_PerK[!is.na(texas_map$PWCT_TX_2023_total_PerK)],
+  title = "Total providers per 1,000 women (15–49)",
+  opacity = 1,
+  group = "Total Providers per 1,000 Women 15-49",
+  className = "legend-perk"
+)|>
   setMapWidgetStyle(list(background = "white")) |>
   addResetMapButton() |>
   hideGroup("Total Providers per 1,000 Women 15-49") |>
@@ -1006,7 +1007,7 @@ df |>
 During the 89th Legislative Session, the Texas Women’s Healthcare Coalition and its partners secured \$20 million in new state funding to expand mobile women's health units across Texas, doubling down on a commitment to meet women where they are. This investment represents \$10 million more than the amount secured in 2023, signaling growing legislative recognition of mobile healthcare as a critical solution to access gaps. This funding is the direct result of sustained, collective advocacy and a willingness by providers to find innovative solutions to reach the counties around them.
 
 
-### On the ground
+### On the Ground
 
 ::: column-screen
 ```{=html}
@@ -1059,5 +1060,4 @@ Scroll on. [@cr-mytext3]{hlz="cr-t1,cr-t2"}
 ### What’s Next
 
 ::: {style="text-align: center;"}
-![](tracer_marker.png){width="10vw"}
 :::
