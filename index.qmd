@@ -29,7 +29,7 @@ That’s where mobile health care units come in.
 
 <div class="hero-video">
   <video autoplay muted loop playsinline preload="auto">
-    <source src="output_video.mp4" type="video/mp4">
+    <source src="Patient Video 1.mp4" type="video/mp4">
   </video>
 </div>
 
@@ -132,7 +132,7 @@ m <- leaflet(
   setView(
     lng = center_lng - 3,
     lat = center_lat,
-    zoom = 6.1999
+    zoom = 6.999
   ) |>
   setMaxBounds(
     lng1 = -106.6,
