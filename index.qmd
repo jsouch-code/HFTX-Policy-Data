@@ -121,7 +121,7 @@ m <- leaflet(
     zoomDelta = 0.5,
     zoomSnap = 0,
     dragging = FALSE,
-    minZoom = 6.2999,
+    minZoom = 6.1999,
     scrollWheelZoom = FALSE
   )
 ) |>
@@ -132,7 +132,7 @@ m <- leaflet(
   setView(
     lng = center_lng - 3,
     lat = center_lat,
-    zoom = 6.999
+    zoom = 6.199
   ) |>
   setMaxBounds(
     lng1 = -106.6,
