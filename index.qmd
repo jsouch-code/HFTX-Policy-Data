@@ -1016,32 +1016,14 @@ df |>
 ```{=html}
 
 <style>
-/* remove default padding that creates the “white gutter” */
-.column-screen { padding-left: 0 !important; padding-right: 0 !important; }
-.column-screen > * { margin-left: 0 !important; margin-right: 0 !important; }
-
-.video-wrap{
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  max-height: 100vh;
-  position: relative;
-  background: #0075A9E6;
-}
-.video-wrap iframe{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
+.hero-video { width: 100%; height: 100vh; overflow: hidden; }
+.hero-video video { width: 100vw; height: 100%; object-fit: cover; display: block; }
 </style>
 
-<div class="video-wrap">
-  <iframe
-    src="https://www.youtube.com/embed/rwSMgGkb8sI?controls=0&modestbranding=1&rel=0&playsinline=1"
-    allow="encrypted-media; picture-in-picture"
-    allowfullscreen>
-  </iframe>
+<div class="hero-video">
+  <video autoplay muted loop playsinline preload="auto">
+    <source src="STFP Tour.mp4" type="video/mp4">
+  </video>
 </div>
 ```
 :::
