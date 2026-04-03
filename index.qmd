@@ -1021,7 +1021,7 @@ df |>
 </style>
 
 <div class="hero-video">
-  <video autoplay muted loop playsinline preload="auto">
+  <video>
     <source src="STFP Tour.mp4" type="video/mp4">
   </video>
 </div>
