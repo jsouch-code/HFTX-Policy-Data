@@ -1016,39 +1016,32 @@ df |>
 ```{=html}
 
 <style>
-.hero-video {
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
+/* remove default padding that creates the “white gutter” */
+.column-screen { padding-left: 0 !important; padding-right: 0 !important; }
+.column-screen > * { margin-left: 0 !important; margin-right: 0 !important; }
 
-.hero-video video {
+.video-wrap{
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 100vh;
+  position: relative;
+  background: #0075A9E6;
+}
+.video-wrap iframe{
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Mobile: avoid awkward cropping and let full video fit naturally */
-@media (max-width: 768px) {
-  .hero-video {
-    height: auto;
-    min-height: unset;
-  }
-
-  .hero-video video {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
+  border: 0;
 }
 </style>
 
-<div class="hero-video">
-  <video controls playsinline preload="metadata">
-    <source src="STFP Tour.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+<div class="video-wrap">
+  <iframe
+    src="https://www.youtube.com/embed/rwSMgGkb8sI?start=13&controls=0&modestbranding=1&rel=0&playsinline=1"
+    allow="encrypted-media; picture-in-picture"
+    allowfullscreen>
+  </iframe>
 </div>
 ```
 :::
@@ -1070,6 +1063,17 @@ Scroll on. [@cr-mytext3]{hlz="cr-t1,cr-t2"}
 
 ::: {style="text-align: center;"}
 :::
+
+
+
+
+
+
+
+
+
+
+
 
 
 
