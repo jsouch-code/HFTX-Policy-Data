@@ -65,7 +65,7 @@ That’s where mobile health care units come in. @cr-myimage1
 
 ### Health Outcomes
 
-::: {.cr-section .quote-section layout="overlay-left"}
+::: {.cr-section .quote-section .cr-narrative-oneoff layout="overlay-left"}
 Learn more. @cr-mytext1
 
 | {#cr-mytext1 .cr-text .scale-to-fill}
