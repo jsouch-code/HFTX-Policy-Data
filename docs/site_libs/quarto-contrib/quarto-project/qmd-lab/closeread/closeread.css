@@ -374,5 +374,31 @@ h3, h4, h5, h6 {
 
 
 
+
+
+.big-narrative .cr-narrative {
+  font-size: 1.35rem !important;
+  line-height: 1.7 !important;
+}
+
+.big-narrative .cr-narrative p,
+.big-narrative .cr-narrative li {
+  font-size: 1.35rem !important;
+  line-height: 1.7 !important;
+}
+
+.big-narrative .cr-narrative strong {
+  font-size: 1.4rem !important;
+}
+
+.big-narrative .cr-narrative h2,
+.big-narrative .cr-narrative h3,
+.big-narrative .cr-narrative h4 {
+  font-size: 1.6rem !important;
+  line-height: 1.3 !important;
+}
+
+
+
 /*# sourceMappingURL=closeread.css.map */
 /*

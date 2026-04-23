@@ -14,8 +14,6 @@ Across the 268,597 square miles of Texas, access to women’s healthcare is deep
 ::: progress-block
 These barriers make timely, comprehensive healthcare out of reach for many, underscoring the urgent need for solutions that meet people where they are. @cr-myimage
 
-That’s where mobile health care units come in.
-
 :::
 
 ::: {#cr-myimage}
@@ -35,6 +33,34 @@ That’s where mobile health care units come in.
 
 ```
 :::
+
+::: progress-block
+
+That’s where mobile health care units come in. @cr-myimage1
+:::
+
+
+::: {#cr-myimage1}
+```{=html}
+
+
+<style>
+.hero-video { width: 100%; height: 100vh; overflow: hidden; }
+.hero-video video { width: 100vw; height: 100%; object-fit: cover; display: block; }
+</style>
+
+<div class="hero-video">
+  <video autoplay muted loop playsinline preload="auto">
+    <source src="output_video.mp4" type="video/mp4">
+  </video>
+</div>
+
+```
+:::
+
+
+
+
 :::::
 
 ### Health Outcomes
@@ -962,7 +988,7 @@ Learn more. @cr-mytext8
 [@cr-mytext8]{highlight="cr-t8,cr-t9"} Keep scrolling.
 :::
 
-:::: {.cr-section .quote-section layout="overlay-left"}
+:::: {.cr-section layout="sidebar-left"}
 Learn more. @cr-pie
 
 ::: {#cr-pie}
@@ -986,20 +1012,40 @@ df |>
     radius = c("0%", "55%"),
     center = c("50%", "58%"),
     label = list(
-      formatter = "{b}\n{@value} ({d}%)",
-      fontSize = 18
+      show = TRUE,
+      color = "#53284F",
+      fontSize = 18,
+      formatter = "{b}\n{@value} ({d}%)"
     )
   ) |>
   e_color(c("#C65B7C", "#4C78A8")) |>
   e_title(
-    "Patients Served in 2025",
-    "Total: 2,576 clients"
+    text = "Patients Served in 2025",
+    subtext = "Total: 2,576 clients",
+    textStyle = list(
+      color = "#53284F"
+    ),
+    subtextStyle = list(
+      color = "#53284F"
+    )
   ) |>
-  e_tooltip(trigger = "item") |>
-  e_legend(bottom = 20) |>
-   e_color(background = "#FFBF3C") |>
+  e_tooltip(
+    trigger = "item",
+    formatter = "{b}<br/>{d}%",
+    textStyle = list(
+      color = "#53284F"
+    )
+  ) |>
+  e_legend(
+    bottom = 20,
+    selectedMode = FALSE,
+    textStyle = list(
+      color = "#53284F"
+    )
+  ) |>
+  e_color(background = "white") |>
+  e_text_style(color = "#53284F") |>
   e_animation(duration = 2200, easing = "cubicOut")
-
 ```
 :::
 ::::
@@ -1033,6 +1079,9 @@ df |>
   width: 100%;
   height: 100%;
   border: 0;
+  
+  
+  
 }
 </style>
 
