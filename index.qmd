@@ -1025,7 +1025,7 @@ df |>
   aspect-ratio: 16 / 9;
   max-height: 100vh;
   position: relative;
-  background: #0075A9E6;
+  background: #C65B7C;
 }
 .video-wrap iframe{
   position: absolute;
