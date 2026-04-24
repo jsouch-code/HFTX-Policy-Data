@@ -37,8 +37,6 @@ These barriers make timely, comprehensive healthcare out of reach for many, unde
 ::: progress-block
 
 That’s where mobile health care units come in. @cr-myimage1
-
-Scroll through this story to learn more
 :::
 
 
@@ -92,12 +90,12 @@ Learn more. @cr-mytext2
 | {#cr-mytext2 .cr-text .scale-to-fill}
 | Barriers to care extend beyond pregnancy.
 | Across Texas, [1.75 million women]{#cr-t5}
-| in need live in contraceptive deserts, where access to
-| affordable birth control is limited or nonexistent.
+| in need live in contraceptive deserts, where access
+| to affordable birth control is limited or nonexistent.
 | In Texas, [153,040 women]{#cr-t6} live in counties
 | without a single health center offering
 | a full range of birth control methods.
-| Together, these gaps in maternal and women’s|
+| Together, these gaps in maternal and women’s
 | healthcare make timely,
 | comprehensive care out of reach for many,
 | underscoring the urgent need for solutions
@@ -116,20 +114,9 @@ This map shows the population of women of reproductive age (15-49) in 2023. @cr-
 **Providers per 1,000**\
 This map shows the ratio of providers – such as doctors, nurses practitioners, or physician assistants – with at least 10 new birth control prescriptions per 1,000 women of reproductive age in 2023. 
 
-**The Family Planning Program**\ 
-The Family Planning Program is a General Revenue-funded, limited-benefit program that serves uninsured men and women across Texas. 
-\n Services covered include:
-\n• Birth control
-\n• Cancer screenings
-\n• Chronic disease testing & treatment
-@cr-map
+FPP Providers. @cr-map
 
-**Healthy Texas Women (HTW)**\
-Healthy Texas Women (HTW) is a Medicaid waiver, limited-benefit program that provides healthcare and family planning services to women aged 15-44 with low income and no insurance. 
-\n Services covered include:
-\n • Birth control
-\n • Cancer screenings
-\n • Chronic disease testing  & treatment @cr-map
+HTW Providers. @cr-map
 
 ::: {#cr-map}
 ```{r}
@@ -509,14 +496,14 @@ Keep scrolling. @cr-mytext0
 | I told her she needed to go to
 | a doctor, but it was too late.
 | She suffered for a year and died
-| of breast cancer, because she|
+| of breast cancer, because she
 | [couldn’t find the right medical services]{#cr-t1}.
 | I then decided I needed to find a way to
-| live for my family.When I discovered your clinic and learned
-| about the services you all provide,
+| live for my family.When I discovered your clinic and 
+| learned about the services you all provide,
 | [I found hope again]{#cr-t2}.
-| I feel that my health is important to my family, because
-| without me, I don’t know how they would
+| I feel that my health is important to my family, 
+| because without me, I don’t know how they would
 | be able to take care of themselves.”
 
                             
@@ -1134,7 +1121,7 @@ Learn more. @cr-mytext3
 | — Dr. Perales, DNP, APRN, CNS-BC
 | Clinic Service Director, STFPHC
 |                               
-Scroll on. [@cr-mytext3]{highlight="cr-t1,cr-t2"} 
+Scroll on. [@cr-mytext3]{hlz="cr-t1,cr-t2"} 
 :::
 
 
@@ -1189,4 +1176,3 @@ This investment represents \$10 million more than the amount secured in 2023, si
 :::
 
 :::
-

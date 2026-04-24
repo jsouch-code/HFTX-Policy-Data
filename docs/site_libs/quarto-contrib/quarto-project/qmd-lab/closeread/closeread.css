@@ -9,6 +9,91 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
+
+.quarto-container .page-columns {
+  display: block !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+}
+
+.quarto-container .page-columns > * {
+  grid-column: auto !important;
+}
+
+.cr-section h1,
+.cr-section h2,
+.cr-section h3,
+.cr-section p {
+  max-width: var(--cr-narrative-overlay-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+body,
+.cr-section,
+.cr-section * {
+  font-family: 'Rubik', sans-serif !important;
+}
+
+#quarto-document-content p {
+  max-width: 80vw;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left !important;
+}
+
+
+h3  {
+  font-family: 'Rubik', sans-serif !important;
+  color: #d24699;
+  width: 50vw;
+  font-size: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+
+
+:root {
+  --cr-narrative-font-family: 'Rubik', sans-serif;
+}
+
+/* Apply Rubik to the entire document body */
+body {
+  font-family: 'Rubik', sans-serif !important;
+  color: #53284f;
+}
+
+
+
+h1 {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 700;
+  font-size: 42px;
+  letter-spacing: 1px;
+}
+
+h2 {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+}
+
+h3 {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  font-size: 25px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
 .cr-section {
   width: 100vw !important;
   max-width: 100vw !important;
@@ -297,7 +382,7 @@ body {
 h2, h3, h4, h5, h6 {
   font-family: 'Rubik', sans-serif !important;
   color: #d24699;
-  max-width: var(--cr-narrative-overlay-max-width);
+  width: 50vw;
   margin: 0 auto;
   text-align: center;
 }
@@ -305,8 +390,8 @@ h2, h3, h4, h5, h6 {
 h1 {
   font-family: 'Rubik', sans-serif !important;
   color: #d24699;
-  max-width: var(--cr-narrative-overlay-max-width);
   margin: 0 auto;
+  padding: 0.5rem 1rem;
   text-align: center;
   font-size: 40px;
 }
@@ -412,6 +497,10 @@ h3, h4, h5, h6 {
 }
 
 
+.quote-section .cr-text {
+  max-width: 50vw;
+}
+
 
 /*# sourceMappingURL=closeread.css.map */
 
@@ -429,13 +518,4 @@ h3, h4, h5, h6 {
 .cr-section .narrative,
 .cr-section .narrative * {
   pointer-events: auto !important;
-}
-
-#quarto-document-content h1,
-#quarto-document-content h2,
-#quarto-document-content h3,
-#quarto-document-content p {
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
 }
