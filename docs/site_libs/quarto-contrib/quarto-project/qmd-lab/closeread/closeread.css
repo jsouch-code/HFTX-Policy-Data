@@ -40,7 +40,7 @@ body,
 }
 
 #quarto-document-content p {
-  max-width: 50vw;
+  max-width: 60vw;
   margin-left: auto;
   margin-right: auto;
   text-align: left !important;
@@ -499,10 +499,7 @@ h3, h4, h5, h6 {
 
 
 .quote-section .cr-text {
-  max-width: 80vw;
-  min-width: 80vw;
-  max-height: 50vh;
-  font-size: 50px;
+  font-size: 24px;
   text-align: left;
 }
 

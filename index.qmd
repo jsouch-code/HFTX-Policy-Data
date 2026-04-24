@@ -164,7 +164,7 @@ m <- leaflet(
   setView(
     lng = center_lng - 3,
     lat = center_lat,
-    zoom = 6.199
+    zoom = 5.199
   ) |>
   setMaxBounds(
     lng1 = -106.6,
@@ -1016,7 +1016,7 @@ df <- data.frame(
   )
 
 df |>
-  e_charts(sex, height = "800px", width = "800px") |>
+  e_charts(sex, height = "800px", width = "100vw") |>
   e_pie(
     value,
     radius = c("0%", "55%"),
