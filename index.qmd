@@ -65,7 +65,8 @@ That’s where mobile health care units come in. @cr-myimage1
 
 ### Health Outcomes
 
-::: {.cr-section .quote-section layout="overlay-left"}
+
+::: {.cr-section .quote-section .hide-quote-narrative layout="overlay-left"}
 Learn more. @cr-mytext1
 
 | {#cr-mytext1 .cr-text .scale-to-fill}
@@ -83,7 +84,7 @@ Learn more. @cr-mytext1
 :::::
 
 
-::: {.cr-section .quote-section layout="overlay-left"}
+::: {.cr-section .quote-section  .hide-narrative layout="overlay-left"}
 Learn more. @cr-mytext2
 
 | {#cr-mytext2 .cr-text .scale-to-fill}
@@ -482,18 +483,28 @@ m
 Mobile healthcare units are designed to close gaps by bringing services directly to patients and communities, especially in rural areas. Mobile clinics reduce the distance, time, and cost barriers that prevent many women from accessing care. Mobile clinics set up in trusted community spaces and adapt their routes based on need. They offer a flexible, efficient way to deliver essential women’s health services, such as birth control, cancer screenings, prenatal care, and preventive visits. For women who don’t have reliable access to transportation, mobile clinics can be a literal lifeline. When speaking to patients, they praise the convenience, as they are no longer required to travel hours from home, miss work, school, or childcare. Mobile clinics don’t just expand access; they help ensure care happens earlier, more consistently, and on patients’ terms.
 
 
-::: {.cr-section .quote-section layout="overlay-left"}
+::: {.cr-section .quote-section .hide-narrative  layout="overlay-left"}
 
 Keep scrolling. @cr-mytext0
 
 | {#cr-mytext0 .cr-text .scale-to-fill}
-| **One patient told a Texas mobile clinic provider**, “I got scared after my neighbor
-| died of breast cancer. She came to me one day and showed me her left breast.
-| I told her she needed to go to a doctor, but it was too late.
-| She suffered for a year and died of breast cancer, because she [couldn’t find the right medical services]{#cr-t1}.
-| I then decided I needed to find a way to live for my family.When I discovered your clinic and learned
-| about the services you all provide, [I found hope again]{#cr-t2}.  I feel that my health is important to my family, because
-| without me, I don’t know how they would be able to take care of themselves.”
+| **Voices of Patients:**,
+| 
+| “I got scared after my neighbor
+| died of breast cancer. She came to me one day
+| and showed me her left breast.
+| I told her she needed to go to
+| a doctor, but it was too late.
+| She suffered for a year and died
+| of breast cancer, because she|
+| [couldn’t find the right medical services]{#cr-t1}.
+| I then decided I needed to find a way to
+| live for my family.When I discovered your clinic and learned
+| about the services you all provide,
+| [I found hope again]{#cr-t2}.
+| I feel that my health is important to my family, because
+| without me, I don’t know how they would
+| be able to take care of themselves.”
 
                             
 Keep scrolling. [@cr-mytext0]{hlz="cr-t1,cr-t2"} 
@@ -983,12 +994,13 @@ m
 
 ::::
 
-::: {.cr-section .quote-section layout="overlay-left"}
+::: {.cr-section .quote-section  .hide-narrative layout="overlay-left"}
 Learn more. @cr-mytext8
 
 | {#cr-mytext8 .cr-text .scale-to-fill}
 | In 2025, South Texas Family Planning & Health Corporation 
-| served [2,576 patients]{#cr-t8} across [18 counties]{#cr-t9} of Texas using its mobile unit.
+| served [2,576 patients]{#cr-t8}
+| across [18 counties]{#cr-t9} of Texas using its mobile unit.
 
 [@cr-mytext8]{highlight="cr-t8,cr-t9"} Keep scrolling.
 :::
@@ -1100,12 +1112,13 @@ df |>
 ```
 :::
 
-::: {.cr-section .quote-section layout="overlay-left"}
+::: {.cr-section .quote-section .hide-narrative layout="overlay-left"}
 Learn more. @cr-mytext3
 
 | {#cr-mytext3 .cr-text .scale-to-fill}
 | "Now we're able to do a [full clinic]{#cr-t1},
-| just like a brick-and-mortar clinic, [just on wheels]{#cr-t2}."
+| just like a brick-and-mortar clinic,
+| [just on wheels]{#cr-t2}."
 | — Dr. Perales, DNP, APRN, CNS-BC
 | Clinic Service Director, STFPHC
 |                               
