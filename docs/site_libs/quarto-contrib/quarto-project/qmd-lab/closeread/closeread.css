@@ -13,7 +13,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 
+#quarto-search-results {
+  display: none !important;
+}
 
+main.content > section:first-of-type {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Stop margin collapsing at the top */
+section.level1 {
+  display: flow-root;
+}
+
+.quarto-container,
+.page-columns,
+main {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+h1 {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
 
 .quarto-container .page-columns {
   display: block !important;
