@@ -35,8 +35,9 @@ main {
 }
 
 h1 {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
+  margin-top: -1% !important;
+  padding-top: 1% !important;
+  padding-bottom: 15;
 }
 
 .quarto-container .page-columns {
@@ -79,8 +80,8 @@ body,
 h3  {
   font-family: 'Rubik', sans-serif !important;
   color: #d24699;
-  width: 50vw;
-  padding-top:5%;
+  width: 100vw;
+  padding-top:6%;
   font-size: 500px;
   margin: 0 auto;
   text-align: center;
@@ -419,7 +420,7 @@ h1 {
 
 /* h2 — stacked under h1 */
 h2 {
-  top: 2%;
+  top: 5%;
   background-color:white;
   padding-left:5%;
   z-index: 1000;
@@ -429,7 +430,7 @@ h2 {
 h3, h4, h5, h6 {
   font-family: 'Rubik', sans-serif !important;
   position: sticky;
-  top: 5%; /* h1 + h2 */
+  top: 95px; /* h1 + h2 */
   z-index: 998;
 
   color: #d24699;
@@ -438,7 +439,7 @@ h3, h4, h5, h6 {
   padding: 0.5rem 1rem;
   border-radius: 0.75rem;
 
-  width: 100%;
+  width: 100$;
   max-width: 800px;
   margin: 0 auto;
 
@@ -478,6 +479,7 @@ h3, h4, h5, h6 {
 .quote-section .callout {
   background: transparent !important;
   color: #fff !important;
+  padding: 3rem 4rem !important;
 }
 
 .cr-hover-content .tip{
