@@ -583,7 +583,7 @@ highlight_map <- texas_map |>
   dplyr::filter(CNTY_NM %in% highlight_counties)
 
 # Build Leaflet widget
-m <- leaflet(width = "99vw", height = "99vh", options = leafletOptions(zoomControl = FALSE, scrollWheelZoom = FALSE, minZoom = 8.199)) %>%
+m <- leaflet(width = "99vw", height = "99vh", options = leafletOptions(zoomControl = FALSE, scrollWheelZoom = FALSE, minZoom = 6.5)) %>%
   addPolygons(
     data = texas_map,
     group = "Population",                 # baseGroups label
@@ -613,7 +613,7 @@ m <- leaflet(width = "99vw", height = "99vh", options = leafletOptions(zoomContr
   setView(
     lng = -98.5,   # adjust
     lat = 27.5,    # adjust
-    zoom = 6
+    zoom = 6.5
   )
 
 
