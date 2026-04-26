@@ -1123,11 +1123,44 @@ df |>
 
 <div class="video-wrap">
   <iframe
-    src="https://www.youtube.com/embed/rwSMgGkb8sI?start=13&controls=0&modestbranding=1&rel=0&playsinline=1"
-    allow="encrypted-media; picture-in-picture"
+    id="ground-video"
+    src="https://www.youtube.com/embed/rwSMgGkb8sI?start=13&controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&mute=0"
+    allow="autoplay; encrypted-media; picture-in-picture"
     allowfullscreen>
   </iframe>
 </div>
+
+<script>
+(function () {
+  const youtubeFrame = document.getElementById("ground-video");
+  if (!youtubeFrame || !("IntersectionObserver" in window)) return;
+
+  const sendCommand = (func) => {
+    youtubeFrame.contentWindow?.postMessage(
+      JSON.stringify({ event: "command", func, args: [] }),
+      "https://www.youtube.com"
+    );
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          sendCommand("playVideo");
+        } else {
+          sendCommand("pauseVideo");
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  youtubeFrame.addEventListener("load", () => {
+    sendCommand("pauseVideo");
+    observer.observe(youtubeFrame);
+  });
+})();
+</script>
 ```
 :::
 
