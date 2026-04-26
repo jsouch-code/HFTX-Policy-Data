@@ -4055,5 +4055,39 @@ function asArray(value) {
 </div>
 <script type="application/json" data-for="htmlwidget-86578f93c43263a8e05e">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://api.mapbox.com/styles/v1/hftx1/cmlwn6zl0000901s7f2po6m0a/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaGZ0eDEiLCJhIjoiY21sd24wNnV2MGtqejNob2xobjNiNmd2OCJ9.KF37L1cXepONaKvApldgAg",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false}]}],"setView":[[31,-99.5],5,[]]},"evals":[],"jsHooks":[]}</script>
 <script type="application/htmlwidget-sizing" data-for="htmlwidget-86578f93c43263a8e05e">{"viewer":{"width":"100%","height":600,"padding":0,"fill":false},"browser":{"width":"100%","height":600,"padding":0,"fill":false}}</script>
+<script>
+  (function () {
+    var widgetId = "htmlwidget-86578f93c43263a8e05e";
+    var texasBounds = [[25.8, -106.7], [36.6, -93.5]];
+
+    function getDynamicPadding() {
+      var width = window.innerWidth || document.documentElement.clientWidth || 1024;
+      if (width < 480) return [18, 18];
+      if (width < 768) return [24, 24];
+      if (width < 1024) return [30, 30];
+      return [40, 40];
+    }
+
+    function fitTexasToViewport() {
+      if (!window.jQuery) return;
+      var map = window.jQuery("#" + widgetId).data("leaflet-map");
+      if (!map) return;
+
+      map.invalidateSize();
+      map.fitBounds(texasBounds, {
+        padding: getDynamicPadding(),
+        animate: false
+      });
+    }
+
+    window.addEventListener("load", fitTexasToViewport);
+
+    var resizeTimer;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(fitTexasToViewport, 150);
+    });
+  })();
+</script>
 </body>
 </html>
