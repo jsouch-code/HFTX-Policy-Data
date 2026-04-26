@@ -709,6 +709,12 @@ js_code <- paste0(
 ",
 "  var followVanWhenZoomed = false;
 ",
+"  var followCenterThrottleMs = 120;
+",
+"  var followCenterMinPx = 16;
+",
+"  var lastFollowCenterAt = 0;
+",
 "
 ",
 "  function refitServiceArea() {
@@ -741,11 +747,43 @@ js_code <- paste0(
 ",
 "    followVanWhenZoomed = shouldFollowVan();
 ",
+"    if (followVanWhenZoomed && tracer) {
+",
+"      keepVanCentered(tracer.getLatLng(), true);
+",
+"    }
+",
 "    if (!followVanWhenZoomed && !map.getBounds().contains(serviceBounds)) {
 ",
 "      refitServiceArea();
 ",
 "    }
+",
+"  }
+",
+"  function keepVanCentered(latLng, force) {
+",
+"    if (!followVanWhenZoomed || !latLng) return;
+",
+"    var now = Date.now();
+",
+"    if (!force && (now - lastFollowCenterAt) < followCenterThrottleMs) return;
+",
+"    var vanPt = map.latLngToContainerPoint(latLng);
+",
+"    var centerPt = map.latLngToContainerPoint(map.getCenter());
+",
+"    var dx = vanPt.x - centerPt.x;
+",
+"    var dy = vanPt.y - centerPt.y;
+",
+"    var dist = Math.sqrt((dx * dx) + (dy * dy));
+",
+"    if (!force && dist < followCenterMinPx) return;
+",
+"    map.panTo(latLng, { animate: false });
+",
+"    lastFollowCenterAt = now;
 ",
 "  }
 ",
@@ -1028,7 +1066,7 @@ js_code <- paste0(
 ",
 "      if (followVanWhenZoomed) {
 ",
-"        map.panTo([b[1], b[0]], { animate: false });
+"        keepVanCentered(L.latLng(b[1], b[0]));
 ",
 "      }
 ",
