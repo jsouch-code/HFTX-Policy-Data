@@ -252,7 +252,7 @@ m <- leaflet(
     lng = ~Longitude,
     popup = ~paste0(Provider.Name, " is an FPP provider."),
     clusterOptions = markerClusterOptions(
-      iconCreateFunction = JS("function(cluster){ return L.divIcon({ html: '<div title=\"FPP\"><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster marker-cluster-fpp', iconSize: new L.Point(40, 40) }); }")
+      iconCreateFunction = JS("function(cluster){ return L.divIcon({ html: '<div title=\"Family Planning Provider\"><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster marker-cluster-fpp', iconSize: new L.Point(40, 40) }); }")
     ),
     group = "FPP Providers"
   ) |>
@@ -262,7 +262,7 @@ m <- leaflet(
     lng = ~Longitude,
     popup = ~paste0(Provider.Name, " is an HTW provider."),
     clusterOptions = markerClusterOptions(
-      iconCreateFunction = JS("function(cluster){ return L.divIcon({ html: '<div title=\"HTW\"><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster marker-cluster-htw', iconSize: new L.Point(40, 40) }); }")
+      iconCreateFunction = JS("function(cluster){ return L.divIcon({ html: '<div title=\"Healthy Texas Women\"><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster marker-cluster-htw', iconSize: new L.Point(40, 40) }); }")
     ),
     group = "HTW Providers"
   ) |>
