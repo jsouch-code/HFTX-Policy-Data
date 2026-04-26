@@ -571,3 +571,23 @@ h3, h4, h5, h6 {
 .key-number1 {
   font-weight: 700 !important;
 }
+
+/* css styles */
+
+.marker-cluster-fpp {
+  background: #0075A9E6;
+}
+
+.marker-cluster-fpp div {
+  background: #0075A9E6;
+  color: #fff;
+}
+
+.marker-cluster-htw {
+  background: #D24699;
+}
+
+.marker-cluster-htw div {
+  background: #D24699;
+  color: #fff;
+}
