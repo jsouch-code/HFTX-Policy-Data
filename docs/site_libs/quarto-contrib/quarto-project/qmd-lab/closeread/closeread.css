@@ -36,7 +36,7 @@ main {
 
 h1 {
   margin-top: -1% !important;
-  padding-top: 1% !important;
+  padding-top: -3% !important;
   padding-bottom: 15;
 }
 
@@ -81,8 +81,8 @@ h3  {
   font-family: 'Rubik', sans-serif !important;
   color: #d24699;
   width: 100vw;
-  padding-top:100px;
-  font-size: 50px;
+  padding-top:50px;
+  font-size: 18px;
   margin: 0 auto;
   text-align: center;
 }
@@ -104,20 +104,21 @@ body {
 h1 {
   font-family: 'Rubik', sans-serif;
   font-weight: 700;
-  font-size: 36px;
+  font-size: 32px;
   letter-spacing: 1px;
 }
 
 h2 {
   font-family: 'Rubik', sans-serif;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 18px;
 }
 
 h3 {
   font-family: 'Rubik', sans-serif;
   font-weight: 600;
-  font-size: 25px;
+  padding-top: 10px;
+  font-size: 16px;
 }
 
 p {
