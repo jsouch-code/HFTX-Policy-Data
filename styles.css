@@ -1,1 +1,44 @@
 /* css styles */
+
+/* Polished section headers while preserving sticky behavior */
+h3.anchored {
+  position: sticky;
+  top: 0.85rem;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.25rem 0 1.1rem;
+  padding: 0.55rem 1rem;
+  text-align: left;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  color: #2f1e2d;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(83, 40, 79, 0.18);
+  border-left: 4px solid #53284f;
+  border-radius: 0.75rem;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 8px 22px rgba(33, 24, 33, 0.12);
+}
+
+h3.anchored::before {
+  content: "";
+  width: 0.52rem;
+  height: 0.52rem;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #d24699, #53284f);
+  flex: 0 0 auto;
+}
+
+h3.anchored .anchorjs-link {
+  margin-left: 0.35rem;
+  color: #7e5f7c;
+  opacity: 0.8;
+}
+
+h3.anchored .anchorjs-link:hover {
+  color: #53284f;
+  opacity: 1;
+}
