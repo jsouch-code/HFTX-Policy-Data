@@ -923,7 +923,7 @@ js_code <- paste0(
 ",
 "      var a = pts[idx-1], b = pts[idx];
 ",
-"      L.polyline([[a[1], a[0]], [b[1], b[0]]], { color: segColor, weight: 5, opacity: 1 }).addTo(group);
+"      L.polyline([[a[1], a[0]], [b[1], b[0]]], { color: segColor, weight: 3, opacity: 1, lineCap: 'round',lineJoin: 'round' }).addTo(group);
 ",
 "      tracer.setLatLng([b[1], b[0]]);
 ",
