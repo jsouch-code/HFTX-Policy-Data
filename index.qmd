@@ -614,7 +614,7 @@ service_bounds_js <- sprintf(
 )
 
 # Build Leaflet widget
-m <- leaflet(width = "99vw", height = "99vh", options = leafletOptions(zoomControl = FALSE, scrollWheelZoom = FALSE, minZoom = 6.5)) %>%
+m <- leaflet(width = "99vw", height = "99vh", options = leafletOptions(zoomControl = FALSE, scrollWheelZoom = FALSE, minZoom = 5)) %>%
   addPolygons(
     data = texas_map,
     group = "Population",                 # baseGroups label
@@ -701,7 +701,10 @@ js_code <- paste0(
 ",
 "  var serviceBounds = L.latLngBounds(", service_bounds_js, ");
 ",
-"  var servicePadding = [20, 20];
+",
+"  var isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
+",
+"  var servicePadding = isMobileViewport ? [40, 40] : [20, 20];
 ",
 "  var isRefittingServiceArea = false;
 ",
