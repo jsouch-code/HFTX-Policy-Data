@@ -542,6 +542,20 @@ Keep scrolling. [@cr-mytext0]{hlz="cr-t1,cr-t2"}
 This map illustrates how mobile units move across regions with limited or no permanent healthcare infrastructures, reaching women who would otherwise face transportation barriers, or even no access at all.
 
 You can scroll around and zoom in and out.
+```{=html}
+<span class="cr-map2-mobile-values">
+South Texas Family Planning &amp; Health Corporation (STFPHC) mobile unit has driven -- miles so far, out of -- total planned miles.
+</span>
+<style>
+  .cr-map2-mobile-values { display: none; }
+  @media (max-width: 768px) {
+    .cr-map2-mobile-values {
+      display: block;
+      margin-top: 0.5rem;
+    }
+  }
+</style>
+```
 
 By 2026, South Texas Family Planning & Health Corporation (STFPHC) had grown to operate a second mobile unit and was approved to serve 29 counties—demonstrating both the success of mobile health services and the increasing demand for accessible care.
 
@@ -611,6 +625,9 @@ service_bounds_js <- sprintf(
   service_bbox["ymin"], service_bbox["xmin"],
   service_bbox["ymax"], service_bbox["xmax"]
 )
+service_bounds_line <- sprintf("  var serviceBounds = L.latLngBounds(%s);\n", service_bounds_js)
+base_icon_w_line <- sprintf("  var baseIconW = %s;\n", marker_w)
+base_icon_h_line <- sprintf("  var baseIconH = %s;\n", marker_h)
 
 # Build Leaflet widget
 m <- leaflet(width = "100vw", height = "100svh", options = leafletOptions(zoomControl = FALSE, scrollWheelZoom = FALSE, minZoom = 5)) %>%
@@ -710,7 +727,7 @@ js_code <- paste0(
 "  } catch(e) {}
 
 ",
-"  var serviceBounds = L.latLngBounds(", service_bounds_js, ");
+"  ", service_bounds_line, "
 ",
 ",
 "  var servicePadding = isMobileViewport ? [24, 24] : [20, 20];
@@ -721,10 +738,10 @@ js_code <- paste0(
 ",
 "  var fullServiceZoom = map.getBoundsZoom(serviceBounds, false, servicePadding);
 ",
-"",
-"  var baseIconW = ", marker_w, ";
+"  \n",
+"  ", base_icon_w_line, "
 ",
-"  var baseIconH = ", marker_h, ";
+"  ", base_icon_h_line, "
 ",
 "  var mobileIconScale = isMobileViewport ? Math.max(0.60, Math.min(0.78, window.innerWidth / 460)) : 1;
 ",
@@ -732,8 +749,7 @@ js_code <- paste0(
 ",
 "  var iconH = Math.round(baseIconH * mobileIconScale);
 ",
-"
-",
+"  \n",
 "  function refitServiceArea() {
 ",
 "    var now = Date.now();
@@ -796,8 +812,7 @@ js_code <- paste0(
 ",
 "  }
 ",
-"
-",
+"  \n",
 "  var pointsPerPart = 200;
 ",
 "  var partMs = 100;
@@ -888,7 +903,7 @@ js_code <- paste0(
 ",
 "    return [
 ",
-"      '<strong>South Texas Family Planning & Health Corporation (STFPHC)</strong>',,
+"      '<strong>South Texas Family Planning & Health Corporation (STFPHC)</strong>',
 ",
 "      'Total distance driven: ' + formatNumber(distanceDriven*0.62, 1) + ' mi',
 ",
@@ -950,9 +965,11 @@ js_code <- paste0(
 ",
 "    if (!isMobileViewport) return;
 ",
-"    ensureMobileNarrativeOverlay();
+"    var mobileNarrativeEl = document.querySelector('.cr-map2-mobile-values');
 ",
-"    if (mobileNarrativeOverlay) mobileNarrativeOverlay.innerHTML = buildMobileNarrative(distanceDriven);
+"    if (!mobileNarrativeEl) return;
+",
+"    mobileNarrativeEl.innerHTML = buildMobileNarrative(distanceDriven);
 ",
 "  }
 
