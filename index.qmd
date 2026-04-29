@@ -537,10 +537,27 @@ Keep scrolling. [@cr-mytext0]{hlz="cr-t1,cr-t2"}
 
 ### Where do they go?
 
+```{=html}
+<style>
+@media (min-width: 769px) {
+  .mobile-only-overlay {
+    display: none !important;
+  }
+}
+</style>
+```
+
 :::: {.cr-section layout="overlay-center"}
 @cr-map2 A single mobile health unit can extend care across multiple counties that aren’t served by brick-and-mortar clinics. 
 
 This map illustrates how mobile units move across regions with limited or no permanent healthcare infrastructures, reaching women who would otherwise face transportation barriers, or even no access at all.
+
+::: {.cr-section .hide-narrative .mobile-only-overlay layout="overlay-center"}
+Track progress. @cr-route-progress-mobile
+
+| {#cr-route-progress-mobile .cr-text .scale-to-fill}
+| Current route progress: [0.0 mi]{#cr-distance-driven} driven of [0.0 mi]{#cr-distance-total} planned.
+:::
 
 You can scroll around and zoom in and out.
 
@@ -1086,8 +1103,6 @@ Learn more. @cr-mytext8
 | In 2025, South Texas Family Planning & Health Corporation 
 | served [2,576 patients]{#cr-t8} across [18 counties]{#cr-t9} of Texas using its mobile unit.
 |
-| Current route progress: [0.0 mi]{#cr-distance-driven} driven of [0.0 mi]{#cr-distance-total} planned.
-
 [@cr-mytext8]{highlight="cr-t8,cr-t9"} Keep scrolling.
 :::
 
