@@ -545,6 +545,9 @@ You can scroll around and zoom in and out.
 
 By 2026, South Texas Family Planning & Health Corporation (STFPHC) had grown to operate a second mobile unit and was approved to serve 29 counties—demonstrating both the success of mobile health services and the increasing demand for accessible care.
 
+<span id="cr-map2-mobile-metrics" style="display:none;">
+STFPHC mobile unit has driven <strong><span id="cr-map2-driven-mi">0.0</span> miles</strong> so far, out of <strong><span id="cr-map2-total-mi">0.0</span> total planned miles</strong>.
+</span>
 
 ::: {#cr-map2}
 ```{r map2}
@@ -898,61 +901,21 @@ js_code <- paste0(
 ",
 "  }
 ",
-"  function buildMobileNarrative(distanceDriven) {
-",
-"    return 'STFPHC mobile unit has driven <strong>' + formatNumber(distanceDriven*0.62, 1) + ' miles</strong> so far, out of <strong>' + formatNumber(totalPlannedDistance*0.62, 1) + ' total planned miles</strong>.';
-",
-"  }
-",
-"  var mobileNarrativeOverlay = null;
-",
-"  function ensureMobileNarrativeOverlay() {
-",
-"    if (!isMobileViewport || mobileNarrativeOverlay) return;
-",
-"    mobileNarrativeOverlay = document.createElement('div');
-",
-"    mobileNarrativeOverlay.style.position = 'absolute';
-",
-"    mobileNarrativeOverlay.style.left = '12px';
-",
-"    mobileNarrativeOverlay.style.right = '12px';
-",
-"    mobileNarrativeOverlay.style.bottom = '12px';
-",
-"    mobileNarrativeOverlay.style.zIndex = '900';
-",
-"    mobileNarrativeOverlay.style.background = 'rgba(255, 255, 255, 0.96)';
-",
-"    mobileNarrativeOverlay.style.border = '1px solid rgba(83, 40, 79, 0.25)';
-",
-"    mobileNarrativeOverlay.style.borderRadius = '10px';
-",
-"    mobileNarrativeOverlay.style.boxShadow = '0 6px 18px rgba(0,0,0,0.14)';
-",
-"    mobileNarrativeOverlay.style.padding = '10px 12px';
-",
-"    mobileNarrativeOverlay.style.fontSize = '13px';
-",
-"    mobileNarrativeOverlay.style.lineHeight = '1.35';
-",
-"    mobileNarrativeOverlay.style.color = '#2f2a2f';
-",
-"    mobileNarrativeOverlay.style.pointerEvents = 'none';
-",
-"    el.style.position = 'relative';
-",
-"    el.appendChild(mobileNarrativeOverlay);
-",
-"  }
-",
 "  function setMobileNarrative(distanceDriven) {
 ",
 "    if (!isMobileViewport) return;
 ",
-"    ensureMobileNarrativeOverlay();
+"    var wrap = document.getElementById('cr-map2-mobile-metrics');
 ",
-"    if (mobileNarrativeOverlay) mobileNarrativeOverlay.innerHTML = buildMobileNarrative(distanceDriven);
+"    var drivenEl = document.getElementById('cr-map2-driven-mi');
+",
+"    var totalEl = document.getElementById('cr-map2-total-mi');
+",
+"    if (wrap) wrap.style.display = 'inline';
+",
+"    if (drivenEl) drivenEl.textContent = formatNumber(distanceDriven*0.62, 1);
+",
+"    if (totalEl) totalEl.textContent = formatNumber(totalPlannedDistance*0.62, 1);
 ",
 "  }
 
