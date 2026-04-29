@@ -625,6 +625,9 @@ service_bounds_js <- sprintf(
   service_bbox["ymin"], service_bbox["xmin"],
   service_bbox["ymax"], service_bbox["xmax"]
 )
+service_bounds_line <- sprintf("  var serviceBounds = L.latLngBounds(%s);\n", service_bounds_js)
+base_icon_w_line <- sprintf("  var baseIconW = %s;\n", marker_w)
+base_icon_h_line <- sprintf("  var baseIconH = %s;\n", marker_h)
 
 # Build Leaflet widget
 m <- leaflet(width = "100vw", height = "100svh", options = leafletOptions(zoomControl = FALSE, scrollWheelZoom = FALSE, minZoom = 5)) %>%
@@ -724,7 +727,7 @@ js_code <- paste0(
 "  } catch(e) {}
 
 ",
-"  var serviceBounds = L.latLngBounds(", service_bounds_js, ");
+"  ", service_bounds_line, "
 ",
 ",
 "  var servicePadding = isMobileViewport ? [24, 24] : [20, 20];
@@ -736,9 +739,9 @@ js_code <- paste0(
 "  var fullServiceZoom = map.getBoundsZoom(serviceBounds, false, servicePadding);
 ",
 "  \n",
-"  var baseIconW = ", marker_w, ";
+"  ", base_icon_w_line, "
 ",
-"  var baseIconH = ", marker_h, ";
+"  ", base_icon_h_line, "
 ",
 "  var mobileIconScale = isMobileViewport ? Math.max(0.60, Math.min(0.78, window.innerWidth / 460)) : 1;
 ",
