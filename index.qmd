@@ -735,7 +735,7 @@ js_code <- paste0(
 ",
 "  var fullServiceZoom = map.getBoundsZoom(serviceBounds, false, servicePadding);
 ",
-"",
+"  \n",
 "  var baseIconW = ", marker_w, ";
 ",
 "  var baseIconH = ", marker_h, ";
