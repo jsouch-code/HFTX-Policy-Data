@@ -613,7 +613,7 @@ service_bounds_js <- sprintf(
 )
 
 # Build Leaflet widget
-m <- leaflet(width = "99vw", height = "99vh", options = leafletOptions(zoomControl = FALSE, scrollWheelZoom = FALSE, minZoom = 5)) %>%
+m <- leaflet(width = "100vw", height = "100svh", options = leafletOptions(zoomControl = FALSE, scrollWheelZoom = FALSE, minZoom = 5)) %>%
   addPolygons(
     data = texas_map,
     group = "Population",                 # baseGroups label
