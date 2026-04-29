@@ -70,7 +70,15 @@ That’s where mobile health care units come in. @cr-myimage1
 Learn more. @cr-mytext1
 
 | {#cr-mytext1 .cr-text .scale-to-fill}
-| The impact on women’s health has been especially severe. Nearly half of Texas counties (46.5%) are classified as [maternity care deserts]{#cr-t1}, meaning they lack access to birthing facilities or maternity care providers altogether. For thousands of women, even basic pregnancy care requires traveling far from home.
+| The impact on women’s health has been
+| especially severe. Nearly half of
+| Texas counties (46.5%) are classified as
+| [maternity care deserts]{#cr-t1},
+| meaning they lack access to birthing facilities
+| or maternity care providers altogether.
+| For thousands of women, even basic
+| pregnancy care requires
+| traveling far from home.
 
 [@cr-mytext1]{highlight="cr-t1"} Keep scrolling to learn more.
 :::::
@@ -79,8 +87,14 @@ Learn more. @cr-mytext1
 ::: {.cr-section .quote-section  .hide-narrative layout="overlay-center"}
 Learn more. @cr-mytext2
 
-| {#cr-mytext2 .cr-text .scale-to-fill} 
-| Barriers to care extend beyond pregnancy. Across Texas, [1.75 million women]{#cr-t5} in need live in contraceptive deserts, where access to affordable birth control is limited or nonexistent. In Texas, [153,040 women]{#cr-t6} live in counties without a single health center offering a full range of birth control methods. Together, these gaps in maternal and women’s healthcare make timely,  comprehensive care out of reach for many, underscoring the urgent need for solutions that meet people where they are. 
+| {#cr-mytext2 .cr-text .scale-to-fill} Barriers to care extend beyond pregnancy.
+| Across Texas, [1.75 million women]{#cr-t5} in need live in contraceptive deserts,
+| where access to affordable birth control is limited or nonexistent.
+| In Texas, [153,040 women]{#cr-t6} live in counties without a
+| single health center offering a full range of birth control methods.
+| Together, these gaps in maternal and women’s healthcare make timely, 
+| comprehensive care out of reach for many, underscoring the urgent 
+| need for solutions that meet people where they are. 
 
 
 [@cr-mytext2]{highlight="cr-t5,cr-t6"} Keep scrolling. 
@@ -606,13 +620,6 @@ marker_png_safe <- gsub("\\\\", "/", marker_png)
 highlight_map <- texas_map |>
   dplyr::filter(CNTY_NM %in% highlight_counties)
 
-service_bbox <- st_bbox(highlight_map)
-service_bounds_js <- sprintf(
-  "[[%f, %f], [%f, %f]]",
-  service_bbox["ymin"], service_bbox["xmin"],
-  service_bbox["ymax"], service_bbox["xmax"]
-)
-
 # Build Leaflet widget
 m <- leaflet(width = "99vw", height = "99vh", options = leafletOptions(zoomControl = FALSE, scrollWheelZoom = FALSE, minZoom = 6.5)) %>%
   addPolygons(
@@ -698,100 +705,6 @@ js_code <- paste0(
 ",
 "  } catch(e) {}
 
-",
-"  var serviceBounds = L.latLngBounds(", service_bounds_js, ");
-",
-"  var servicePadding = [20, 20];
-",
-"  var isRefittingServiceArea = false;
-",
-"  var fullServiceZoom = map.getBoundsZoom(serviceBounds, false, servicePadding);
-",
-"  var followVanWhenZoomed = false;
-",
-"  var followCenterThrottleMs = 120;
-",
-"  var followCenterMinPx = 16;
-",
-"  var lastFollowCenterAt = 0;
-",
-"
-",
-"  function refitServiceArea() {
-",
-"    isRefittingServiceArea = true;
-",
-"    map.fitBounds(serviceBounds, { padding: servicePadding });
-",
-"    setTimeout(function(){ isRefittingServiceArea = false; }, 0);
-",
-"  }
-",
-"  function isVanVisible() {
-",
-"    if (!tracer) return false;
-",
-"    return map.getBounds().contains(tracer.getLatLng());
-",
-"  }
-",
-"  function shouldFollowVan() {
-",
-"    return tracer && map.getZoom() > (fullServiceZoom + 0.5) && isVanVisible();
-",
-"  }
-",
-"  function enforceViewportRules() {
-",
-"    if (isRefittingServiceArea) return;
-",
-"    followVanWhenZoomed = shouldFollowVan();
-",
-"    if (followVanWhenZoomed && tracer) {
-",
-"      keepVanCentered(tracer.getLatLng(), true);
-",
-"    }
-",
-"    if (!followVanWhenZoomed && !map.getBounds().contains(serviceBounds)) {
-",
-"      refitServiceArea();
-",
-"    }
-",
-"  }
-",
-"  function keepVanCentered(latLng, force) {
-",
-"    if (!followVanWhenZoomed || !latLng) return;
-",
-"    var now = Date.now();
-",
-"    if (!force && (now - lastFollowCenterAt) < followCenterThrottleMs) return;
-",
-"    var vanPt = map.latLngToContainerPoint(latLng);
-",
-"    var centerPt = map.latLngToContainerPoint(map.getCenter());
-",
-"    var dx = vanPt.x - centerPt.x;
-",
-"    var dy = vanPt.y - centerPt.y;
-",
-"    var dist = Math.sqrt((dx * dx) + (dy * dy));
-",
-"    if (!force && dist < followCenterMinPx) return;
-",
-"    map.panTo(latLng, { animate: false });
-",
-"    lastFollowCenterAt = now;
-",
-"  }
-",
-"  map.on('moveend zoomend', enforceViewportRules);
-",
-"  refitServiceArea();
-",
-"
 ",
 "  var pointsPerPart = 200;
 ",
@@ -1063,12 +976,6 @@ js_code <- paste0(
 "      L.polyline([[a[1], a[0]], [b[1], b[0]]], { color: segColor, weight: 3, opacity: 1, lineCap: 'round',lineJoin: 'round' }).addTo(group);
 ",
 "      tracer.setLatLng([b[1], b[0]]);
-",
-"      if (followVanWhenZoomed) {
-",
-"        keepVanCentered(L.latLng(b[1], b[0]));
-",
-"      }
 ",
 "      setTracerRotation(tracer, bearingDeg(a, b));
 ",
