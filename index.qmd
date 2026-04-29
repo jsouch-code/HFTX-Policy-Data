@@ -526,6 +526,7 @@ Keep scrolling. @cr-mytext0
 
 | {#cr-mytext0 .cr-text .scale-to-fill}
 | **Voices of Patients:**
+| 
 | “I got scared after my neighbor died of breast cancer. She came to me one day and showed me her left breast. I told her she needed to go to a doctor, but it was too late. She suffered for a year and died of breast cancer, because she [couldn’t find the right medical services]{#cr-t1}. I then decided I needed to find a way to live for my family.When I discovered your clinic and I learned about the services you all provide, [I found hope again]{#cr-t2}. I feel that my health is important to my family, because without me, I don’t know how they would be able to take care of themselves.”
 
                             
@@ -613,7 +614,7 @@ service_bounds_js <- sprintf(
 )
 
 # Build Leaflet widget
-m <- leaflet(width = "100vw", height = "100svh", options = leafletOptions(zoomControl = FALSE, scrollWheelZoom = FALSE, minZoom = 5)) %>%
+m <- leaflet(width = "99vw", height = "99vh", options = leafletOptions(zoomControl = FALSE, scrollWheelZoom = FALSE, minZoom = 6.5)) %>%
   addPolygons(
     data = texas_map,
     group = "Population",                 # baseGroups label
@@ -689,58 +690,34 @@ js_code <- paste0(
 "  });
 
 ",
-"  var isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
-",
-"  if (isMobileViewport) {
-",
-"    // Lock map height to initial viewport pixels on phones to avoid URL-bar resize jitter.
-",
-"    el.style.height = window.innerHeight + 'px';
-",
-"    map.invalidateSize(false);
-",
-"  }
-",
 "  try {
 ",
 "    var all = L.geoJSON(gj);
 ",
-"    if (!isMobileViewport) map.fitBounds(all.getBounds(), { padding: [20, 20] });
+"    map.fitBounds(all.getBounds(), { padding: [20, 20] });
 ",
 "  } catch(e) {}
 
 ",
 "  var serviceBounds = L.latLngBounds(", service_bounds_js, ");
 ",
-",
-"  var servicePadding = isMobileViewport ? [24, 24] : [20, 20];
+"  var servicePadding = [20, 20];
 ",
 "  var isRefittingServiceArea = false;
 ",
-"  var lastServiceRefitAt = 0;
-",
 "  var fullServiceZoom = map.getBoundsZoom(serviceBounds, false, servicePadding);
 ",
-"",
-"  var baseIconW = ", marker_w, ";
+"  var followVanWhenZoomed = false;
 ",
-"  var baseIconH = ", marker_h, ";
+"  var followCenterThrottleMs = 120;
 ",
-"  var mobileIconScale = isMobileViewport ? Math.max(0.60, Math.min(0.78, window.innerWidth / 460)) : 1;
+"  var followCenterMinPx = 16;
 ",
-"  var iconW = Math.round(baseIconW * mobileIconScale);
-",
-"  var iconH = Math.round(baseIconH * mobileIconScale);
+"  var lastFollowCenterAt = 0;
 ",
 "
 ",
 "  function refitServiceArea() {
-",
-"    var now = Date.now();
-",
-"    if (now - lastServiceRefitAt < 250) return;
-",
-"    lastServiceRefitAt = now;
 ",
 "    isRefittingServiceArea = true;
 ",
@@ -750,17 +727,17 @@ js_code <- paste0(
 ",
 "  }
 ",
-"  function keepTracerCentered() {
+"  function isVanVisible() {
 ",
-"    if (!tracer) return;
+"    if (!tracer) return false;
 ",
-"    map.panTo(tracer.getLatLng(), { animate: false });
+"    return map.getBounds().contains(tracer.getLatLng());
 ",
 "  }
 ",
-"  function isServiceAreaInView() {
+"  function shouldFollowVan() {
 ",
-"    return map.getBounds().pad(0.02).contains(serviceBounds);
+"    return tracer && map.getZoom() > (fullServiceZoom + 0.5) && isVanVisible();
 ",
 "  }
 ",
@@ -768,7 +745,15 @@ js_code <- paste0(
 ",
 "    if (isRefittingServiceArea) return;
 ",
-"    if (!tracer && !isServiceAreaInView()) {
+"    followVanWhenZoomed = shouldFollowVan();
+",
+"    if (followVanWhenZoomed && tracer) {
+",
+"      keepVanCentered(tracer.getLatLng(), true);
+",
+"    }
+",
+"    if (!followVanWhenZoomed && !map.getBounds().contains(serviceBounds)) {
 ",
 "      refitServiceArea();
 ",
@@ -776,25 +761,35 @@ js_code <- paste0(
 ",
 "  }
 ",
+"  function keepVanCentered(latLng, force) {
 ",
-"  if (isMobileViewport) {
+"    if (!followVanWhenZoomed || !latLng) return;
 ",
+"    var now = Date.now();
 ",
-"    map.fitBounds(serviceBounds, { padding: servicePadding, animate: false });
+"    if (!force && (now - lastFollowCenterAt) < followCenterThrottleMs) return;
 ",
-"    map.on('zoomend moveend', keepTracerCentered);
+"    var vanPt = map.latLngToContainerPoint(latLng);
 ",
-"  } else {
+"    var centerPt = map.latLngToContainerPoint(map.getCenter());
 ",
-"    map.on('moveend zoomend', enforceViewportRules);
+"    var dx = vanPt.x - centerPt.x;
 ",
-"    map.on('moveend zoomend', keepTracerCentered);
+"    var dy = vanPt.y - centerPt.y;
 ",
-"    map.on('resize', refitServiceArea);
+"    var dist = Math.sqrt((dx * dx) + (dy * dy));
 ",
-"    refitServiceArea();
+"    if (!force && dist < followCenterMinPx) return;
+",
+"    map.panTo(latLng, { animate: false });
+",
+"    lastFollowCenterAt = now;
 ",
 "  }
+",
+"  map.on('moveend zoomend', enforceViewportRules);
+",
+"  refitServiceArea();
 ",
 "
 ",
@@ -845,9 +840,9 @@ js_code <- paste0(
 ",
 "    iconUrl: '", marker_png_safe, "',
 ",
-"    iconSize: [iconW, iconH],
+"    iconSize: [", marker_w, ", ", marker_h, "],
 ",
-"    iconAnchor: [Math.round(iconW/2), iconH]
+"    iconAnchor: [", round(marker_w/2), ", ", marker_h, "]
 ",
 "  });
 ",
@@ -895,64 +890,6 @@ js_code <- paste0(
 "      'Total route distance: ' + formatNumber(totalPlannedDistance*0.62, 1) + ' mi'
 ",
 "    ].join('<br>');
-",
-"  }
-",
-"  function buildMobileNarrative(distanceDriven) {
-",
-"    return 'STFPHC mobile unit has driven <strong>' + formatNumber(distanceDriven*0.62, 1) + ' miles</strong> so far, out of <strong>' + formatNumber(totalPlannedDistance*0.62, 1) + ' total planned miles</strong>.';
-",
-"  }
-",
-"  var mobileNarrativeOverlay = null;
-",
-"  function ensureMobileNarrativeOverlay() {
-",
-"    if (!isMobileViewport || mobileNarrativeOverlay) return;
-",
-"    mobileNarrativeOverlay = document.createElement('div');
-",
-"    mobileNarrativeOverlay.style.position = 'absolute';
-",
-"    mobileNarrativeOverlay.style.left = '12px';
-",
-"    mobileNarrativeOverlay.style.right = '12px';
-",
-"    mobileNarrativeOverlay.style.bottom = '12px';
-",
-"    mobileNarrativeOverlay.style.zIndex = '900';
-",
-"    mobileNarrativeOverlay.style.background = 'rgba(255, 255, 255, 0.96)';
-",
-"    mobileNarrativeOverlay.style.border = '1px solid rgba(83, 40, 79, 0.25)';
-",
-"    mobileNarrativeOverlay.style.borderRadius = '10px';
-",
-"    mobileNarrativeOverlay.style.boxShadow = '0 6px 18px rgba(0,0,0,0.14)';
-",
-"    mobileNarrativeOverlay.style.padding = '10px 12px';
-",
-"    mobileNarrativeOverlay.style.fontSize = '13px';
-",
-"    mobileNarrativeOverlay.style.lineHeight = '1.35';
-",
-"    mobileNarrativeOverlay.style.color = '#2f2a2f';
-",
-"    mobileNarrativeOverlay.style.pointerEvents = 'none';
-",
-"    el.style.position = 'relative';
-",
-"    el.appendChild(mobileNarrativeOverlay);
-",
-"  }
-",
-"  function setMobileNarrative(distanceDriven) {
-",
-"    if (!isMobileViewport) return;
-",
-"    ensureMobileNarrativeOverlay();
-",
-"    if (mobileNarrativeOverlay) mobileNarrativeOverlay.innerHTML = buildMobileNarrative(distanceDriven);
 ",
 "  }
 
@@ -1087,28 +1024,21 @@ js_code <- paste0(
 ",
 "      tracer = L.marker([pts[0][1], pts[0][0]], { icon: markerIcon }).addTo(map);
 ",
+"      tracer.bindPopup(buildTracerTooltip(feature, gradientState.baseDistanceDriven), {
 ",
-"      if (!isMobileViewport) tracer.bindPopup(buildTracerTooltip(feature, gradientState.baseDistanceDriven), {
+"        closeButton: true, autoClose: false, closeOnClick: false,
 ",
-"        closeButton: true, autoClose: false, closeOnClick: false, autoPan: false,
-",
-"        offset: [0, -iconH]
+"        offset: [0, -", marker_h, "]
 ",
 "      });
 ",
-",
-"      if (!isMobileViewport) tracer.openPopup();
-",
-"      setMobileNarrative(gradientState.baseDistanceDriven);
+"      tracer.openPopup();
 ",
 "    } else {
 ",
 "      tracer.setLatLng([pts[0][1], pts[0][0]]);
 ",
-",
-"      if (!isMobileViewport) tracer.setPopupContent(buildTracerTooltip(feature, gradientState.baseDistanceDriven));
-",
-"      setMobileNarrative(gradientState.baseDistanceDriven);
+"      tracer.setPopupContent(buildTracerTooltip(feature, gradientState.baseDistanceDriven));
 ",
 "    }
 ",
@@ -1134,7 +1064,11 @@ js_code <- paste0(
 ",
 "      tracer.setLatLng([b[1], b[0]]);
 ",
-"      map.panTo([b[1], b[0]], { animate: false });
+"      if (followVanWhenZoomed) {
+",
+"        keepVanCentered(L.latLng(b[1], b[0]));
+",
+"      }
 ",
 "      setTracerRotation(tracer, bearingDeg(a, b));
 ",
@@ -1144,10 +1078,7 @@ js_code <- paste0(
 ",
 "      var distanceDriven = gradientState.baseDistanceDriven + (gradientState.featureDistance * progress);
 ",
-",
-"      if (!isMobileViewport) tracer.setPopupContent(buildTracerTooltip(feature, distanceDriven));
-",
-"      setMobileNarrative(distanceDriven);
+"      tracer.setPopupContent(buildTracerTooltip(feature, distanceDriven));
 ",
 "      idx++;
 ",
