@@ -12,33 +12,6 @@ format: closeread-html
 
 ```{=html}
 
-<style>
-@media (max-width: 768px) {
-  html, body {
-    overflow-y: scroll;
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  body::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  body::-webkit-scrollbar-track {
-    background: rgba(83, 40, 79, 0.12);
-  }
-
-  body::-webkit-scrollbar-thumb {
-    background-color: rgba(83, 40, 79, 0.55);
-    border-radius: 999px;
-  }
-}
-</style>
-
-
-
-```
-
 Across the [268,597 square miles of Texas]{.key-number}, access to women’s healthcare is deeply uneven. Large regions of the state function as “healthcare deserts,” where high- population communities have few or sometimes no access to nearby clinics providing essential services like contraception, cancer screenings, and preventive care. Many rural Texans face long travel distances, limited transportation options, and months-long wait times.
 
 ::: {.cr-section .emphasis-section layout="overlay-center"}
