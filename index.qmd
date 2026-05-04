@@ -537,10 +537,27 @@ Keep scrolling. [@cr-mytext0]{hlz="cr-t1,cr-t2"}
 
 ### Where do they go?
 
+```{=html}
+<style>
+@media (min-width: 769px) {
+  .mobile-only-overlay {
+    display: none !important;
+  }
+}
+</style>
+```
+
 :::: {.cr-section layout="overlay-center"}
 @cr-map2 A single mobile health unit can extend care across multiple counties that aren’t served by brick-and-mortar clinics. 
 
 This map illustrates how mobile units move across regions with limited or no permanent healthcare infrastructures, reaching women who would otherwise face transportation barriers, or even no access at all.
+
+::: {.cr-section .hide-narrative .mobile-only-overlay layout="overlay-center"}
+Track progress. @cr-route-progress-mobile
+
+| {#cr-route-progress-mobile .cr-text .scale-to-fill}
+| Current route progress: [0.0 mi]{#cr-distance-driven} driven of [0.0 mi]{#cr-distance-total} planned.
+:::
 
 You can scroll around and zoom in and out.
 
@@ -776,13 +793,30 @@ js_code <- paste0(
 "  }, 0);
 
 ",
+"  function updateNarrativeDistance(distanceDriven) {
+",
+"    var drivenEl = document.getElementById('cr-distance-driven');
+",
+"    var totalEl = document.getElementById('cr-distance-total');
+",
+"    var drivenMi = formatNumber(distanceDriven * 0.62, 1) + ' mi';
+",
+"    var totalMi = formatNumber(totalPlannedDistance * 0.62, 1) + ' mi';
+",
+"    if (drivenEl) drivenEl.textContent = drivenMi;
+",
+"    if (totalEl) totalEl.textContent = totalMi;
+",
+"  }
+
+",
 "  function buildTracerTooltip(feature, distanceDriven) {
 ",
 "    var props = (feature && feature.properties) ? feature.properties : {};
 ",
 "    return [
 ",
-"      '<strong>South Texas Family Planning & Health Corporation (STFPHC)</strong>',,
+"      '<strong>South Texas Family Planning & Health Corporation (STFPHC)</strong>',
 ",
 "      'Total distance driven: ' + formatNumber(distanceDriven*0.62, 1) + ' mi',
 ",
@@ -933,11 +967,15 @@ js_code <- paste0(
 ",
 "      tracer.openPopup();
 ",
+"      updateNarrativeDistance(gradientState.baseDistanceDriven);
+",
 "    } else {
 ",
 "      tracer.setLatLng([pts[0][1], pts[0][0]]);
 ",
 "      tracer.setPopupContent(buildTracerTooltip(feature, gradientState.baseDistanceDriven));
+",
+"      updateNarrativeDistance(gradientState.baseDistanceDriven);
 ",
 "    }
 ",
@@ -972,6 +1010,8 @@ js_code <- paste0(
 "      var distanceDriven = gradientState.baseDistanceDriven + (gradientState.featureDistance * progress);
 ",
 "      tracer.setPopupContent(buildTracerTooltip(feature, distanceDriven));
+",
+"      updateNarrativeDistance(distanceDriven);
 ",
 "      idx++;
 ",
@@ -1062,7 +1102,7 @@ Learn more. @cr-mytext8
 | {#cr-mytext8 .cr-text .scale-to-fill}
 | In 2025, South Texas Family Planning & Health Corporation 
 | served [2,576 patients]{#cr-t8} across [18 counties]{#cr-t9} of Texas using its mobile unit.
-
+|
 [@cr-mytext8]{highlight="cr-t8,cr-t9"} Keep scrolling.
 :::
 
